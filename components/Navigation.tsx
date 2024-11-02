@@ -61,7 +61,10 @@ export default function Navigation() {
           />
         )
       ) : (
-        <MobileNavigation setIsActiveLink={setIsActiveLink} />
+        <MobileNavigation
+          isActiveLink={isActiveLink}
+          setIsActiveLink={setIsActiveLink}
+        />
       )}
     </>
   );

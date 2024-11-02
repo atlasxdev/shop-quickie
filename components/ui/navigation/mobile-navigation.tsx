@@ -1,20 +1,33 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { buttonVariants } from "../button";
+import { Link as LucideLink, ShoppingCartIcon } from "lucide-react";
+import { NAV_LINKS } from "@/constants";
+import { wait } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+
+const staticLinks = NAV_LINKS.slice(1);
 
 export function MobileNavigation({
+  isActiveLink,
   setIsActiveLink,
 }: {
+  isActiveLink: string | null;
   setIsActiveLink: Dispatch<SetStateAction<string | null>>;
 }) {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <nav
       className={
@@ -22,7 +35,7 @@ export function MobileNavigation({
       }
     >
       <div className="w-full flex items-center justify-between">
-        <Sheet>
+        <Sheet onOpenChange={(open) => setIsOpen(open)} open={isOpen}>
           <SheetTrigger>
             {" "}
             <svg
@@ -57,25 +70,84 @@ export function MobileNavigation({
           </SheetTrigger>
           <SheetContent side={"left"}>
             <SheetHeader>
-              <div className="relative size-20 mx-auto">
+              <Link
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsActiveLink(null);
+                }}
+                className={"relative size-20 mx-auto"}
+                href={"/"}
+              >
                 <Image src={"/logo.png"} fill className="object-cover" alt="" />
+              </Link>
+              <div className="flex items-center w-max mx-auto space-x-2">
+                <SheetTitle>Quick links</SheetTitle>
+                <LucideLink />
               </div>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </SheetDescription>
             </SheetHeader>
+            <div className="mt-16 flex flex-col">
+              {NAV_LINKS.map(({ label, href, elementId }) =>
+                elementId != null ? (
+                  <Link
+                    key={label}
+                    href={href}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      if (
+                        staticLinks.some(({ label }) => label === isActiveLink)
+                      ) {
+                        setIsActiveLink(label);
+                        document
+                          .getElementById(elementId)!
+                          .scrollIntoView({ behavior: "smooth" });
+                        setIsOpen(false);
+                      } else {
+                        router.push("/");
+                        setIsActiveLink(label);
+                        setIsOpen(false);
+                        await wait(1500);
+                        document
+                          .getElementById(elementId)!
+                          .scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
+                    className={buttonVariants({
+                      className: "uppercase -tracking-tighter !justify-start",
+                      variant: "link",
+                      size: "lg",
+                    })}
+                  >
+                    {label}
+                  </Link>
+                ) : (
+                  <Link
+                    key={label}
+                    href={href}
+                    onClick={() => {
+                      setIsActiveLink(label);
+                    }}
+                    className={buttonVariants({
+                      className: "uppercase -tracking-tighter !justify-start",
+                      variant: "link",
+                      size: "lg",
+                    })}
+                  >
+                    {label}
+                  </Link>
+                )
+              )}
+            </div>
           </SheetContent>
         </Sheet>
         <Link
-          onClick={() => {
-            setIsActiveLink(null);
-          }}
-          className={"relative size-10"}
-          href={"/"}
+          href={"/cart"}
+          className={buttonVariants({
+            className: "!py-5",
+            variant: "ghost",
+            size: "sm",
+          })}
         >
-          <Image src={"/logo.png"} fill className="object-cover" alt="" />
+          <ShoppingCartIcon className="!size-6" />
         </Link>
       </div>
     </nav>
