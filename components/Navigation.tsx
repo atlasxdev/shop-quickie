@@ -21,19 +21,22 @@ export default function Navigation() {
   const [isPageScrolled, setIsPageScrolled] = useState<boolean>(false);
   const [isActiveLink, setIsActiveLink] = useState<string | null>(null);
   const matches = useMediaQuery("(min-width: 768px)");
-  const user = null;
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (pathname.includes("/store")) {
-      isClient && setIsActiveLink("Store");
+    if (!isClient) {
+      return;
     } else {
-      isClient && setIsActiveLink(null);
+      if (pathname.includes("/store")) {
+        setIsActiveLink("Store");
+      } else {
+        setIsActiveLink(null);
+      }
     }
-  }, [pathname]);
+  }, [isClient, pathname]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 30) {
