@@ -40,7 +40,9 @@ export default function RootLayout({
         className={`${figtree.className} flex flex-col min-h-dvh antialiased`}
       >
         <Navigation />
+
         <Provider>{children}</Provider>
+
         <Footer />
       </body>
     </html>

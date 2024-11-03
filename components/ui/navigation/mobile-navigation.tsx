@@ -15,6 +15,7 @@ import { Link as LucideLink, ShoppingCartIcon } from "lucide-react";
 import { NAV_LINKS } from "@/constants";
 import { wait } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { OramaSearch } from "@/services/OramaSearch";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -85,7 +86,10 @@ export function MobileNavigation({
                 <LucideLink />
               </div>
             </SheetHeader>
-            <div className="mt-16 flex flex-col">
+            <div className="mt-4 w-full flex items-center">
+              <OramaSearch />
+            </div>
+            <div className="mt-12 flex flex-col">
               {NAV_LINKS.map(({ label, href, elementId }) =>
                 elementId != null ? (
                   <Link

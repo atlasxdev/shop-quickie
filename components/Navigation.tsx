@@ -1,6 +1,5 @@
 "use client";
 
-import { MaxWidthWrapper } from "./MaxWidthWrapper";
 import { ShoppingCartIcon, User } from "lucide-react";
 import { Button, buttonVariants } from "./ui/button";
 import Link from "next/link";
@@ -87,92 +86,92 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
       animate={{
         top: 20,
       }}
-      className={"flex items-center sticky z-20 inset-x-0 p-4 md:p-6"}
+      className={
+        "flex items-center sticky z-20 inset-x-0 p-4 md:p-6 w-2/4 max-w-2xl mx-auto"
+      }
     >
-      <MaxWidthWrapper>
-        <div
-          className={
-            "w-full flex items-center  backdrop-blur-md bg-white/70 py-5 px-8 border rounded-full justify-center gap-6"
-          }
-        >
-          <div className={"flex items-center gap-10"}>
-            <Link
-              onClick={() => {
-                setIsActiveLink(null);
-              }}
-              className={"relative size-10"}
-              href={"/"}
-            >
-              <Image src={"/logo.png"} fill className="object-cover" alt="" />
-            </Link>
+      <div
+        className={
+          "w-full flex items-center justify-between backdrop-blur-md bg-white/70 py-5 px-8 border rounded-full gap-6"
+        }
+      >
+        <div className={"flex items-center gap-10"}>
+          <Link
+            onClick={() => {
+              setIsActiveLink(null);
+            }}
+            className={"relative size-10"}
+            href={"/"}
+          >
+            <Image src={"/logo.png"} fill className="object-cover" alt="" />
+          </Link>
 
-            <div className="hidden md:flex items-center justify-center">
-              {NAV_LINKS.map(({ label, href, elementId }) =>
-                elementId != null ? (
-                  <Link
-                    key={label}
-                    href={href}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      if (isActiveLink === "Store") {
-                        router.push("/");
-                        setIsActiveLink(label);
-                        await wait(1000);
-                        document
-                          .getElementById(elementId)!
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        setIsActiveLink(label);
-                        document
-                          .getElementById(elementId)!
-                          .scrollIntoView({ behavior: "smooth" });
-                      }
-                    }}
-                    className={buttonVariants({
-                      className:
-                        isActiveLink === label
-                          ? "!text-[#FBA328] !font-semibold"
-                          : "!text-black",
-                      variant: "ghost",
-                      size: "sm",
-                    })}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <Link
-                    key={label}
-                    href={href}
-                    onClick={() => {
+          <div className="hidden md:flex items-center justify-center">
+            {NAV_LINKS.map(({ label, href, elementId }) =>
+              elementId != null ? (
+                <Link
+                  key={label}
+                  href={href}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (isActiveLink === "Store") {
+                      router.push("/");
                       setIsActiveLink(label);
-                    }}
-                    className={buttonVariants({
-                      className:
-                        isActiveLink === label
-                          ? "!text-[#FBA328] !font-semibold"
-                          : "!text-black",
-                      variant: "ghost",
-                      size: "sm",
-                    })}
-                  >
-                    {label}
-                  </Link>
-                )
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <Button size={"sm"} variant={"ghost"} className="rounded-full">
-                <User className="!size-5" />
-              </Button>
-            ) : null}
-            <div className="hidden md:block cursor-pointer rounded-md p-2">
-              <ShoppingCartIcon />
-            </div>
+                      await wait(1000);
+                      document
+                        .getElementById(elementId)!
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      setIsActiveLink(label);
+                      document
+                        .getElementById(elementId)!
+                        .scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className={buttonVariants({
+                    className:
+                      isActiveLink === label
+                        ? "!text-[#FBA328] !font-semibold"
+                        : "!text-black",
+                    variant: "ghost",
+                    size: "sm",
+                  })}
+                >
+                  {label}
+                </Link>
+              ) : (
+                <Link
+                  key={label}
+                  href={href}
+                  onClick={() => {
+                    setIsActiveLink(label);
+                  }}
+                  className={buttonVariants({
+                    className:
+                      isActiveLink === label
+                        ? "!text-[#FBA328] !font-semibold"
+                        : "!text-black",
+                    variant: "ghost",
+                    size: "sm",
+                  })}
+                >
+                  {label}
+                </Link>
+              )
+            )}
           </div>
         </div>
-      </MaxWidthWrapper>
+        <div className="flex items-center gap-4">
+          {user ? (
+            <Button size={"sm"} variant={"ghost"} className="rounded-full">
+              <User className="!size-5" />
+            </Button>
+          ) : null}
+          <div className="hidden md:block cursor-pointer rounded-md p-2">
+            <ShoppingCartIcon />
+          </div>
+        </div>
+      </div>
     </motion.nav>
   );
 }

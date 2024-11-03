@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { Button, buttonVariants } from "../button";
 import { ShoppingCartIcon, User } from "lucide-react";
+import { OramaSearch } from "@/services/OramaSearch";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -99,6 +100,7 @@ export function DesktopNavigation({
               )}
             </div>
           </div>
+          <OramaSearch />
           <div className="flex items-center gap-4">
             {user ? (
               <Button size={"sm"} variant={"ghost"} className="rounded-full">
