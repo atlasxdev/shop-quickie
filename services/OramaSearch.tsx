@@ -21,20 +21,18 @@ import LearnMore from "@/components/cta/learn-more";
 import { CardDescription } from "@/components/ui/card";
 import { AnimatePresence, motion } from "framer-motion";
 import { priceFormatter } from "@/lib/utils";
-import { useDebounceCallback } from "usehooks-ts";
 
 export function OramaSearch() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [results, setResults] = useState<Result<any>[]>([]);
-  const debounced = useDebounceCallback(setSearch, 500);
 
   useEffect(() => {
     if (!isOpen) {
       setSearch("");
     }
-  }, [isOpen]);
+  }, [isOpen, setSearch]);
 
   async function oramaSearch(term: string) {
     try {
@@ -82,7 +80,7 @@ export function OramaSearch() {
             value={search}
             onChange={async (e) => {
               if (e.target.value == null) return;
-              debounced(e.target.value);
+              setSearch(e.target.value);
               await oramaSearch(e.target.value);
             }}
           />
