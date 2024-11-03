@@ -21,7 +21,7 @@ export function DesktopNavigation({
   isActiveLink: string | null;
   setIsActiveLink: Dispatch<SetStateAction<string | null>>;
 }) {
-  const user = null;
+  const user = true;
   const router = useRouter();
 
   return (
@@ -100,8 +100,8 @@ export function DesktopNavigation({
               )}
             </div>
           </div>
-          <OramaSearch />
-          <div className="flex items-center gap-4">
+          <div className="w-full flex justify-end items-center gap-4">
+            <OramaSearch />
             {user ? (
               <Button size={"sm"} variant={"ghost"} className="rounded-full">
                 <User className="!size-5" />

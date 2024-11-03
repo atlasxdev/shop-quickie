@@ -12,6 +12,7 @@ import { useMotionValueEvent, useScroll, motion } from "framer-motion";
 import { useMediaQuery } from "usehooks-ts";
 import { MobileNavigation } from "./ui/navigation/mobile-navigation";
 import { DesktopNavigation } from "./ui/navigation/desktop-navigation";
+import { OramaSearch } from "@/services/OramaSearch";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -76,7 +77,7 @@ type Props = {
 
 function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
   const router = useRouter();
-  const user = null;
+  const user = true;
 
   return (
     <motion.nav
@@ -87,7 +88,7 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
         top: 20,
       }}
       className={
-        "flex items-center sticky z-20 inset-x-0 p-4 md:p-6 w-2/4 max-w-2xl mx-auto"
+        "flex items-center sticky z-20 inset-x-0 p-4 md:p-6 w-3/4 max-w-6xl mx-auto"
       }
     >
       <div
@@ -95,7 +96,7 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
           "w-full flex items-center justify-between backdrop-blur-md bg-white/70 py-5 px-8 border rounded-full gap-6"
         }
       >
-        <div className={"flex items-center gap-10"}>
+        <div className={"flex items-center gap-8"}>
           <Link
             onClick={() => {
               setIsActiveLink(null);
@@ -161,7 +162,8 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="w-full flex justify-end items-center gap-4">
+          <OramaSearch />
           {user ? (
             <Button size={"sm"} variant={"ghost"} className="rounded-full">
               <User className="!size-5" />

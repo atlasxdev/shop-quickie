@@ -15,7 +15,7 @@ import {
 import { Result } from "@orama/orama";
 import { Product } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Loader, SearchIcon } from "lucide-react";
+import { ArrowUpDown, Loader, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import LearnMore from "@/components/cta/learn-more";
 import { CardDescription } from "@/components/ui/card";
@@ -24,6 +24,7 @@ import { priceFormatter } from "@/lib/utils";
 import { useDebounceCallback } from "usehooks-ts";
 
 export function OramaSearch() {
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -31,10 +32,24 @@ export function OramaSearch() {
   const debouncedOramaSearch = useDebounceCallback(oramaSearch, 500);
 
   useEffect(() => {
+    if (isClicked) {
+      results.sort(
+        (d1, d2) =>
+          (d2.document as Product).price - (d1.document as Product).price
+      );
+    } else {
+      results.sort(
+        (d1, d2) =>
+          (d1.document as Product).price - (d2.document as Product).price
+      );
+    }
+  }, [isClicked, results]);
+
+  useEffect(() => {
     if (!isOpen) {
       setSearch("");
     }
-  }, [isOpen, search, setSearch]);
+  }, [isOpen]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -43,7 +58,6 @@ export function OramaSearch() {
         setIsOpen(true);
       }
     };
-
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
@@ -56,8 +70,6 @@ export function OramaSearch() {
         mode: "vector",
         limit: 5,
       });
-
-      console.log(searchResults);
 
       if (!searchResults?.hits.length) {
         setIsLoading(false);
@@ -76,7 +88,7 @@ export function OramaSearch() {
     <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <DialogTrigger asChild>
         <Button
-          className="flex w-full lg:w-2/6 justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
+          className="flex w-full max-w-xs justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
           variant={"secondary"}
           size={"sm"}
         >
@@ -85,12 +97,12 @@ export function OramaSearch() {
             Search...
           </div>
 
-          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-            <span className="text-xs">⌘</span>K
+          <kbd className="hidden md:inline-flex pointer-events-none  h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+            <span className="text-sm">⌘</span>K
           </kbd>
         </Button>
       </DialogTrigger>
-      <DialogContent className="!rounded-xl px-4 max-h-96 overflow-auto">
+      <DialogContent className="!rounded-xl px-4 h-96 overflow-auto">
         <DialogHeader className="pt-6 space-y-4">
           <DialogTitle className="text-center -tracking-tighter uppercase font-extrabold text-[#FBA328]">
             Ask me anything
@@ -98,7 +110,8 @@ export function OramaSearch() {
 
           <Input
             autoFocus
-            placeholder="Search products..."
+            placeholder="Search for products..."
+            className="text-xs md:text-sm"
             value={search}
             onChange={async (e) => {
               if (e.target.value == null) return;
@@ -107,29 +120,6 @@ export function OramaSearch() {
             }}
           />
         </DialogHeader>
-
-        <AnimatePresence>
-          {results == null && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                display: "none",
-              }}
-              animate={{
-                opacity: 1,
-                display: "block",
-              }}
-              exit={{
-                opacity: 0,
-                display: "none",
-              }}
-            >
-              <p className="text-balance text-center -tracking-tighter text-muted-foreground font-bold">
-                Oops! Item not found.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <AnimatePresence>
           {isLoading && (
@@ -155,12 +145,30 @@ export function OramaSearch() {
 
         {results != null && results.length > 0 && (
           <>
-            <CardDescription className="mt-2">
-              {results.length} Results
-            </CardDescription>
+            <div className="mt-0 md:mt-4 w-full flex items-center justify-between">
+              <CardDescription className="mt-2 text-xs font-medium -tracking-tighter">
+                {results.length} Results
+              </CardDescription>
+              <Button
+                disabled={results.length <= 1}
+                onClick={() => setIsClicked((prev) => !prev)}
+                variant={"ghost"}
+                size={"sm"}
+                className="gap-2"
+              >
+                Price
+                <ArrowUpDown />
+              </Button>
+            </div>
             <div className="w-full space-y-2">
               {results.map((hit: Result<Product>) => (
-                <div
+                <motion.div
+                  layout
+                  transition={{
+                    type: "spring",
+                    damping: 25,
+                    stiffness: 120,
+                  }}
                   className="w-full flex gap-4 rounded-md p-4 border hover:shadow-md transition-shadow"
                   key={hit.id}
                 >
@@ -184,7 +192,7 @@ export function OramaSearch() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </>
