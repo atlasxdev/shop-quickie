@@ -21,18 +21,32 @@ import LearnMore from "@/components/cta/learn-more";
 import { CardDescription } from "@/components/ui/card";
 import { AnimatePresence, motion } from "framer-motion";
 import { priceFormatter } from "@/lib/utils";
+import { useDebounceCallback } from "usehooks-ts";
 
 export function OramaSearch() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [results, setResults] = useState<Result<any>[]>([]);
+  const debouncedOramaSearch = useDebounceCallback(oramaSearch, 500);
 
   useEffect(() => {
     if (!isOpen) {
       setSearch("");
     }
-  }, [isOpen, setSearch]);
+  }, [isOpen, search, setSearch]);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   async function oramaSearch(term: string) {
     try {
@@ -40,17 +54,18 @@ export function OramaSearch() {
       const searchResults = await oramaClient.search({
         term: term,
         mode: "vector",
-        sortBy: {
-          property: "price",
-          order: "ASC",
-        },
+        limit: 5,
       });
-      if (searchResults == null) {
+
+      console.log(searchResults);
+
+      if (!searchResults?.hits.length) {
         setIsLoading(false);
+        setResults([]);
         throw new Error("Something went wrong");
       }
-      setResults(searchResults.hits);
       setIsLoading(false);
+      setResults(searchResults.hits);
     } catch (error) {
       oramaClient.reset();
       console.error(error);
@@ -61,30 +76,60 @@ export function OramaSearch() {
     <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <DialogTrigger asChild>
         <Button
-          className="flex w-full lg:w-2/6 justify-start mx-4 lg:mx-0 lg:pl-6 text-muted-foreground hover:text-black"
+          className="flex w-full lg:w-2/6 justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
           variant={"secondary"}
           size={"sm"}
         >
-          <SearchIcon />
-          Search...
+          <div className="flex items-center gap-2">
+            <SearchIcon />
+            Search...
+          </div>
+
+          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+            <span className="text-xs">⌘</span>K
+          </kbd>
         </Button>
       </DialogTrigger>
-      <DialogContent className="!rounded-xl px-4 max-h-96 max-w-md overflow-auto">
+      <DialogContent className="!rounded-xl px-4 max-h-96 overflow-auto">
         <DialogHeader className="pt-6 space-y-4">
           <DialogTitle className="text-center -tracking-tighter uppercase font-extrabold text-[#FBA328]">
             Ask me anything
           </DialogTitle>
+
           <Input
             autoFocus
-            placeholder="Search..."
+            placeholder="Search products..."
             value={search}
             onChange={async (e) => {
               if (e.target.value == null) return;
               setSearch(e.target.value);
-              await oramaSearch(e.target.value);
+              await debouncedOramaSearch(e.target.value);
             }}
           />
         </DialogHeader>
+
+        <AnimatePresence>
+          {results == null && (
+            <motion.div
+              initial={{
+                opacity: 0,
+                display: "none",
+              }}
+              animate={{
+                opacity: 1,
+                display: "block",
+              }}
+              exit={{
+                opacity: 0,
+                display: "none",
+              }}
+            >
+              <p className="text-balance text-center -tracking-tighter text-muted-foreground font-bold">
+                Oops! Item not found.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {isLoading && (
@@ -107,30 +152,8 @@ export function OramaSearch() {
             </motion.div>
           )}
         </AnimatePresence>
-        <AnimatePresence>
-          {results.length === 0 && isLoading == false && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                display: "none",
-              }}
-              animate={{
-                opacity: 1,
-                display: "block",
-              }}
-              exit={{
-                opacity: 0,
-                display: "none",
-              }}
-            >
-              <p className="text-balance text-center -tracking-tighter text-muted-foreground font-bold">
-                Quickly find the product you want by simply typing it here.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {results.length > 0 && (
+        {results != null && results.length > 0 && (
           <>
             <CardDescription className="mt-2">
               {results.length} Results
