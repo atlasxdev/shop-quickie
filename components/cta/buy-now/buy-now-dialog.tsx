@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,11 @@ import {
 function BuyNowDialog() {
   return (
     <Dialog>
-      <DialogTrigger>Open</DialogTrigger>
+      <DialogTrigger asChild>
+        <Button size={"lg"} className="rounded-full w-full" variant={"default"}>
+          Buy now
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>

@@ -2,20 +2,8 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
-import dynamic from "next/dynamic";
-import Provider from "@/components/tanstack-query/Provider";
-import { NavLoader } from "@/components/nav-loader";
 
-const Navigation = dynamic(() => import("@/components/Navigation"), {
-  ssr: false,
-  loading: ({ isLoading }) => {
-    if (isLoading) {
-      return <NavLoader />;
-    } else {
-      return null;
-    }
-  },
-});
+import Provider from "@/components/tanstack-query/Provider";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -39,8 +27,6 @@ export default function RootLayout({
       <body
         className={`${figtree.className} flex flex-col min-h-dvh antialiased`}
       >
-        <Navigation />
-
         <Provider>{children}</Provider>
 
         <Footer />

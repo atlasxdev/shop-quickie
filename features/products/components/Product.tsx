@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PRODUCT_IMAGES } from "@/constants";
-import { cn, priceFormatter } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Product as TProduct } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { notFound, useRouter } from "next/navigation";
@@ -22,6 +22,8 @@ import { A11y } from "swiper/modules";
 import { ImageZoom } from "./ImageZoom";
 import {
   ArrowLeftIcon,
+  CircleMinusIcon,
+  CirclePlusIcon,
   MousePointerClickIcon,
   ShoppingCartIcon,
 } from "lucide-react";
@@ -32,9 +34,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 
 export function Product({ id }: { id: string }) {
+  const user = true;
   const router = useRouter();
+  const [quantity, setQuantity] = useState(1);
   const [seeMore, setSeeMore] = useState<boolean>(false);
   const [isReachedBeginning, setIsReachedBeginning] = useState<boolean>(true);
   const [isReachedEnd, setIsReachedEnd] = useState<boolean>(false);
@@ -197,10 +202,43 @@ export function Product({ id }: { id: string }) {
                 </div>
               </div>
               <CardDescription className="text-base md:text-lg text-black font-medium">
-                {priceFormatter(data.data.price)}
+                <AnimatedNumber
+                  value={data.data.price * quantity}
+                  isPrice={true}
+                />
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 md:space-y-8">
+            <CardContent className="space-y-4 md:space-y-6">
+              <div className="w-full flex items-center justify-between">
+                <p className="uppercase text-muted-foreground -tracking-tighter font-bold">
+                  Quantity
+                </p>
+                <div className="w-max flex items-center justify-between gap-6">
+                  <Button
+                    disabled={quantity == 1}
+                    onClick={() =>
+                      setQuantity((prev) => {
+                        if (prev === 1) return 1;
+                        return prev - 1;
+                      })
+                    }
+                    size={"sm"}
+                    className="rounded-full w-max"
+                    variant={"ghost"}
+                  >
+                    <CircleMinusIcon />
+                  </Button>
+                  <span className="w-full text-center">{quantity}</span>
+                  <Button
+                    onClick={() => setQuantity((prev) => prev + 1)}
+                    size={"sm"}
+                    className="rounded-full w-max"
+                    variant={"ghost"}
+                  >
+                    <CirclePlusIcon />
+                  </Button>
+                </div>
+              </div>
               <div className="space-y-3 md:space-y-4">
                 <p className="uppercase text-muted-foreground -tracking-tighter font-bold">
                   Item details
@@ -253,6 +291,7 @@ export function Product({ id }: { id: string }) {
                   </motion.svg>
                 </Button>
               </div>
+
               <div className="space-y-4">
                 <p className="uppercase text-muted-foreground -tracking-tighter font-bold">
                   Item description
@@ -261,6 +300,7 @@ export function Product({ id }: { id: string }) {
                   {data.data.description}
                 </p>
               </div>
+
               <CardFooter className="flex-col gap-3 md:gap-4 px-0 pb-0 md:px-6 md:pb-6">
                 <Button
                   size={"lg"}
@@ -270,13 +310,29 @@ export function Product({ id }: { id: string }) {
                   Add to cart
                   <ShoppingCartIcon />
                 </Button>
-                <Button
-                  size={"lg"}
-                  className="rounded-full w-full"
-                  variant={"default"}
-                >
-                  Buy now
-                </Button>
+                {user ? (
+                  <Button
+                    onClick={() =>
+                      router.push(
+                        `/checkout?productId=${id}&quantity=${quantity}`
+                      )
+                    }
+                    size={"lg"}
+                    className="rounded-full w-full"
+                    variant={"default"}
+                  >
+                    Buy now
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => router.push("/login")}
+                    size={"lg"}
+                    className="rounded-full w-full"
+                    variant={"default"}
+                  >
+                    Buy now
+                  </Button>
+                )}
               </CardFooter>
             </CardContent>
           </Card>
