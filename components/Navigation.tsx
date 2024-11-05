@@ -169,9 +169,16 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
               <User className="!size-5" />
             </Button>
           ) : null}
-          <div className="hidden md:block cursor-pointer rounded-md p-2">
-            <ShoppingCartIcon />
-          </div>
+
+          <Link
+            href={"/cart"}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+            })}
+          >
+            <ShoppingCartIcon className="!size-6" />
+          </Link>
         </div>
       </div>
     </motion.nav>

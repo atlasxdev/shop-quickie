@@ -27,7 +27,7 @@ function layout({
           </Link>
         </MaxWidthWrapper>
       </div>
-      <div className="flex-1 py-12 md:py-14 lg:py-16">
+      <div className="flex-1 py-12 md:py-14 lg:py-16 bg-[#F5F5F7]">
         <MaxWidthWrapper>{children}</MaxWidthWrapper>
       </div>
     </>

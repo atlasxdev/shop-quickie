@@ -47,5 +47,13 @@ export const ZodCreditCardSchema = z.object({
   cvv: z.string().regex(/^\d{3,4}$/, { message: "CVV must be 3 or 4 digits" }),
 });
 
+export const ZodLoginSchema = z
+  .object({
+    username: z.string().min(3, "Username must be at least 3 characters long."),
+    password: z.string().min(5, "Password must be at least 5 characters long."),
+  })
+  .required();
+
+export type TLoginSchema = z.infer<typeof ZodLoginSchema>;
 export type TCheckoutSchema = z.infer<typeof ZodCheckoutSchema>;
 export type TCreditCardSchema = z.infer<typeof ZodCreditCardSchema>;

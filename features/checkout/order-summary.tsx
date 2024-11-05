@@ -1,8 +1,8 @@
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DELIVERY_OPTIONS } from "./review-order";
 import { Separator } from "@/components/ui/separator";
+import { CompleteOrderDialog } from "./complete-order-dialog";
 
 function OrderSummary({
   isValid,
@@ -80,9 +80,7 @@ function OrderSummary({
 
           <AnimatedNumber value={orderTotal} isPrice={true} />
         </div>
-        <Button disabled={!isValid} className="rounded-full w-full">
-          Complete Order
-        </Button>
+        <CompleteOrderDialog isValid={isValid} />
       </CardContent>
     </Card>
   );

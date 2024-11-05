@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
 import "./globals.css";
+import type { Metadata } from "next";
+import { Recursive } from "next/font/google";
 import { Footer } from "@/components/Footer";
-
+import { Toaster } from "@/components/ui/sonner";
 import Provider from "@/components/tanstack-query/Provider";
 
-const figtree = Figtree({
+const recursive = Recursive({
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
@@ -25,10 +25,10 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" />
       </head>
       <body
-        className={`${figtree.className} flex flex-col min-h-dvh antialiased`}
+        className={`${recursive.className} flex flex-col min-h-dvh antialiased overflow-y-auto overflow-x-hidden`}
       >
         <Provider>{children}</Provider>
-
+        <Toaster closeButton theme="light" position="top-center" />
         <Footer />
       </body>
     </html>

@@ -18,6 +18,7 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import OrderSummary from "./order-summary";
 import { DELIVERY_OPTIONS } from "./review-order";
+import { useEffect, useRef } from "react";
 
 const BANKS = [
   "/american-express-logo.png",
@@ -40,6 +41,7 @@ export function PaymentDetails({
   isFormValid: boolean;
   orderTotal: number;
 }) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     register,
     formState: { errors, isValid },
@@ -53,12 +55,20 @@ export function PaymentDetails({
     },
     mode: "onChange",
   });
+  const { ref, ...rest } = register("cardHolderName");
+
+  useEffect(() => {
+    if (isFormValid && inputRef.current != null) {
+      inputRef.current.focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [isFormValid]);
 
   return (
     <div className="w-full h-max space-y-6 md:space-y-8">
       <Card
         className={cn("w-full h-max", {
-          "pointer-events-none opacity-40": !isFormValid,
+          "pointer-events-none opacity-60": !isFormValid,
         })}
       >
         <CardHeader className="space-y-4">
@@ -71,9 +81,9 @@ export function PaymentDetails({
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="w-full px-4 flex justify-between items-center rounded-md border">
-            <CardDescription className="font-medium -tracking-tighter text-xs">
+            <span className="font-medium -tracking-tighter text-xs">
               Credit Card
-            </CardDescription>
+            </span>
             <div className="flex items-center justify-center py-2 gap-2">
               {BANKS.map((imageUrl) => (
                 <Image
@@ -90,45 +100,52 @@ export function PaymentDetails({
           <div className="space-y-2">
             <div className="space-y-0.5">
               <Label className="text-xs -tracking-tighter">
-                Card holder name
+                Card holder name*
               </Label>
-              <Input {...register("cardHolderName")} />
-              {errors.cardHolderName && (
-                <AnimatePresence>
+              <Input
+                {...rest}
+                name="cardHolderName"
+                ref={(e) => {
+                  ref(e);
+                  inputRef.current = e;
+                }}
+              />
+              <AnimatePresence>
+                {errors.cardHolderName && (
                   <ErrorMessage message={errors.cardHolderName.message} />
-                </AnimatePresence>
-              )}
+                )}
+              </AnimatePresence>
             </div>
             <div className="flex gap-2">
               <div className="space-y-0.5">
-                <Label className="text-xs -tracking-tighter">Card number</Label>
+                <Label className="text-xs -tracking-tighter">
+                  Card number*
+                </Label>
                 <Input {...register("cardNumber")} />
-                {errors.cardNumber && (
-                  <AnimatePresence>
+                <AnimatePresence>
+                  {errors.cardNumber && (
                     <ErrorMessage message={errors.cardNumber.message} />
-                  </AnimatePresence>
-                )}
+                  )}
+                </AnimatePresence>
               </div>
               <div className="space-y-0.5">
                 <Label className="text-xs -tracking-tighter">
-                  Expiration date
+                  Expiration date*
                 </Label>
                 <Input {...register("expirationDate")} />
-                {errors.expirationDate && (
-                  <AnimatePresence>
+                <AnimatePresence>
+                  {errors.expirationDate && (
                     <ErrorMessage message={errors.expirationDate.message} />
-                  </AnimatePresence>
-                )}
+                  )}
+                </AnimatePresence>
               </div>
             </div>
             <div className="space-y-0.5">
-              <Label className="text-xs -tracking-tighter">CVV</Label>
+              <Label className="text-xs -tracking-tighter">CVV*</Label>
               <Input {...register("cvv")} />
-              {errors.cvv && (
-                <AnimatePresence>
-                  <ErrorMessage message={errors.cvv.message} />
-                </AnimatePresence>
-              )}
+              <AnimatePresence>
+                {errors.cvv && <ErrorMessage message={errors.cvv.message} />}
+              </AnimatePresence>
             </div>
           </div>
         </CardContent>

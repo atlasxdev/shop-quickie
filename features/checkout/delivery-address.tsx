@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { DELIVERY_OPTIONS } from "./review-order";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ export function DeliveryAddress({
   price: number;
   selected: (typeof DELIVERY_OPTIONS)[0] | null;
 }) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     register,
     formState: { errors, isValid },
@@ -46,12 +47,20 @@ export function DeliveryAddress({
     },
     mode: "onChange",
   });
+  const { ref, ...rest } = register("email");
+
+  useEffect(() => {
+    if (selected != null && inputRef.current != null) {
+      inputRef.current.focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [selected]);
 
   return (
     <>
       <Card
         className={cn("w-full h-max", {
-          "pointer-events-none opacity-40": selected == null,
+          "pointer-events-none opacity-60": selected == null,
         })}
       >
         <CardHeader className="space-y-4">
@@ -66,30 +75,35 @@ export function DeliveryAddress({
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Email address*</Label>
 
-            <Input {...register("email")} />
-            {errors.email && (
-              <AnimatePresence>
-                <ErrorMessage message={errors.email.message} />
-              </AnimatePresence>
-            )}
+            <Input
+              {...rest}
+              name="email"
+              ref={(e) => {
+                ref(e);
+                inputRef.current = e;
+              }}
+            />
+            <AnimatePresence>
+              {errors.email && <ErrorMessage message={errors.email.message} />}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Full name*</Label>
             <Input {...register("fullName")} />
-            {errors.fullName && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.fullName && (
                 <ErrorMessage message={errors.fullName.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Mobile*</Label>
             <Input {...register("mobile")} />
-            {errors.mobile && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.mobile && (
                 <ErrorMessage message={errors.mobile.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">
@@ -100,49 +114,49 @@ export function DeliveryAddress({
               className="text-xs"
               placeholder="Street name, Building, House no."
             />
-            {errors.deliveryAddress && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.deliveryAddress && (
                 <ErrorMessage message={errors.deliveryAddress.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Suburb/Town*</Label>
             <Input {...register("suburbOrTown")} />
-            {errors.suburbOrTown && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.suburbOrTown && (
                 <ErrorMessage message={errors.suburbOrTown.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">City/State*</Label>
             <Input {...register("cityOrState")} />
-            {errors.cityOrState && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.cityOrState && (
                 <ErrorMessage message={errors.cityOrState.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">
               Postcode/ZIP Code*
             </Label>
             <Input {...register("postalOrZipCode")} />
-            {errors.postalOrZipCode && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.postalOrZipCode && (
                 <ErrorMessage message={errors.postalOrZipCode.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Country*</Label>
             <Input {...register("country")} />
-            {errors.country && (
-              <AnimatePresence>
+            <AnimatePresence>
+              {errors.country && (
                 <ErrorMessage message={errors.country.message} />
-              </AnimatePresence>
-            )}
+              )}
+            </AnimatePresence>
           </div>
         </CardContent>
       </Card>

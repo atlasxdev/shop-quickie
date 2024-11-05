@@ -35,9 +35,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
+import AddToCart from "@/components/cta/add-to-cart";
+import { toast } from "sonner";
 
 export function Product({ id }: { id: string }) {
-  const user = true;
+  const user = null;
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [seeMore, setSeeMore] = useState<boolean>(false);
@@ -302,36 +304,52 @@ export function Product({ id }: { id: string }) {
               </div>
 
               <CardFooter className="flex-col gap-3 md:gap-4 px-0 pb-0 md:px-6 md:pb-6">
-                <Button
-                  size={"lg"}
-                  className="rounded-full w-full gap-2"
-                  variant={"secondary"}
-                >
-                  Add to cart
-                  <ShoppingCartIcon />
-                </Button>
                 {user ? (
-                  <Button
-                    onClick={() =>
-                      router.push(
-                        `/checkout?productId=${id}&quantity=${quantity}`
-                      )
-                    }
-                    size={"lg"}
-                    className="rounded-full w-full"
-                    variant={"default"}
-                  >
-                    Buy now
-                  </Button>
+                  <>
+                    <AddToCart
+                      productId={data.data.id.toString()}
+                      quantity={quantity}
+                    />
+                    <Button
+                      onClick={() =>
+                        router.push(
+                          `/checkout?productId=${id}&quantity=${quantity}`
+                        )
+                      }
+                      size={"lg"}
+                      className="rounded-full w-full"
+                      variant={"default"}
+                    >
+                      Buy now
+                    </Button>
+                  </>
                 ) : (
-                  <Button
-                    onClick={() => router.push("/login")}
-                    size={"lg"}
-                    className="rounded-full w-full"
-                    variant={"default"}
-                  >
-                    Buy now
-                  </Button>
+                  <>
+                    <Button
+                      onClick={() =>
+                        toast("🛒 Please sign in to add items to your cart.", {
+                          action: {
+                            label: "Go",
+                            onClick: () => router.push("/login"),
+                          },
+                        })
+                      }
+                      size={"lg"}
+                      className="rounded-full w-full gap-2"
+                      variant={"secondary"}
+                    >
+                      Add to cart
+                      <ShoppingCartIcon />
+                    </Button>
+                    <Button
+                      onClick={() => router.push("/login")}
+                      size={"lg"}
+                      className="rounded-full w-full"
+                      variant={"default"}
+                    >
+                      Buy now
+                    </Button>
+                  </>
                 )}
               </CardFooter>
             </CardContent>

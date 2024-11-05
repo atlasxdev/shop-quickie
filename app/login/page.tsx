@@ -1,0 +1,128 @@
+"use client";
+
+import { apiRoute } from "@/axios/apiRoute";
+import { ErrorMessage } from "@/components/ErrorMessage";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { wait } from "@/lib/utils";
+import { TLoginSchema, ZodLoginSchema } from "@/zod-schema";
+import { useUserStore } from "@/zustand-store/store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
+import { AnimatePresence } from "framer-motion";
+import { ArrowLeft, LogIn } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+function Page() {
+  const router = useRouter();
+  const logIn = useUserStore((state) => state.logIn);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async ({ username, password }: TLoginSchema) => {
+      return await apiRoute.post(`/auth/login`, {
+        username,
+        password,
+      });
+    },
+    onMutate: () => toast("Logging you in..."),
+    onSuccess: async (data: AxiosResponse<{ token: string }>) => {
+      toast("Welcome back!");
+      logIn(data.data.token);
+      localStorage.setItem("user", JSON.stringify(data.data.token));
+      await wait(1000);
+      router.back();
+    },
+    onError: () => {
+      toast("Oops! Something went wrong", {
+        description: "Try again",
+      });
+      reset();
+    },
+  });
+
+  const {
+    register,
+    formState: { errors, isValid },
+    reset,
+    handleSubmit,
+  } = useForm<TLoginSchema>({
+    resolver: zodResolver(ZodLoginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    mode: "onChange",
+  });
+
+  function submitForm(data: TLoginSchema) {
+    mutate({ ...data });
+  }
+
+  return (
+    <div className="relative flex-1 flex items-center justify-center bg-[#F5F5F7] py-12 md:py-14 lg:py-16">
+      <Link
+        href={"/store"}
+        className={buttonVariants({
+          variant: "link",
+          className:
+            "-tracking-tighter absolute top-5 left-5 gap-2 !text-[#FBA328]",
+        })}
+      >
+        <ArrowLeft />
+        Continue shopping
+      </Link>
+      <Card className="max-w-sm w-full h-96">
+        <CardHeader className="flex items-center justify-center">
+          <Image src={"/logo.png"} width={60} height={60} alt="" />
+          <CardTitle className="text-xl font-bold -tracking-tighter">
+            Welcome
+          </CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit(submitForm)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-xs -tracking-tighter">Username</Label>
+              <Input {...register("username")} autoFocus className="text-xs" />
+              <AnimatePresence>
+                {errors.username && (
+                  <ErrorMessage message={errors.username.message} />
+                )}
+              </AnimatePresence>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs -tracking-tighter">Password</Label>
+              <Input {...register("password")} className="" type="password" />
+              <AnimatePresence>
+                {errors.password && (
+                  <ErrorMessage message={errors.password.message} />
+                )}
+              </AnimatePresence>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button
+              disabled={!isValid || isPending}
+              className="w-full rounded-full gap-2"
+            >
+              Login <LogIn />
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
+  );
+}
+
+export default Page;
