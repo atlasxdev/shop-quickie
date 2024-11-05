@@ -16,7 +16,7 @@ function AddToCart({
 }) {
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
+  // const user = useUserStore((state) => state.user);
   const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
