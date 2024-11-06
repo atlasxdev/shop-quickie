@@ -1,6 +1,6 @@
 "use client";
 
-import { useCartStore, useUserStore } from "@/zustand-store/store";
+import { Cart, useCartStore } from "@/zustand-store/store";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ShoppingCartIcon } from "lucide-react";
@@ -16,18 +16,52 @@ function AddToCart({
 }) {
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter();
-  // const user = useUserStore((state) => state.user);
   const addToCart = useCartStore((state) => state.addToCart);
+  const updateCart = useCartStore((state) => state.updateCart);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  function updateCart() {
-    addToCart({
-      productId,
-      quantity,
-    });
+  function mutateCart() {
+    const user = JSON.parse(localStorage.getItem("user") ?? "{}");
+    const _cart: Cart[] | [] = JSON.parse(localStorage.getItem("cart") ?? "[]");
+    if (_cart.length == 0) {
+      const CART = [
+        {
+          id: crypto.randomUUID(),
+          userId: user.userId,
+          products: [{ quantity, productId }],
+          date: new Date().toDateString(),
+        },
+      ];
+      addToCart({
+        id: crypto.randomUUID(),
+        userId: user.userId,
+        products: [{ quantity, productId }],
+        date: new Date().toDateString(),
+      });
+      localStorage.setItem("cart", JSON.stringify(CART));
+    } else {
+      localStorage.removeItem("cart");
+      const newItem = { productId, quantity };
+      const updatedCart = _cart.flatMap((item: Cart) =>
+        item.products.flatMap((v) => [newItem, v])
+      );
+      updateCart(
+        _cart.flatMap((items) => {
+          return [{ ...items, products: updatedCart }];
+        })
+      );
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(
+          _cart.flatMap((items) => {
+            return [{ ...items, products: updatedCart }];
+          })
+        )
+      );
+    }
     toast("Item added to your cart! 🎉", {
       action: {
         label: "View",
@@ -52,7 +86,7 @@ function AddToCart({
 
   return (
     <Button
-      onClick={() => updateCart()}
+      onClick={() => mutateCart()}
       size={"lg"}
       className="rounded-full w-full gap-2"
       variant={"secondary"}

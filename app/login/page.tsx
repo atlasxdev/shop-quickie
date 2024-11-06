@@ -25,6 +25,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import USERS from "../../data/users.json";
 
 function Page() {
   const router = useRouter();
@@ -37,15 +38,19 @@ function Page() {
       });
     },
     onMutate: () => toast("Logging you in..."),
-    onSuccess: async (data: AxiosResponse<{ token: string }>) => {
+    onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
+      const user = USERS.find((user) => user.username == username);
       toast("Welcome back!");
       logIn(data.data.token);
-      localStorage.setItem("user", JSON.stringify(data.data.token));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ token: data.data.token, userId: user?.id })
+      );
       await wait(1000);
       router.back();
     },
     onError: () => {
-      toast("Oops! Something went wrong", {
+      toast("Oops! User not found", {
         description: "Try again",
       });
       reset();

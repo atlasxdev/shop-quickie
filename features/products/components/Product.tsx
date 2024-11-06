@@ -37,9 +37,12 @@ import { Badge } from "@/components/ui/badge";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import AddToCart from "@/components/cta/add-to-cart";
 import { toast } from "sonner";
+import { useUserStore } from "@/zustand-store/store";
 
 export function Product({ id }: { id: string }) {
-  const user = null;
+  const user =
+    useUserStore((state) => state.user) ??
+    JSON.parse(localStorage.getItem("user") ?? "null");
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [seeMore, setSeeMore] = useState<boolean>(false);

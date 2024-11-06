@@ -11,6 +11,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Button, buttonVariants } from "../button";
 import { ShoppingCartIcon, User } from "lucide-react";
 import { OramaSearch } from "@/services/OramaSearch";
+import { useUserStore } from "@/zustand-store/store";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -21,7 +22,9 @@ export function DesktopNavigation({
   isActiveLink: string | null;
   setIsActiveLink: Dispatch<SetStateAction<string | null>>;
 }) {
-  const user = true;
+  const user =
+    useUserStore((state) => state.user) ??
+    JSON.parse(localStorage.getItem("user") ?? "null");
   const router = useRouter();
 
   return (

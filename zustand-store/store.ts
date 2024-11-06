@@ -29,8 +29,8 @@ export interface Name {
 }
 
 export interface Cart {
-  id: number | null;
-  userId: number | null;
+  id: number | string;
+  userId: number;
   date: string;
   products: { productId: string; quantity: number }[] | [];
 }
@@ -45,8 +45,8 @@ export type CartStore = {
   cart: [] | Cart[];
   updateCart: (cart: Cart[]) => void;
   getInDateRange: () => void;
-  addToCart: (item: { productId: string; quantity: number }) => void;
-  deleteCart: (id: number) => void;
+  addToCart: (item: Cart) => void;
+  removeItem: (productId: number) => void;
 };
 
 export const useCartStore = create<CartStore>()((set) => ({
@@ -59,19 +59,8 @@ export const useCartStore = create<CartStore>()((set) => ({
       ),
     })),
   addToCart: (item) =>
-    set((state) => {
-      const cart = state.cart;
-      const updateCart = cart.filter((items) => {
-        const updatedProducts = items.products.filter(
-          ({ productId }) => productId != item.productId
-        );
-
-        return [{ ...state, cart: [{ ...items, products: updatedProducts }] }];
-      });
-      localStorage.setItem("cart", JSON.stringify(updateCart));
-      return { ...state, cart };
-    }),
-  deleteCart: (id) =>
+    set((state) => ({ ...state, cart: [{ ...item, ...state.cart }] })),
+  removeItem: (id) =>
     set((state) => ({ cart: state.cart.filter((v) => v.id != id) })),
 }));
 

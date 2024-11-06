@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { priceFormatter } from "@/lib/utils";
 import { Product } from "@/types";
-import { Cart, useCartStore } from "@/zustand-store/store";
+import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, LogIn } from "lucide-react";
@@ -56,9 +56,6 @@ function Page() {
     );
   }
 
-  console.log(cart);
-  console.log(products);
-
   return (
     <>
       <Navigation />
@@ -85,6 +82,7 @@ function Page() {
                   <CartItem
                     key={index}
                     id={product.productId}
+                    index={index}
                     quantity={product.quantity}
                   />
                 ))}
@@ -98,7 +96,15 @@ function Page() {
   );
 }
 
-function CartItem({ id, quantity }: { id?: string; quantity: number }) {
+function CartItem({
+  id,
+  quantity,
+  index,
+}: {
+  id?: string;
+  quantity: number;
+  index: number;
+}) {
   const router = useRouter();
   const updateCart = useCartStore((state) => state.updateCart);
   const { data, isLoading, isError } = useQuery({
@@ -148,18 +154,10 @@ function CartItem({ id, quantity }: { id?: string; quantity: number }) {
               const cart: Cart[] = JSON.parse(
                 localStorage.getItem("cart") ?? "[]"
               );
-              console.log(cart);
               const updatedCart = cart.flatMap((items) => {
-                const products = items.products;
-                const cart = products.filter(
-                  (product) =>
-                    product.productId != id && product.quantity != quantity
-                );
-
-                console.log(cart);
-                return [{ ...items, products: cart }];
+                items.products.splice(index, 1);
+                return items;
               });
-
               localStorage.removeItem("cart");
               updateCart(updatedCart);
               localStorage.setItem("cart", JSON.stringify(updatedCart));
@@ -186,6 +184,9 @@ function CartItem({ id, quantity }: { id?: string; quantity: number }) {
 }
 
 function EmptyCart() {
+  const user =
+    useUserStore((state) => state.user) ??
+    JSON.parse(localStorage.getItem("user") ?? "null");
   const router = useRouter();
 
   return (
@@ -195,17 +196,21 @@ function EmptyCart() {
           Your cart is empty
         </h1>
         <p className="text-muted-foreground -tracking-tighter font-bold">
-          Log in to check if you have any saved items, or simply keep shopping.
+          {user
+            ? "Check our wonderful products, keep browsing, and add them here."
+            : "   Log in to check if you have any saved items, or simply keep shopping."}
         </p>
       </div>
       <div className="flex gap-4 max-w-md">
-        <Button
-          onClick={() => router.push("/login")}
-          size={"lg"}
-          className="rounded-full w-full gap-2"
-        >
-          Sign in <LogIn />
-        </Button>
+        {!user ? (
+          <Button
+            onClick={() => router.push("/login")}
+            size={"lg"}
+            className="rounded-full w-full gap-2"
+          >
+            Sign in <LogIn />
+          </Button>
+        ) : null}
         <Button
           onClick={() => router.push("/store")}
           size={"lg"}
