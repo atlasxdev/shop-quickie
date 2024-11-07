@@ -49,7 +49,7 @@ function Page() {
       router.back();
     },
     onError: () => {
-      toast("Oops! User not found", {
+      toast.error("Oops! User not found", {
         description: "Try again",
       });
       reset();
