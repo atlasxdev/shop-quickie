@@ -73,10 +73,10 @@ function Page() {
                 exit={{
                   opacity: 0,
                 }}
-                className="space-y-6 md:space-y-10"
+                className="space-y-10 md:space-y-14"
               >
                 <h1 className="text-center text-4xl -tracking-tighter font-bold">
-                  You cart
+                  Your cart
                 </h1>
                 {products.map((product, index) => (
                   <CartItem
@@ -122,11 +122,20 @@ function CartItem({
   }
 
   if (isLoading || data?.data == null) {
-    return <h1>Loading...</h1>;
+    return (
+      <>
+        <div className="flex-1 py-12 md:py-14 lg:py-16">
+          <Skeleton className="max-w-screen-xl w-full h-96" />
+        </div>
+      </>
+    );
   }
 
   return (
-    <motion.div layout className="flex items-start gap-8">
+    <motion.div
+      layout
+      className="flex flex-col md:flex-row items-start gap-4 md:gap-6"
+    >
       <Image
         className="object-contain hidden md:block"
         src={data.data.image}
@@ -135,10 +144,10 @@ function CartItem({
         alt={data.data.description}
       />
       <Image
-        className="object-contain block md:hidden"
+        className="object-cover block md:hidden mx-auto"
         src={data.data.image}
-        width={80}
-        height={80}
+        width={60}
+        height={60}
         alt={data.data.description}
       />
       <div className="w-full flex flex-col gap-4 py-4">
@@ -157,7 +166,7 @@ function CartItem({
           </div>
         </div>
         <Separator />
-        <div className="ml-auto w-max flex items-center gap-4">
+        <div className="mx-auto md:mx-0 md:ml-auto w-max flex items-center gap-4">
           <Button
             onClick={() => {
               const cart: Cart[] = JSON.parse(
