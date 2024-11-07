@@ -36,7 +36,7 @@ export function Checkout({
 
   if (isLoading || data?.data == null) {
     return (
-      <div className="w-full grid grid-cols-3 gap-4 md:gap-6">
+      <div className="w-full grid grid-cols1 lg:grid-cols-3 gap-4 md:gap-6">
         <Skeleton className="h-96 rounded-lg w-full" />
         <Skeleton className="h-96 rounded-lg w-full" />
         <Skeleton className="h-96 rounded-lg w-full" />

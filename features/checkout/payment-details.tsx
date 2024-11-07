@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import OrderSummary from "./order-summary";
 import { DELIVERY_OPTIONS } from "./review-order";
 import { useEffect, useRef } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 const BANKS = [
   "/american-express-logo.png",
@@ -41,6 +42,7 @@ export function PaymentDetails({
   isFormValid: boolean;
   orderTotal: number;
 }) {
+  const matches = useMediaQuery("(min-width: 768px)");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     register,
@@ -56,16 +58,21 @@ export function PaymentDetails({
     mode: "onChange",
   });
   const { ref, ...rest } = register("cardHolderName");
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (isFormValid && inputRef.current != null) {
+    if (isFormValid && inputRef.current != null && matches) {
       inputRef.current.focus();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (isFormValid && containerRef.current != null) {
+      containerRef.current.scrollIntoView({
+        behavior: "smooth",
+      });
     }
-  }, [isFormValid]);
+  }, [isFormValid, matches]);
 
   return (
-    <div className="w-full h-max space-y-6 md:space-y-8">
+    <div ref={containerRef} className="w-full h-max space-y-6 md:space-y-8">
       <Card
         className={cn("w-full h-max", {
           "pointer-events-none opacity-60": !isFormValid,

@@ -17,6 +17,7 @@ import { AnimatePresence } from "framer-motion";
 import { ZodCheckoutSchema, TCheckoutSchema } from "@/zod-schema";
 import { PaymentDetails } from "./payment-details";
 import { ErrorMessage } from "@/components/ErrorMessage";
+import { useMediaQuery } from "usehooks-ts";
 
 export function DeliveryAddress({
   title,
@@ -29,6 +30,7 @@ export function DeliveryAddress({
   price: number;
   selected: (typeof DELIVERY_OPTIONS)[0] | null;
 }) {
+  const matches = useMediaQuery("(min-width: 768px)");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const {
     register,
@@ -48,17 +50,24 @@ export function DeliveryAddress({
     mode: "onChange",
   });
   const { ref, ...rest } = register("email");
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (selected != null && inputRef.current != null) {
+    if (selected != null && inputRef.current != null && matches) {
       inputRef.current.focus();
+
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (selected != null && containerRef.current != null) {
+      containerRef.current.scrollIntoView({
+        behavior: "smooth",
+      });
     }
-  }, [selected]);
+  }, [matches, selected]);
 
   return (
     <>
       <Card
+        ref={containerRef}
         className={cn("w-full h-max", {
           "pointer-events-none opacity-60": selected == null,
         })}

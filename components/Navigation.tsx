@@ -1,7 +1,7 @@
 "use client";
 
-import { ShoppingCartIcon, User } from "lucide-react";
-import { Button, buttonVariants } from "./ui/button";
+import { ShoppingCartIcon } from "lucide-react";
+import { buttonVariants } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import { useMediaQuery } from "usehooks-ts";
 import { MobileNavigation } from "./ui/navigation/mobile-navigation";
 import { DesktopNavigation } from "./ui/navigation/desktop-navigation";
 import { OramaSearch } from "@/services/OramaSearch";
+import { UserDropdown } from "./UserDropdown";
+import { useUserStore } from "@/zustand-store/store";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -77,7 +79,9 @@ type Props = {
 
 function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
   const router = useRouter();
-  const user = true;
+  const user =
+    useUserStore((state) => state.user) ??
+    JSON.parse(localStorage.getItem("user") ?? "null");
 
   return (
     <motion.nav
@@ -164,11 +168,7 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
         </div>
         <div className="w-full flex justify-end items-center gap-4">
           <OramaSearch />
-          {user ? (
-            <Button size={"sm"} variant={"ghost"} className="rounded-full">
-              <User className="!size-5" />
-            </Button>
-          ) : null}
+          {user ? <UserDropdown /> : null}
 
           <Link
             href={"/cart"}

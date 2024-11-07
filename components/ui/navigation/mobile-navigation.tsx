@@ -16,6 +16,8 @@ import { NAV_LINKS } from "@/constants";
 import { wait } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { OramaSearch } from "@/services/OramaSearch";
+import { UserDropdown } from "@/components/UserDropdown";
+import { useUserStore } from "@/zustand-store/store";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -26,6 +28,10 @@ export function MobileNavigation({
   isActiveLink: string | null;
   setIsActiveLink: Dispatch<SetStateAction<string | null>>;
 }) {
+  const user =
+    useUserStore((state) => state.user) ??
+    JSON.parse(localStorage.getItem("user") ?? "null");
+
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -143,16 +149,18 @@ export function MobileNavigation({
             </div>
           </SheetContent>
         </Sheet>
-        <Link
-          href={"/cart"}
-          className={buttonVariants({
-            className: "!py-5",
-            variant: "ghost",
-            size: "sm",
-          })}
-        >
-          <ShoppingCartIcon className="!size-6" />
-        </Link>
+        <div className="flex items-center gap-1.5">
+          {user ? <UserDropdown /> : null}
+          <Link
+            href={"/cart"}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+            })}
+          >
+            <ShoppingCartIcon className="!size-5" />
+          </Link>
+        </div>
       </div>
     </nav>
   );

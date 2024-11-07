@@ -8,10 +8,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
-import { Button, buttonVariants } from "../button";
-import { ShoppingCartIcon, User } from "lucide-react";
+import { buttonVariants } from "../button";
+import { ShoppingCartIcon } from "lucide-react";
 import { OramaSearch } from "@/services/OramaSearch";
 import { useUserStore } from "@/zustand-store/store";
+import { UserDropdown } from "@/components/UserDropdown";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -105,11 +106,7 @@ export function DesktopNavigation({
           </div>
           <div className="w-full flex justify-end items-center gap-4">
             <OramaSearch />
-            {user ? (
-              <Button size={"sm"} variant={"ghost"} className="rounded-full">
-                <User className="!size-5" />
-              </Button>
-            ) : null}
+            {user ? <UserDropdown /> : null}
             <div className="hidden md:block">
               <Link
                 href={"/cart"}

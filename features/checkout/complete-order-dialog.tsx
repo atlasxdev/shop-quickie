@@ -14,13 +14,30 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useRouter } from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { useMediaQuery } from "usehooks-ts";
 
 export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
   const router = useRouter();
+  const matches = useMediaQuery("(min-width: 768px)");
   const [isChecked, setIsChecked] = useState<CheckedState>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <AlertDialog>
@@ -42,42 +59,82 @@ export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
             following:
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <ol className="space-y-2">
-          <li className="flex flex-col gap-1">
-            <span className="text-xs font-semibold">
-              1. Review of Information
-            </span>
-            <span className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
-              Please carefully review all details you have provided, including
-              but not limited to payment information, shipping address, contact
-              details, and product selections. You confirm that all information
-              is accurate and up-to-date.
-            </span>
-          </li>
-          <li className="flex flex-col gap-1">
-            <span className="text-xs font-semibold">
-              2. Irreversible Transaction
-            </span>
-            <span className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
-              Once you confirm this action, the transaction will be considered
-              final and cannot be undone. This includes any modifications to
-              shipping or payment information. Any corrections or cancellations
-              must be made before confirming this purchase.
-            </span>
-          </li>
-          <li className="flex flex-col gap-1">
-            <span className="text-xs font-semibold">
-              3. Agreement to Terms of Sale
-            </span>
-            <span className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
-              By selecting the checkbox below and proceeding, you accept our
-              terms of sale, which include the conditions and limitations of
-              refunds, exchanges, and returns as applicable under our policy.
-              You understand that any requests outside of these terms may not be
-              honored.
-            </span>
-          </li>
-        </ol>
+        {matches ? (
+          <ol className="space-y-2">
+            <li className="flex flex-col gap-1">
+              <span className="text-xs font-semibold">
+                1. Review of Information
+              </span>
+              <span className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
+                Please carefully review all details you have provided, including
+                but not limited to payment information, shipping address,
+                contact details, and product selections. You confirm that all
+                information is accurate and up-to-date.
+              </span>
+            </li>
+            <li className="flex flex-col gap-1">
+              <span className="text-xs font-semibold">
+                2. Irreversible Transaction
+              </span>
+              <span className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
+                Once you confirm this action, the transaction will be considered
+                final and cannot be undone. This includes any modifications to
+                shipping or payment information. Any corrections or
+                cancellations must be made before confirming this purchase.
+              </span>
+            </li>
+            <li className="flex flex-col gap-1">
+              <span className="text-xs font-semibold">
+                3. Agreement to Terms of Sale
+              </span>
+              <span className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
+                By selecting the checkbox below and proceeding, you accept our
+                terms of sale, which include the conditions and limitations of
+                refunds, exchanges, and returns as applicable under our policy.
+                You understand that any requests outside of these terms may not
+                be honored.
+              </span>
+            </li>
+          </ol>
+        ) : (
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-xs font-semibold">
+                1. Review of Information
+              </AccordionTrigger>
+              <AccordionContent className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
+                Once you confirm this action, the transaction will be considered
+                final and cannot be undone. This includes any modifications to
+                shipping or payment information. Any corrections or
+                cancellations must be made before confirming this purchase.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-xs font-semibold">
+                2. Irreversible Transaction
+              </AccordionTrigger>
+              <AccordionContent className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
+                Please carefully review all details you have provided, including
+                but not limited to payment information, shipping address,
+                contact details, and product selections. You confirm that all
+                information is accurate and up-to-date.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="text-xs font-semibold">
+                3. Agreement to Terms of Sale
+              </AccordionTrigger>
+              <AccordionContent className="text-xs ml-4 text-muted-foreground -tracking-tighter text-pretty">
+                By selecting the checkbox below and proceeding, you accept our
+                terms of sale, which include the conditions and limitations of
+                refunds, exchanges, and returns as applicable under our policy.
+                You understand that any requests outside of these terms may not
+                be honored.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+
         <div className="mt-2 flex flex-col gap-2">
           <span className="text-xs -tracking-tighter text-pretty">
             Please confirm your agreement by checking the box below. This action

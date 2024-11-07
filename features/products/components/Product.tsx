@@ -54,6 +54,8 @@ export function Product({ id }: { id: string }) {
     (product) => product.id === Number(id)
   );
 
+  const BEST_SELLERS = [1, 5, 18];
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
@@ -96,13 +98,21 @@ export function Product({ id }: { id: string }) {
         <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
           <div className="w-full lg:w-3/5 pl-0 lg:pl-6">
             <Card className="md:sticky md:top-12 border-none shadow-none">
-              <CardHeader className="p-4 md:p-6">
+              <CardHeader className="space-y-0 flex flex-row justify-between items-center p-4 md:p-6">
                 <Badge
                   className="capitalize rounded-full font-medium w-max text-[0.7rem]"
                   variant={"secondary"}
                 >
                   {data.data.category}
                 </Badge>
+                {BEST_SELLERS.some((v) => v == data.data.id) ? (
+                  <Badge
+                    className="capitalize rounded-full font-medium w-max text-[0.7rem] space-x-1.5"
+                    variant={"outline"}
+                  >
+                    🌟 Best seller
+                  </Badge>
+                ) : null}
               </CardHeader>
               <CardContent className="!p-6">
                 <Swiper
@@ -263,9 +273,6 @@ export function Product({ id }: { id: string }) {
                         opacity: seeMore ? 1 : 0,
                         display: seeMore ? "block" : "none",
                       }}
-                      transition={{
-                        delay: 0.5,
-                      }}
                       className={"space-y-4"}
                     >
                       <p className="font-medium -tracking-tighter text-xs md:text-sm text-balance">
@@ -332,7 +339,7 @@ export function Product({ id }: { id: string }) {
                       onClick={() =>
                         toast("🛒 Please sign in to add items to your cart.", {
                           action: {
-                            label: "Go",
+                            label: "Sign in",
                             onClick: () => router.push("/login"),
                           },
                         })
@@ -345,7 +352,14 @@ export function Product({ id }: { id: string }) {
                       <ShoppingCartIcon />
                     </Button>
                     <Button
-                      onClick={() => router.push("/login")}
+                      onClick={() =>
+                        toast("Please sign in to buy this product", {
+                          action: {
+                            label: "Sign in",
+                            onClick: () => router.push("/login"),
+                          },
+                        })
+                      }
                       size={"lg"}
                       className="rounded-full w-full"
                       variant={"default"}

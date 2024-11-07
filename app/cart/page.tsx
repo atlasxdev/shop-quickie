@@ -126,26 +126,35 @@ function CartItem({
   }
 
   return (
-    <motion.div layout className="flex gap-8">
+    <motion.div layout className="flex items-start gap-8">
       <Image
-        className="object-contain"
+        className="object-contain hidden md:block"
         src={data.data.image}
         width={100}
         height={100}
         alt={data.data.description}
       />
+      <Image
+        className="object-contain block md:hidden"
+        src={data.data.image}
+        width={80}
+        height={80}
+        alt={data.data.description}
+      />
       <div className="w-full flex flex-col gap-4 py-4">
-        <div className="w-full flex items-center justify-between">
-          <p className="text-xl font-bold -tracking-tighter w-[400px] text-balance">
+        <div className="w-full flex items-start md:items-center justify-between">
+          <p className="text-sm md:text-xl font-bold -tracking-tighter w-full lg:w-[400px] text-balance">
             {data.data.title}
           </p>
 
-          <p className="text-sm -tracking-tighter text-muted-foreground">
-            Qty: <span className="font-bold text-black">{quantity}</span>
-          </p>
-          <p className="text-lg font-bold -tracking-tighter">
-            {priceFormatter(data.data.price * quantity)}
-          </p>
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-sm -tracking-tighter text-muted-foreground">
+              Qty: <span className="font-bold text-black">{quantity}</span>
+            </p>
+            <p className="text-sm md:text-lg font-bold -tracking-tighter">
+              {priceFormatter(data.data.price * quantity)}
+            </p>
+          </div>
         </div>
         <Separator />
         <div className="ml-auto w-max flex items-center gap-4">
@@ -192,16 +201,16 @@ function EmptyCart() {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold -tracking-tighter">
+        <h1 className="text-2xl md:text-4xl font-bold -tracking-tighter">
           Your cart is empty
         </h1>
-        <p className="text-muted-foreground -tracking-tighter font-bold">
+        <p className="text-sm md:text-base text-muted-foreground -tracking-tighter font-bold">
           {user
             ? "Check our wonderful products, keep browsing, and add them here."
             : "   Log in to check if you have any saved items, or simply keep shopping."}
         </p>
       </div>
-      <div className="flex gap-4 max-w-md">
+      <div className="flex flex-col md:flex-row gap-4 max-w-md">
         {!user ? (
           <Button
             onClick={() => router.push("/login")}

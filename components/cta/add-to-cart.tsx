@@ -26,6 +26,7 @@ function AddToCart({
   function mutateCart() {
     const user = JSON.parse(localStorage.getItem("user") ?? "{}");
     const _cart: Cart[] | [] = JSON.parse(localStorage.getItem("cart") ?? "[]");
+    const products = _cart.flatMap((items) => items.products);
     if (_cart.length == 0) {
       const CART = [
         {
@@ -42,6 +43,15 @@ function AddToCart({
         date: new Date().toDateString(),
       });
       localStorage.setItem("cart", JSON.stringify(CART));
+    } else if (products.length == 0) {
+      localStorage.removeItem("cart");
+      const newItem = { productId, quantity };
+      const updatedCart = _cart.flatMap((item: Cart) => {
+        item.products.push(newItem as never);
+        return item;
+      });
+      updateCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
     } else {
       localStorage.removeItem("cart");
       const newItem = { productId, quantity };

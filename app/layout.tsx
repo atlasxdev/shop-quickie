@@ -25,7 +25,7 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" />
       </head>
       <body
-        className={`${recursive.className} flex flex-col min-h-dvh antialiased overflow-y-auto overflow-x-hidden`}
+        className={`${recursive.className} flex flex-col min-h-dvh antialiased`}
       >
         <Provider>{children}</Provider>
         <Toaster closeButton theme="light" position="top-center" />

@@ -40,7 +40,6 @@ function Page() {
     onMutate: () => toast("Logging you in..."),
     onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
       const user = USERS.find((user) => user.username == username);
-      toast("Welcome back!");
       logIn(data.data.token);
       localStorage.setItem(
         "user",
@@ -76,7 +75,7 @@ function Page() {
   }
 
   return (
-    <div className="relative flex-1 flex items-center justify-center bg-[#F5F5F7] py-12 md:py-14 lg:py-16">
+    <div className="px-6 md:px-0 relative flex-1 flex items-center justify-center bg-[#F5F5F7] py-12 md:py-14 lg:py-16">
       <Link
         href={"/store"}
         className={buttonVariants({
@@ -88,7 +87,7 @@ function Page() {
         <ArrowLeft />
         Continue shopping
       </Link>
-      <Card className="max-w-sm w-full h-96">
+      <Card className="mt-8 md:mt-0 max-w-sm w-full h-96">
         <CardHeader className="flex items-center justify-center">
           <Image src={"/logo.png"} width={60} height={60} alt="" />
           <CardTitle className="text-xl font-bold -tracking-tighter">
