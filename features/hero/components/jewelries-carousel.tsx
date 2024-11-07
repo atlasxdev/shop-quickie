@@ -30,7 +30,7 @@ export function JewelriesCarousel({ product }: { product: TProducts }) {
           Jewelries
         </p>
         <Link
-          href={"/"}
+          href={"/store"}
           className={buttonVariants({
             className:
               "!font-bold uppercase !rounded-full gap-2 !text-[#FBA328] !p-0",
