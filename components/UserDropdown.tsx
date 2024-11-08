@@ -23,8 +23,10 @@ import {
 import { useUserStore } from "@/zustand-store/store";
 import { wait } from "@/lib/utils";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function UserDropdown() {
+  const router = useRouter();
   const logOut = useUserStore((state) => state.logOut);
 
   return (
@@ -57,7 +59,14 @@ export function UserDropdown() {
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() =>
+              router.push(
+                "/track-order?trackingId=b3091bdc-d50b-48a1-8d90-f291c9aad50e"
+              )
+            }
+          >
             <PackageSearch />
             <span className="text-xs md:text-sm">Order track</span>
           </DropdownMenuItem>

@@ -24,11 +24,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useMediaQuery } from "usehooks-ts";
+import { toast } from "sonner";
+import { wait } from "@/lib/utils";
 
 export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
   const router = useRouter();
   const matches = useMediaQuery("(min-width: 768px)");
   const [isChecked, setIsChecked] = useState<CheckedState>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -39,11 +42,21 @@ export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
     return <h1>Loading...</h1>;
   }
 
+  async function handleOrder() {
+    toast("Processing order...", {
+      duration: 1000,
+    });
+    setIsLoading(true);
+    await wait(2000);
+    setIsLoading(false);
+    router.push("/order-success");
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          disabled={!isValid}
+          disabled={!isValid || isLoading}
           className="uppercase -tracking-tighter rounded-full w-full"
         >
           Complete Order
@@ -151,10 +164,11 @@ export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
           </div>
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
           <AlertDialogAction
+            className="rounded-full"
             disabled={!isChecked}
-            onClick={() => router.push("/order-success")}
+            onClick={async () => await handleOrder()}
           >
             Continue
           </AlertDialogAction>

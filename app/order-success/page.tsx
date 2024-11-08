@@ -74,7 +74,14 @@ function Page() {
               <ArrowLeft />
               Go back to shopping
             </Button>
-            <Button className="rounded-full gap-2">
+            <Button
+              onClick={() =>
+                router.push(
+                  "/track-order?trackingId=b3091bdc-d50b-48a1-8d90-f291c9aad50e"
+                )
+              }
+              className="rounded-full gap-2"
+            >
               <PackageSearchIcon />
               Track your order
             </Button>
