@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { notFound, useRouter } from "next/navigation";
 import { Swiper as SwiperType } from "swiper/types";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { A11y } from "swiper/modules";
 import { ImageZoom } from "./ImageZoom";
 import {
@@ -40,19 +40,22 @@ import { toast } from "sonner";
 import { useUserStore } from "@/zustand-store/store";
 
 export function Product({ id }: { id: string }) {
-  const user =
-    useUserStore((state) => state.user) ??
-    JSON.parse(localStorage.getItem("user") ?? "null");
+  const userStore = useUserStore((state) => state.user);
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [seeMore, setSeeMore] = useState<boolean>(false);
   const [isReachedBeginning, setIsReachedBeginning] = useState<boolean>(true);
   const [isReachedEnd, setIsReachedEnd] = useState<boolean>(false);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
+  const [user, setUser] = useState();
 
   const productAssets = PRODUCT_IMAGES.find(
     (product) => product.id === Number(id)
   );
+
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user") ?? "null"));
+  }, []);
 
   const BEST_SELLERS = [1, 5, 18];
 
@@ -314,7 +317,7 @@ export function Product({ id }: { id: string }) {
               </div>
 
               <CardFooter className="flex-col gap-3 md:gap-4 px-0 pb-0 md:px-6 md:pb-6">
-                {user ? (
+                {user || userStore ? (
                   <>
                     <AddToCart
                       productId={data.data.id.toString()}

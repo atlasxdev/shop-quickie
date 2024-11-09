@@ -3,18 +3,26 @@
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useUserStore } from "@/zustand-store/store";
 import { ArrowLeft, Copy, PackageSearchIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
 function Page() {
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
+  const userStore = useUserStore((state) => state.user);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     setIsClient(true);
+    setUser(JSON.parse(localStorage.getItem("user") ?? "null"));
   }, []);
+
+  if (!user || !userStore) {
+    return notFound();
+  }
 
   return (
     <>

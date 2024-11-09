@@ -124,9 +124,7 @@ function CartItem({
   if (isLoading || data?.data == null) {
     return (
       <>
-        <div className="flex-1 py-12 md:py-14 lg:py-16">
-          <Skeleton className="max-w-screen-xl w-full h-96" />
-        </div>
+        <Skeleton className="w-full h-44 md:h-52" />
       </>
     );
   }
