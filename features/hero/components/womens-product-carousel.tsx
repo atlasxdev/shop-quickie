@@ -26,7 +26,7 @@ export function WomensProductCarousel({ product }: { product: TProducts }) {
     <>
       <div
         id="women's clothing"
-        className="scroll-mt-20 md:scroll-mt-14 pt-6 md:pt-8 w-full flex justify-between items-center"
+        className="scroll-mt-20 md:scroll-mt-32 pt-6 md:pt-8 w-full flex justify-between items-center"
       >
         <p className="uppercase font-bold text-lg sm:text-xl md:text-2xl -tracking-tighter">
           Women&apos;s Clothing

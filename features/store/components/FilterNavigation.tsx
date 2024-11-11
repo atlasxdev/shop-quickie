@@ -58,8 +58,8 @@ function FilterNavigation() {
                   src={`/categories/${category}.jpg`}
                   alt={`${category} image`}
                   className="object-contain aspect-square"
-                  width={80}
-                  height={80}
+                  width={110}
+                  height={110}
                 />
                 <Button
                   variant={"link"}
