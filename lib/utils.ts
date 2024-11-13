@@ -2,9 +2,30 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { AxiosResponse } from "axios";
 import { TProducts } from "@/types";
+import { Cart } from "@/zustand-store/store";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function generateCheckoutUrl(products: Cart["products"]) {
+  const url: string[] = [];
+  for (let index = 0; index < products.length; index++) {
+    if (products.length === 1) {
+      url.push(
+        `productId=${products[index].productId}&quantity=${products[index].quantity}`
+      );
+    } else if (products.length == index + 1) {
+      url.push(
+        `productId=${products[index].productId}&quantity=${products[index].quantity}`
+      );
+    } else {
+      url.push(
+        `productId=${products[index].productId}&quantity=${products[index].quantity}&`
+      );
+    }
+  }
+  return url.join("");
 }
 
 export async function wait(time: number) {
@@ -15,6 +36,7 @@ export function priceFormatter(price: number) {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
+    maximumFractionDigits: 2,
   });
 
   return formatter.format(price);

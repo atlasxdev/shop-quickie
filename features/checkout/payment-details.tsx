@@ -28,19 +28,13 @@ const BANKS = [
 ];
 
 export function PaymentDetails({
-  title,
-  price,
-  quantity,
+  productsWithQuantities,
   deliveryOption,
   isFormValid,
-  orderTotal,
 }: {
-  title: string;
-  quantity: number;
-  price: number;
+  productsWithQuantities: { [key: string]: string }[];
   deliveryOption?: (typeof DELIVERY_OPTIONS)[0];
   isFormValid: boolean;
-  orderTotal: number;
 }) {
   const matches = useMediaQuery("(min-width: 768px)");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -159,11 +153,8 @@ export function PaymentDetails({
       </Card>
 
       <OrderSummary
-        title={title}
-        quantity={quantity}
-        price={price}
+        productsWithQuantities={productsWithQuantities}
         deliveryOption={deliveryOption}
-        orderTotal={orderTotal}
         isValid={isValid}
       />
     </div>

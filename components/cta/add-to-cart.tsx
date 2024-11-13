@@ -10,9 +10,11 @@ import { useRouter } from "next/navigation";
 function AddToCart({
   productId,
   quantity,
+  price,
 }: {
   productId: string;
   quantity: number;
+  price: number;
 }) {
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter();
@@ -32,20 +34,20 @@ function AddToCart({
         {
           id: crypto.randomUUID(),
           userId: user.userId,
-          products: [{ quantity, productId }],
+          products: [{ productId, quantity, price }],
           date: new Date().toDateString(),
         },
       ];
       addToCart({
         id: crypto.randomUUID(),
         userId: user.userId,
-        products: [{ quantity, productId }],
+        products: [{ productId, quantity, price }],
         date: new Date().toDateString(),
       });
       localStorage.setItem("cart", JSON.stringify(CART));
     } else if (products.length == 0) {
       localStorage.removeItem("cart");
-      const newItem = { productId, quantity };
+      const newItem = { productId, quantity, price };
       const updatedCart = _cart.flatMap((item: Cart) => {
         item.products.push(newItem as never);
         return item;
@@ -54,20 +56,44 @@ function AddToCart({
       localStorage.setItem("cart", JSON.stringify(updatedCart));
     } else {
       localStorage.removeItem("cart");
-      const newItem = { productId, quantity };
-      const updatedCart = _cart.flatMap((item: Cart) =>
-        item.products.flatMap((v) => [newItem, v])
-      );
+      const newItem = { productId, quantity, price };
+      const updatedCart = _cart.flatMap((item: Cart) => {
+        if (item.products.find((v) => v.productId == newItem.productId)) {
+          item.products.forEach((v) => {
+            if (v.productId == newItem.productId) {
+              v.quantity++;
+            } else {
+              return v;
+            }
+          });
+          return item.products.flatMap((v) => v);
+        }
+        return item.products.flatMap((v) => [newItem, v]);
+      });
       updateCart(
         _cart.flatMap((items) => {
-          return [{ ...items, products: updatedCart }];
+          return [
+            {
+              ...items,
+              products: updatedCart.filter(
+                (v, index) => updatedCart.indexOf(v) === index
+              ),
+            },
+          ];
         })
       );
       localStorage.setItem(
         "cart",
         JSON.stringify(
           _cart.flatMap((items) => {
-            return [{ ...items, products: updatedCart }];
+            return [
+              {
+                ...items,
+                products: updatedCart.filter(
+                  (v, index) => updatedCart.indexOf(v) === index
+                ),
+              },
+            ];
           })
         )
       );

@@ -361,3 +361,26 @@ export const PRODUCT_IMAGES = [
     ],
   },
 ];
+
+export const PRODUCT_PRICES = [
+  { productId: 1, price: 109.95 },
+  { productId: 2, price: 22.3 },
+  { productId: 3, price: 55.99 },
+  { productId: 4, price: 15.99 },
+  { productId: 5, price: 695 },
+  { productId: 6, price: 168 },
+  { productId: 7, price: 9.99 },
+  { productId: 8, price: 10.99 },
+  { productId: 9, price: 64 },
+  { productId: 10, price: 109 },
+  { productId: 11, price: 109 },
+  { productId: 12, price: 114 },
+  { productId: 13, price: 599 },
+  { productId: 14, price: 999.99 },
+  { productId: 15, price: 56.99 },
+  { productId: 16, price: 29.95 },
+  { productId: 17, price: 39.99 },
+  { productId: 18, price: 9.85 },
+  { productId: 19, price: 7.95 },
+  { productId: 20, price: 12.99 },
+];

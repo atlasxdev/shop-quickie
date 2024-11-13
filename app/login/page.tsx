@@ -89,7 +89,7 @@ function Page() {
       </Link>
       <Card className="mt-8 md:mt-0 max-w-sm w-full h-96">
         <CardHeader className="flex items-center justify-center">
-          <Image src={"/logo.png"} width={60} height={60} alt="" />
+          <Image src={"/logo.png"} priority width={60} height={60} alt="" />
           <CardTitle className="text-xl font-bold -tracking-tighter">
             Welcome
           </CardTitle>

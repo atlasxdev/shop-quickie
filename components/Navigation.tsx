@@ -108,7 +108,13 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
             className={"relative size-10"}
             href={"/"}
           >
-            <Image src={"/logo.png"} fill className="object-cover" alt="" />
+            <Image
+              src={"/logo.png"}
+              priority
+              fill
+              className="object-cover"
+              alt=""
+            />
           </Link>
 
           <div className="hidden md:flex items-center justify-center">

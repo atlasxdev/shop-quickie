@@ -3,9 +3,12 @@
 import { apiRoute } from "@/axios/apiRoute";
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { NavLoader } from "@/components/nav-loader";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddQuantity } from "@/features/cart/add-quantity";
+import { Checkout } from "@/features/cart/Checkout";
 import { priceFormatter } from "@/lib/utils";
 import { Product } from "@/types";
 import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
@@ -14,8 +17,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, LogIn } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const Navigation = dynamic(() => import("@/components/Navigation"), {
   ssr: false,
@@ -33,6 +37,7 @@ function Page() {
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
   const products = cart.flatMap((items) => items.products);
+  const [cartTotal, setCartTotal] = useState(0);
 
   useEffect(() => {
     setIsClient(true);
@@ -42,6 +47,12 @@ function Page() {
     const _cart = JSON.parse(localStorage.getItem("cart") ?? "[]");
     updateCart(_cart);
   }, [updateCart]);
+
+  useEffect(() => {
+    setCartTotal(() =>
+      products.reduce((acc, val) => acc + val.price * val.quantity, 0)
+    );
+  }, [products]);
 
   if (!isClient) {
     return (
@@ -75,11 +86,13 @@ function Page() {
                 }}
                 className="space-y-10 md:space-y-14"
               >
-                <h1 className="text-center text-4xl -tracking-tighter font-bold">
-                  Your cart
+                <h1 className="text-center text-2xl md:text-3xl -tracking-tighter font-semibold">
+                  Your cart total is{" "}
+                  <AnimatedNumber value={cartTotal} isPrice={true} />
                 </h1>
                 {products.map((product, index) => (
                   <CartItem
+                    setCartTotal={setCartTotal}
                     key={index}
                     id={product.productId}
                     index={index}
@@ -90,6 +103,11 @@ function Page() {
             )}
           </AnimatePresence>
           {products.length == 0 || cart.length == 0 ? <EmptyCart /> : null}
+          {cartTotal > 0 && (
+            <AnimatePresence>
+              <Checkout cartTotal={cartTotal} products={products} />
+            </AnimatePresence>
+          )}
         </MaxWidthWrapper>
       </div>
     </>
@@ -100,12 +118,13 @@ function CartItem({
   id,
   quantity,
   index,
+  setCartTotal,
 }: {
   id?: string;
   quantity: number;
   index: number;
+  setCartTotal: Dispatch<SetStateAction<number>>;
 }) {
-  const router = useRouter();
   const updateCart = useCartStore((state) => state.updateCart);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["product", id],
@@ -132,7 +151,7 @@ function CartItem({
   return (
     <motion.div
       layout
-      className="flex flex-col md:flex-row items-start gap-4 md:gap-6"
+      className="flex flex-col md:flex-row items-center gap-4 md:gap-6"
     >
       <Image
         className="object-contain hidden md:block"
@@ -144,29 +163,43 @@ function CartItem({
       <Image
         className="object-cover block md:hidden mx-auto"
         src={data.data.image}
-        width={60}
-        height={60}
+        width={80}
+        height={80}
         alt={data.data.description}
       />
       <div className="w-full flex flex-col gap-4 py-4">
         <div className="w-full flex items-start md:items-center justify-between">
-          <p className="text-sm md:text-xl font-bold -tracking-tighter w-full lg:w-[400px] text-balance">
+          <Link
+            href={`/products?id=${data.data.id}`}
+            className="text-base md:text-xl font-semibold -tracking-tighter w-full lg:w-[400px] text-balance hover:underline underline-offset-2"
+          >
             {data.data.title}
-          </p>
+          </Link>
 
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-sm -tracking-tighter text-muted-foreground">
-              Qty: <span className="font-bold text-black">{quantity}</span>
-            </p>
-            <p className="text-sm md:text-lg font-bold -tracking-tighter">
+          <div className="flex flex-wrap items-center justify-end gap-4 md:gap-6">
+            <AddQuantity
+              quantity={quantity}
+              productId={data.data.id.toString()}
+            />
+            <p className="text-sm md:text-lg -tracking-tighter">
               {priceFormatter(data.data.price * quantity)}
             </p>
           </div>
         </div>
         <Separator />
-        <div className="mx-auto md:mx-0 md:ml-auto w-max flex items-center gap-4">
+        <div className="w-full flex justify-between items-center">
+          <p className="text-xs text-muted-foreground md:text-sm font-medium -tracking-tighter">
+            Item price: {priceFormatter(data.data.price)}
+          </p>
           <Button
             onClick={() => {
+              setCartTotal((prev) => {
+                if (prev == null) {
+                  return prev;
+                } else {
+                  return prev - data.data.price;
+                }
+              });
               const cart: Cart[] = JSON.parse(
                 localStorage.getItem("cart") ?? "[]"
               );
@@ -178,20 +211,10 @@ function CartItem({
               updateCart(updatedCart);
               localStorage.setItem("cart", JSON.stringify(updatedCart));
             }}
-            size={"lg"}
-            className="rounded-full"
-            variant={"destructive"}
+            className="rounded-full text-red-600 p-0 text-xs md:text-sm"
+            variant={"link"}
           >
             Remove
-          </Button>
-          <Button
-            onClick={() =>
-              router.push(`/checkout?productId=${id}&quantity=${quantity}`)
-            }
-            size={"lg"}
-            className="rounded-full"
-          >
-            Checkout
           </Button>
         </div>
       </div>

@@ -8,6 +8,10 @@ import { Product } from "@/types";
 import { motion } from "framer-motion";
 import { cn, priceFormatter } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { notFound } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { apiRoute } from "@/axios/apiRoute";
 
 export const DELIVERY_OPTIONS = [
   {
@@ -28,62 +32,25 @@ export const DELIVERY_OPTIONS = [
 ];
 
 export function ReviewOrder({
-  quantity,
-  data,
+  productsWithQuantities,
   selected,
   setSelected,
 }: {
-  quantity: string;
-  data: Product;
+  productsWithQuantities: { [key: string]: string }[];
   selected: (typeof DELIVERY_OPTIONS)[0] | null;
   setSelected: Dispatch<SetStateAction<(typeof DELIVERY_OPTIONS)[0] | null>>;
 }) {
   return (
     <Card className="w-full h-max">
-      <CardHeader className="space-y-8">
+      <CardHeader>
         <CardTitle className="text-[#FBA328] uppercase -tracking-tighter">
           1. Review your order
         </CardTitle>
-        <div className="w-full flex gap-4">
-          <Image
-            src={data.image}
-            width={80}
-            height={80}
-            alt={data.description}
-            className="object-cover"
-          />
-          <p className="text-sm font-medium -tracking-tighter text-pretty">
-            {data.title}
-          </p>
-        </div>
       </CardHeader>
-      <CardContent className="space-y-8">
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <p className=" text-xs font-medium -tracking-tighter text-muted-foreground">
-              Price
-            </p>
-            <p className="text-xs -tracking-tighter">
-              {priceFormatter(data.price)}
-            </p>
-          </div>
-          <Separator />
-          <div className="flex justify-between">
-            <p className=" text-xs font-medium -tracking-tighter text-muted-foreground">
-              Quantity
-            </p>
-            <p className="text-xs font-medium -tracking-tighter">{quantity}</p>
-          </div>
-          <Separator />
-          <div className="flex justify-between">
-            <p className="text-xs uppercase font-bold -tracking-tighter">
-              Subtotal
-            </p>
-            <p className="text-sm font-bold -tracking-tighter">
-              {priceFormatter(data.price * parseInt(quantity))}
-            </p>
-          </div>
-        </div>
+      <CardContent className="space-y-6">
+        {productsWithQuantities.map((v, index) => (
+          <Item key={index} productId={v.productId} quantity={v.quantity} />
+        ))}
         <div className="space-y-4">
           <motion.p
             animate={{
@@ -146,5 +113,70 @@ function DeliverOptions({
         </Radio>
       ))}
     </RadioGroup>
+  );
+}
+
+function Item({
+  productId,
+  quantity,
+}: {
+  productId: string;
+  quantity: string;
+}) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["checkout-item", productId],
+    queryFn: async () => {
+      return await apiRoute.get<Product>(`/products/${productId}`);
+    },
+    enabled: productId != null && quantity != null,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isError) {
+    return notFound();
+  }
+
+  if (isLoading || data?.data == null) {
+    return <Skeleton className="h-20 rounded-lg w-full" />;
+  }
+
+  return (
+    <>
+      <div className="w-full flex gap-4">
+        <Image
+          src={data.data.image}
+          width={80}
+          height={80}
+          alt={data.data.description}
+          className="object-cover"
+        />
+        <div className="space-y-4">
+          <p className="text-sm font-medium -tracking-tighter text-pretty">
+            {data.data.title}
+          </p>
+          <div className="space-y-1">
+            <p className="text-xs font-medium -tracking-tighter">
+              {priceFormatter(data.data.price)}
+            </p>
+            <p className="text-xs font-medium -tracking-tighter text-muted-foreground">
+              Qty: {quantity}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="space-y-4">
+        <div className="flex justify-between">
+          <p className="text-xs uppercase font-bold -tracking-tighter">
+            Subtotal
+          </p>
+
+          <p className="text-sm font-bold -tracking-tighter">
+            {priceFormatter(data.data.price * parseInt(quantity))}
+          </p>
+        </div>
+        <Separator />
+      </div>
+    </>
   );
 }

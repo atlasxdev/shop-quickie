@@ -46,7 +46,7 @@ export function MobileNavigation({
           <SheetTrigger>
             {" "}
             <svg
-              stroke-width="2"
+              strokeWidth="2"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -55,23 +55,23 @@ export function MobileNavigation({
               <path
                 d="M3 5H21"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></path>
               <path
                 d="M3 12H16"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></path>
               <path
                 d="M3 19H11"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></path>
             </svg>
           </SheetTrigger>
@@ -85,7 +85,13 @@ export function MobileNavigation({
                 className={"relative size-20 mx-auto"}
                 href={"/"}
               >
-                <Image src={"/logo.png"} fill className="object-cover" alt="" />
+                <Image
+                  src={"/logo.png"}
+                  priority
+                  fill
+                  className="object-cover"
+                  alt=""
+                />
               </Link>
               <div className="flex items-center w-max mx-auto space-x-2">
                 <SheetTitle>Quick links</SheetTitle>

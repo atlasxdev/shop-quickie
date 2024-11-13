@@ -32,7 +32,7 @@ export interface Cart {
   id: number | string;
   userId: number;
   date: string;
-  products: { productId: string; quantity: number }[] | [];
+  products: { productId: string; quantity: number; price: number }[] | [];
 }
 
 type UserStore = {

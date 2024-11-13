@@ -320,6 +320,7 @@ export function Product({ id }: { id: string }) {
                 {user || userStore ? (
                   <>
                     <AddToCart
+                      price={data.data.price}
                       productId={data.data.id.toString()}
                       quantity={quantity}
                     />

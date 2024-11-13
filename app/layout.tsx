@@ -25,6 +25,7 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" />
       </head>
       <body
+        suppressHydrationWarning={true}
         className={`${recursive.className} flex flex-col min-h-screen antialiased`}
       >
         <Provider>{children}</Provider>

@@ -20,14 +20,10 @@ import { ErrorMessage } from "@/components/ErrorMessage";
 import { useMediaQuery } from "usehooks-ts";
 
 export function DeliveryAddress({
-  title,
-  quantity,
-  price,
+  productsWithQuantities,
   selected,
 }: {
-  title: string;
-  quantity: number;
-  price: number;
+  productsWithQuantities: { [key: string]: string }[];
   selected: (typeof DELIVERY_OPTIONS)[0] | null;
 }) {
   const matches = useMediaQuery("(min-width: 768px)");
@@ -171,19 +167,13 @@ export function DeliveryAddress({
       </Card>
       {selected == null ? (
         <PaymentDetails
-          title={title}
-          price={price}
-          quantity={quantity}
-          orderTotal={price * quantity + 0}
+          productsWithQuantities={productsWithQuantities}
           isFormValid={isValid}
         />
       ) : (
         <PaymentDetails
-          title={title}
-          price={price}
-          quantity={quantity}
+          productsWithQuantities={productsWithQuantities}
           deliveryOption={selected}
-          orderTotal={price * quantity + selected.price}
           isFormValid={isValid}
         />
       )}
