@@ -3,15 +3,16 @@
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Copy, PackageSearchIcon } from "lucide-react";
-import { notFound, useRouter } from "next/navigation";
+import Unauthorized from "@/components/Unauthorized";
+import { ArrowLeft, Copy, Loader, PackageSearchIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
 function Page() {
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
     const user = JSON.parse(window.localStorage.getItem("user") ?? "null");
@@ -19,24 +20,28 @@ function Page() {
     setIsClient(true);
   }, []);
 
-  if (isClient) {
-    if (user == null) {
-      return notFound();
-    }
+  if (!isClient) {
+    return (
+      <div className="flex-1 flex items-center justify-center h-[60vh]">
+        <Loader className="size-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Unauthorized />;
   }
 
   return (
     <>
-      {isClient ? (
-        <Confetti
-          width={window.innerWidth / 1.5}
-          height={window.innerHeight}
-          numberOfPieces={200}
-          className="hidden md:block mx-auto"
-          gravity={0.5}
-          recycle={false}
-        />
-      ) : null}
+      <Confetti
+        width={window.innerWidth / 1.5}
+        height={window.innerHeight}
+        numberOfPieces={200}
+        className="hidden md:block mx-auto"
+        gravity={0.5}
+        recycle={false}
+      />
       <div className="flex-1 py-16 md:py-20 lg:py-24">
         <MaxWidthWrapper className="space-y-6 md:space-y-8 max-w-screen-lg">
           <div className="space-y-4">

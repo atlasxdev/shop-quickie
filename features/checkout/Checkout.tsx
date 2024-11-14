@@ -5,6 +5,7 @@ import { DELIVERY_OPTIONS } from "./review-order";
 import { useEffect, useState } from "react";
 import { ReviewOrder } from "./review-order";
 import { DeliveryAddress } from "./delivery-address";
+import Unauthorized from "@/components/Unauthorized";
 
 export function Checkout({
   productId,
@@ -15,6 +16,11 @@ export function Checkout({
 }) {
   const productIdArray = Array.isArray(productId) ? productId : [productId];
   const quantityArray = Array.isArray(quantity) ? quantity : [quantity];
+  const [user, setUser] = useState<string | null>(null);
+  const productsWithQuantities = productIdArray.map((id, index) => ({
+    productId: id,
+    quantity: quantityArray[index],
+  }));
   const [isClient, setIsClient] = useState<boolean>(false);
   const [selected, setSelected] = useState<(typeof DELIVERY_OPTIONS)[0] | null>(
     null
@@ -22,6 +28,7 @@ export function Checkout({
 
   useEffect(() => {
     setIsClient(true);
+    setUser(localStorage.getItem("user") ?? null);
   }, []);
 
   if (!isClient) {
@@ -34,10 +41,9 @@ export function Checkout({
     );
   }
 
-  const productsWithQuantities = productIdArray.map((id, index) => ({
-    productId: id,
-    quantity: quantityArray[index],
-  }));
+  if (!user) {
+    return <Unauthorized />;
+  }
 
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">

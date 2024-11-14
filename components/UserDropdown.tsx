@@ -1,11 +1,4 @@
-import {
-  BookUser,
-  LogOut,
-  MapPinHouse,
-  PackageSearch,
-  User,
-  UserPlus,
-} from "lucide-react";
+import { Loader, LogOut, PackageSearch, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,21 +6,30 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/zustand-store/store";
 import { wait } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function UserDropdown() {
   const router = useRouter();
+  const [isClient, setIsClient] = useState<boolean>(false);
+  const [user, setUser] = useState<{ userId: number } | null>(null);
   const logOut = useUserStore((state) => state.logOut);
+
+  useEffect(() => {
+    const user = JSON.parse(window.localStorage.getItem("user") ?? "null");
+    setUser(user);
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <Loader className="size-4 animate-spin" />;
+  }
 
   return (
     <DropdownMenu>
@@ -40,25 +42,15 @@ export function UserDropdown() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus />
-              <span className="text-xs md:text-sm">Profile</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <BookUser />
-                  <span className="text-xs md:text-sm">Profile Details</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MapPinHouse />
-                  <span className="text-xs md:text-sm">Your Address</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() =>
+              router.push(`/user-profile/${user?.userId.toString()}`)
+            }
+          >
+            <User />
+            <span className="text-xs md:text-sm">Profile</span>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() =>

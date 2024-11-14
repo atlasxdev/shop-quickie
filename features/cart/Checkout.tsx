@@ -1,11 +1,11 @@
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { generateCheckoutUrl } from "@/lib/utils";
 import { Cart } from "@/zustand-store/store";
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export function Checkout({
   cartTotal,
@@ -14,7 +14,6 @@ export function Checkout({
   cartTotal: number;
   products: Cart["products"];
 }) {
-  const router = useRouter();
   const checkoutUrl = generateCheckoutUrl(products);
 
   return (
@@ -42,13 +41,15 @@ export function Checkout({
         />
       </div>
       <div className="w-52 ml-auto ">
-        <Button
-          onClick={() => router.push(`/checkout?${checkoutUrl}`)}
-          size={"lg"}
-          className="w-full rounded-full gap-2"
+        <Link
+          href={`/checkout?${checkoutUrl}`}
+          className={buttonVariants({
+            size: "lg",
+            className: "w-full !rounded-full gap-2",
+          })}
         >
           Checkout <ArrowRight />
-        </Button>
+        </Link>
       </div>
     </motion.div>
   );

@@ -50,8 +50,6 @@ export function getActualProductArray(
 
   const currentPage = pageParams.slice(-1)[0] as number;
 
-  console.log(pages);
-
   const pagesToSlice =
     (pageParams.reduce(
       (acc, val) => (acc as number) + (val as number),

@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { wait } from "@/lib/utils";
+import { cn, wait } from "@/lib/utils";
 import { TLoginSchema, ZodLoginSchema } from "@/zod-schema";
 import { useUserStore } from "@/zustand-store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { AnimatePresence } from "framer-motion";
-import { ArrowLeft, LogIn } from "lucide-react";
+import { ArrowLeft, Loader, LogIn } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -118,9 +118,11 @@ function Page() {
           <CardFooter>
             <Button
               disabled={!isValid || isPending}
-              className="w-full rounded-full gap-2"
+              className={cn("w-full rounded-full gap-2", {
+                "animate-pulse": isPending,
+              })}
             >
-              Login <LogIn />
+              Login {isPending ? <Loader /> : <LogIn />}
             </Button>
           </CardFooter>
         </form>
