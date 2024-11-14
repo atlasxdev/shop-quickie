@@ -172,30 +172,34 @@ function Page({ params: { id } }: { params: { id: string } }) {
                   </div>
                   <div className="w-full flex flex-col gap-4">
                     <div className="flex gap-4">
-                      <div className="space-y-2 w-full">
-                        <Label className="-tracking-tighter">First name</Label>
+                      <div className="space-y-1 md:space-y-2 w-full">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
+                          First name
+                        </Label>
                         <Input
-                          className="capitalize text-sm -tracking-tighter"
+                          className="capitalize text-xs md:text-sm -tracking-tighter"
                           defaultValue={data.data.name.firstname}
                           readOnly
                         />
                       </div>
-                      <div className="space-y-2 w-full">
-                        <Label className="-tracking-tighter">Last name</Label>
+                      <div className="space-y-1 md:space-y-2 w-full">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
+                          Last name
+                        </Label>
                         <Input
-                          className="capitalize text-sm -tracking-tighter"
+                          className="capitalize text-xs md:text-sm -tracking-tighter"
                           defaultValue={data.data.name.lastname}
                           readOnly
                         />
                       </div>
                     </div>
                     <div className="flex gap-4">
-                      <div className="w-full space-y-2">
-                        <Label className="-tracking-tighter">
+                      <div className="w-full space-y-1 md:space-y-2">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
                           Phone number
                         </Label>
                         <Input
-                          className="text-sm -tracking-tighter"
+                          className="text-xs md:text-sm -tracking-tighter"
                           defaultValue={data.data.phone}
                           readOnly
                         />
@@ -221,12 +225,12 @@ function Page({ params: { id } }: { params: { id: string } }) {
                       </p>
                     </div>
                     <div className="w-full flex gap-4">
-                      <div className="w-full space-y-2">
-                        <Label className="-tracking-tighter">
+                      <div className="w-full space-y-1 md:space-y-2">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
                           Email address
                         </Label>
                         <Input
-                          className="text-sm -tracking-tighter"
+                          className="text-xs md:text-sm -tracking-tighter"
                           defaultValue={data.data.email}
                           readOnly
                         />
@@ -263,28 +267,34 @@ function Page({ params: { id } }: { params: { id: string } }) {
                   </div>
                   <div className="w-full flex flex-col gap-4">
                     <div className="w-full flex gap-4">
-                      <div className="space-y-2 w-full">
-                        <Label className="-tracking-tighter">City</Label>
+                      <div className="space-y-1 md:space-y-2 w-full">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
+                          City
+                        </Label>
                         <Input
-                          className="capitalize text-sm -tracking-tighter"
+                          className="capitalize text-xs md:text-sm -tracking-tighter"
                           defaultValue={data.data.address.city}
                           readOnly
                         />
                       </div>
-                      <div className="space-y-2 w-full">
-                        <Label className="-tracking-tighter">Street</Label>
+                      <div className="space-y-1 md:space-y-2 w-full">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
+                          Street
+                        </Label>
                         <Input
-                          className="capitalize text-sm -tracking-tighter"
+                          className="capitalize text-xs md:text-sm -tracking-tighter"
                           defaultValue={`${data.data.address.street} ${data.data.address.number}`}
                           readOnly
                         />
                       </div>
                     </div>
                     <div className="flex gap-4">
-                      <div className="w-full space-y-2">
-                        <Label className="-tracking-tighter">Zip code</Label>
+                      <div className="w-full space-y-1 md:space-y-2">
+                        <Label className="text-xs md:text-sm -tracking-tighter">
+                          Zip code
+                        </Label>
                         <Input
-                          className="text-sm -tracking-tighter"
+                          className="text-xs md:text-sm -tracking-tighter"
                           defaultValue={data.data.address.zipcode}
                           readOnly
                         />

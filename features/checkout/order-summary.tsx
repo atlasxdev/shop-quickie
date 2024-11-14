@@ -108,8 +108,13 @@ function Summary({
 
   useEffect(() => {
     if (data?.data == null) return;
-    setItemTotal((prev) => prev + data.data.price);
-  }, [data?.data, setItemTotal]);
+    setItemTotal((prev) => {
+      console.log(prev);
+      return prev + data.data.price * parseInt(quantity);
+    });
+
+    return () => setItemTotal(0);
+  }, [data?.data, quantity, setItemTotal]);
 
   if (isError) {
     return notFound();
