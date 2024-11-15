@@ -117,12 +117,13 @@ function Page() {
           </CardContent>
           <CardFooter>
             <Button
-              disabled={!isValid || isPending}
+              disabled={!isValid}
               className={cn("w-full rounded-full gap-2", {
-                "animate-pulse": isPending,
+                "animate-pulse pointer-events-none": isPending,
               })}
             >
-              Login {isPending ? <Loader /> : <LogIn />}
+              Login{" "}
+              {isPending ? <Loader className="animate-spin" /> : <LogIn />}
             </Button>
           </CardFooter>
         </form>
