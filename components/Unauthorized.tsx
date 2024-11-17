@@ -6,7 +6,7 @@ function Unauthorized() {
   const router = useRouter();
 
   return (
-    <div className="rounded-lg max-w-screen-lg mx-auto flex-1 flex items-center justify-center h-[60vh] bg-white">
+    <div className="rounded-lg max-w-screen-lg mx-auto flex-1 flex items-center justify-center h-[60vh] bg-white px-6">
       <div className="flex flex-col gap-4">
         <div className="w-max mx-auto ">
           <Lock className="size-8" />
