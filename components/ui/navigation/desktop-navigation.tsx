@@ -118,7 +118,7 @@ export function DesktopNavigation({
             <OramaSearch />
             {user ? <UserDropdown /> : null}
             <div className="relative hidden md:block">
-              {cart[0].products.length > 0 ? (
+              {cart != null && cart[0].products.length > 0 ? (
                 <span className="bg-black right-0 -top-1 absolute size-5 flex items-center justify-center p-1 rounded-full border">
                   <AnimatedNumber
                     className="text-[0.7rem] text-white"
