@@ -17,7 +17,8 @@ import { wait } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { OramaSearch } from "@/services/OramaSearch";
 import { UserDropdown } from "@/components/UserDropdown";
-import { useUserStore } from "@/zustand-store/store";
+import { useCartStore, useUserStore } from "@/zustand-store/store";
+import { AnimatedNumber } from "../AnimatedNumber";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -31,7 +32,9 @@ export function MobileNavigation({
   const user =
     useUserStore((state) => state.user) ??
     JSON.parse(localStorage.getItem("user") ?? "null");
-
+  const cart =
+    useCartStore((state) => state.cart) ??
+    JSON.parse(localStorage.getItem("cart") ?? "null");
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -157,15 +160,25 @@ export function MobileNavigation({
         </Sheet>
         <div className="flex items-center gap-1.5">
           {user ? <UserDropdown /> : null}
-          <Link
-            href={"/cart"}
-            className={buttonVariants({
-              variant: "ghost",
-              size: "sm",
-            })}
-          >
-            <ShoppingCartIcon className="!size-5" />
-          </Link>
+          <div className="relative">
+            {cart[0].products.length > 0 ? (
+              <span className="bg-black right-0 -top-1.5 absolute size-5 flex items-center justify-center p-1 rounded-full border">
+                <AnimatedNumber
+                  className="text-[0.65rem] text-white"
+                  value={cart[0].products.length}
+                />
+              </span>
+            ) : null}
+            <Link
+              href={"/cart"}
+              className={buttonVariants({
+                variant: "ghost",
+                size: "sm",
+              })}
+            >
+              <ShoppingCartIcon className="!size-5" />
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

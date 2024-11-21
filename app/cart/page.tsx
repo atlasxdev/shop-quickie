@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
 const Navigation = dynamic(() => import("@/components/Navigation"), {
   ssr: false,
@@ -36,8 +36,11 @@ function Page() {
   const [isClient, setIsClient] = useState<boolean>(false);
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
-  const products = cart.flatMap((items) => items.products);
   const [cartTotal, setCartTotal] = useState(0);
+
+  const products = useMemo(() => {
+    return cart != null ? cart.flatMap((items) => items.products) : [];
+  }, [cart]);
 
   useEffect(() => {
     setIsClient(true);
@@ -102,7 +105,7 @@ function Page() {
               </motion.div>
             )}
           </AnimatePresence>
-          {products.length == 0 || cart.length == 0 ? <EmptyCart /> : null}
+          {products.length == 0 || cart?.length == 0 ? <EmptyCart /> : null}
           {cartTotal > 0 && (
             <AnimatePresence>
               <Checkout cartTotal={cartTotal} products={products} />

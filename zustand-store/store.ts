@@ -42,7 +42,7 @@ type UserStore = {
 };
 
 export type CartStore = {
-  cart: [] | Cart[];
+  cart: null | Cart[];
   updateCart: (cart: Cart[]) => void;
   getInDateRange: () => void;
   addToCart: (item: Cart) => void;
@@ -50,18 +50,26 @@ export type CartStore = {
 };
 
 export const useCartStore = create<CartStore>()((set) => ({
-  cart: [],
+  cart: null,
   updateCart: (cart) => set({ cart }),
   getInDateRange: () =>
-    set((state) => ({
-      cart: state.cart.sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-      ),
-    })),
+    set((state) =>
+      state.cart != null
+        ? {
+            cart: state.cart.sort(
+              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            ),
+          }
+        : state
+    ),
   addToCart: (item) =>
     set((state) => ({ ...state, cart: [{ ...item, ...state.cart }] })),
   removeItem: (id) =>
-    set((state) => ({ cart: state.cart.filter((v) => v.id != id) })),
+    set((state) =>
+      state.cart != null
+        ? { cart: state.cart.filter((v) => v.id != id) }
+        : state
+    ),
 }));
 
 export const useUserStore = create<UserStore>()((set) => ({

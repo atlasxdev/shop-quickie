@@ -14,7 +14,8 @@ import { MobileNavigation } from "./ui/navigation/mobile-navigation";
 import { DesktopNavigation } from "./ui/navigation/desktop-navigation";
 import { OramaSearch } from "@/services/OramaSearch";
 import { UserDropdown } from "./UserDropdown";
-import { useUserStore } from "@/zustand-store/store";
+import { useCartStore, useUserStore } from "@/zustand-store/store";
+import { AnimatedNumber } from "./ui/AnimatedNumber";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export default function Navigation() {
   const [isClient, setIsClient] = useState(false);
   const [isPageScrolled, setIsPageScrolled] = useState<boolean>(false);
   const [isActiveLink, setIsActiveLink] = useState<string | null>(null);
-  const matches = useMediaQuery("(min-width: 768px)");
+  const matches = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     setIsClient(true);
@@ -82,6 +83,9 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
   const user =
     useUserStore((state) => state.user) ??
     JSON.parse(localStorage.getItem("user") ?? "null");
+  const cart =
+    useCartStore((state) => state.cart) ??
+    JSON.parse(localStorage.getItem("cart") ?? "null");
 
   return (
     <motion.nav
@@ -92,7 +96,7 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
         top: 20,
       }}
       className={
-        "flex items-center sticky z-20 inset-x-0 p-4 md:p-6 w-3/4 max-w-6xl mx-auto"
+        "flex items-center sticky z-20 inset-x-0 p-4 md:p-6 w-full max-w-5xl mx-auto"
       }
     >
       <div
@@ -175,16 +179,26 @@ function FloatingNavBar({ isActiveLink, setIsActiveLink }: Props) {
         <div className="w-full flex justify-end items-center gap-4">
           <OramaSearch />
           {user ? <UserDropdown /> : null}
+          <div className="relative hidden md:block">
+            {cart[0].products.length > 0 ? (
+              <span className="bg-black right-0 -top-1 absolute size-5 flex items-center justify-center p-1 rounded-full border">
+                <AnimatedNumber
+                  className="text-[0.7rem] text-white"
+                  value={cart[0].products.length}
+                />
+              </span>
+            ) : null}
 
-          <Link
-            href={"/cart"}
-            className={buttonVariants({
-              variant: "ghost",
-              size: "sm",
-            })}
-          >
-            <ShoppingCartIcon className="!size-6" />
-          </Link>
+            <Link
+              href={"/cart"}
+              className={buttonVariants({
+                variant: "ghost",
+                size: "sm",
+              })}
+            >
+              <ShoppingCartIcon className="!size-6" />
+            </Link>
+          </div>
         </div>
       </div>
     </motion.nav>

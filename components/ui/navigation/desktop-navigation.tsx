@@ -11,8 +11,9 @@ import { Dispatch, SetStateAction } from "react";
 import { buttonVariants } from "../button";
 import { ShoppingCartIcon } from "lucide-react";
 import { OramaSearch } from "@/services/OramaSearch";
-import { useUserStore } from "@/zustand-store/store";
+import { useCartStore, useUserStore } from "@/zustand-store/store";
 import { UserDropdown } from "@/components/UserDropdown";
+import { AnimatedNumber } from "../AnimatedNumber";
 
 const staticLinks = NAV_LINKS.slice(1);
 
@@ -26,6 +27,9 @@ export function DesktopNavigation({
   const user =
     useUserStore((state) => state.user) ??
     JSON.parse(localStorage.getItem("user") ?? "null");
+  const cart =
+    useCartStore((state) => state.cart) ??
+    JSON.parse(localStorage.getItem("cart") ?? "null");
   const router = useRouter();
 
   return (
@@ -113,7 +117,15 @@ export function DesktopNavigation({
           <div className="w-full flex justify-end items-center gap-4">
             <OramaSearch />
             {user ? <UserDropdown /> : null}
-            <div className="hidden md:block">
+            <div className="relative hidden md:block">
+              {cart[0].products.length > 0 ? (
+                <span className="bg-black right-0 -top-1 absolute size-5 flex items-center justify-center p-1 rounded-full border">
+                  <AnimatedNumber
+                    className="text-[0.7rem] text-white"
+                    value={cart[0].products.length}
+                  />
+                </span>
+              ) : null}
               <Link
                 href={"/cart"}
                 className={buttonVariants({
