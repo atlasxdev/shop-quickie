@@ -14,7 +14,7 @@ import { Product } from "@/types";
 import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, LogIn } from "lucide-react";
+import { ArrowLeftIcon, ArrowRight, LogIn } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,9 +33,10 @@ const Navigation = dynamic(() => import("@/components/Navigation"), {
 });
 
 function Page() {
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const router = useRouter();
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
+  const [isClient, setIsClient] = useState<boolean>(false);
   const [cartTotal, setCartTotal] = useState(0);
 
   const products = useMemo(() => {
@@ -73,7 +74,18 @@ function Page() {
   return (
     <>
       <Navigation />
-      <div className="flex-1 py-12 md:py-14 lg:py-16">
+      <div className="pl-6 md:pl-8 pt-8 md:pt-6">
+        <Button
+          onClick={() => router.back()}
+          className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
+          variant={"link"}
+          size={"sm"}
+        >
+          <ArrowLeftIcon />
+          Go back
+        </Button>
+      </div>
+      <div className="flex-1 py-14 md:py-16 lg:py-20">
         <MaxWidthWrapper className="max-w-screen-lg">
           <AnimatePresence>
             {products.length > 0 && (
@@ -172,6 +184,7 @@ function CartItem({
         height={80}
         alt={data.data.description}
       />
+
       <div className="w-full flex flex-col gap-4 py-4">
         <div className="w-full flex items-start md:items-center justify-between">
           <Link
