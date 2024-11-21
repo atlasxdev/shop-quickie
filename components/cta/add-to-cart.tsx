@@ -92,7 +92,6 @@ function AddToCart({
           });
           return item.products.flatMap((v) => v);
         }
-
         toast("Item added to your cart! 🎉", {
           action: {
             label: "View",
