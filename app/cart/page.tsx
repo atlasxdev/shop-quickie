@@ -47,7 +47,7 @@ function Page() {
   }, []);
 
   useEffect(() => {
-    const _cart = JSON.parse(localStorage.getItem("cart") ?? "[]");
+    const _cart = JSON.parse(localStorage.getItem("cart") ?? "null");
     updateCart(_cart);
   }, [updateCart]);
 
@@ -105,7 +105,9 @@ function Page() {
               </motion.div>
             )}
           </AnimatePresence>
-          {products.length == 0 || cart?.length == 0 ? <EmptyCart /> : null}
+          {cart == null || products.length == 0 || cart.length == 0 ? (
+            <EmptyCart />
+          ) : null}
           {cartTotal > 0 && (
             <AnimatePresence>
               <Checkout cartTotal={cartTotal} products={products} />
