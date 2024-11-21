@@ -74,17 +74,19 @@ function Page() {
   return (
     <>
       <Navigation />
-      <div className="pl-6 md:pl-8 pt-8 md:pt-6">
-        <Button
-          onClick={() => router.back()}
-          className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
-          variant={"link"}
-          size={"sm"}
-        >
-          <ArrowLeftIcon />
-          Go back
-        </Button>
-      </div>
+      {products.length > 0 && (
+        <div className="pl-6 md:pl-8 pt-8 md:pt-6">
+          <Button
+            onClick={() => router.back()}
+            className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
+            variant={"link"}
+            size={"sm"}
+          >
+            <ArrowLeftIcon />
+            Go back
+          </Button>
+        </div>
+      )}
       <div className="flex-1 py-14 md:py-16 lg:py-20">
         <MaxWidthWrapper className="max-w-screen-lg">
           <AnimatePresence>
