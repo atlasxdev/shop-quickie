@@ -149,7 +149,7 @@ function Item({
           width={80}
           height={80}
           alt={data.data.description}
-          className="object-cover"
+          className="object-contain"
         />
         <div className="space-y-4">
           <p className="text-sm font-medium -tracking-tighter text-pretty">
