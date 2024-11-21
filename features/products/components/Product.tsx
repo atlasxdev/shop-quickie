@@ -248,6 +248,7 @@ export function Product({ id }: { id: string }) {
                   </Button>
                   <span className="w-full text-center">{quantity}</span>
                   <Button
+                    disabled={quantity >= 10}
                     onClick={() => setQuantity((prev) => prev + 1)}
                     size={"sm"}
                     className="rounded-full w-max"
