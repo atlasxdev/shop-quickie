@@ -45,6 +45,12 @@ function AddToCart({
         date: new Date().toDateString(),
       });
       localStorage.setItem("cart", JSON.stringify(CART));
+      toast("Item added to your cart! 🎉", {
+        action: {
+          label: "View",
+          onClick: () => router.push("/cart"),
+        },
+      });
     } else if (products.length == 0) {
       localStorage.removeItem("cart");
       const newItem = { productId, quantity, price };
@@ -54,6 +60,12 @@ function AddToCart({
       });
       updateCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
+      toast("Item added to your cart! 🎉", {
+        action: {
+          label: "View",
+          onClick: () => router.push("/cart"),
+        },
+      });
     } else {
       localStorage.removeItem("cart");
       const newItem = { productId, quantity, price };
@@ -61,13 +73,32 @@ function AddToCart({
         if (item.products.find((v) => v.productId == newItem.productId)) {
           item.products.forEach((v) => {
             if (v.productId == newItem.productId) {
-              v.quantity++;
+              if (v.quantity + quantity > 10 || v.quantity >= 10) {
+                toast("🔔 Heads Up!", {
+                  description: "You can only add up to 10 of this item.",
+                });
+              } else {
+                v.quantity += quantity;
+                toast("Item added to your cart! 🎉", {
+                  action: {
+                    label: "View",
+                    onClick: () => router.push("/cart"),
+                  },
+                });
+              }
             } else {
               return v;
             }
           });
           return item.products.flatMap((v) => v);
         }
+
+        toast("Item added to your cart! 🎉", {
+          action: {
+            label: "View",
+            onClick: () => router.push("/cart"),
+          },
+        });
         return item.products.flatMap((v) => [newItem, v]);
       });
       updateCart(
@@ -98,12 +129,6 @@ function AddToCart({
         )
       );
     }
-    toast("Item added to your cart! 🎉", {
-      action: {
-        label: "View",
-        onClick: () => router.push("/cart"),
-      },
-    });
   }
 
   if (!isClient) {
