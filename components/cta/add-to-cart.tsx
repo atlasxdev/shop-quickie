@@ -45,7 +45,7 @@ function AddToCart({
         date: new Date().toDateString(),
       });
       localStorage.setItem("cart", JSON.stringify(CART));
-      toast("Item added to your cart! 🎉", {
+      toast.success("Item added to your cart! 🎉", {
         action: {
           label: "View",
           onClick: () => router.push("/cart"),
@@ -60,7 +60,7 @@ function AddToCart({
       });
       updateCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-      toast("Item added to your cart! 🎉", {
+      toast.success("Item added to your cart! 🎉", {
         action: {
           label: "View",
           onClick: () => router.push("/cart"),
@@ -74,12 +74,12 @@ function AddToCart({
           item.products.forEach((v) => {
             if (v.productId == newItem.productId) {
               if (v.quantity + quantity > 10 || v.quantity >= 10) {
-                toast("🔔 Heads Up!", {
+                toast.warning("🔔 Heads Up!", {
                   description: "You can only add up to 10 of this item.",
                 });
               } else {
                 v.quantity += quantity;
-                toast("Item added to your cart! 🎉", {
+                toast.success("Item added to your cart! 🎉", {
                   action: {
                     label: "View",
                     onClick: () => router.push("/cart"),
@@ -92,9 +92,10 @@ function AddToCart({
           });
           return item.products.flatMap((v) => v);
         }
-        toast("Item added to your cart! 🎉", {
+        toast.success("Item added to your cart! 🎉", {
           action: {
             label: "View",
+
             onClick: () => router.push("/cart"),
           },
         });

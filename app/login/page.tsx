@@ -37,7 +37,10 @@ function Page() {
         password,
       });
     },
-    onMutate: () => toast("Logging you in..."),
+    onMutate: () =>
+      toast("🔑 Welcome!", {
+        description: "Just a moment while we verify your credentials",
+      }),
     onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
       const user = USERS.find((user) => user.username == username);
       logIn(data.data.token);
@@ -46,11 +49,14 @@ function Page() {
         JSON.stringify({ token: data.data.token, userId: user?.id })
       );
       await wait(1000);
+      toast("Welcome back! 🎉", {
+        description: "You’ve successfully logged in.",
+      });
       router.back();
     },
     onError: () => {
-      toast.error("Oops! User not found", {
-        description: "Try again",
+      toast.error("Oops! We couldn't log you in.", {
+        description: "Please check your credentials and try again.",
       });
       reset();
     },
@@ -80,8 +86,12 @@ function Page() {
         href={"/store"}
         className={buttonVariants({
           variant: "link",
-          className:
+          className: cn(
             "-tracking-tighter absolute top-5 left-5 gap-2 !text-[#FBA328]",
+            {
+              "pointer-events-none": isPending,
+            }
+          ),
         })}
       >
         <ArrowLeft />

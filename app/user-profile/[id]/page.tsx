@@ -88,7 +88,9 @@ function Page({ params: { id } }: { params: { id: string } }) {
                     onClick={async () => {
                       localStorage.removeItem("user");
                       localStorage.removeItem("cart");
-                      toast("Logging out...");
+                      toast("👋 Goodbye! You’ve successfully logged out.", {
+                        description: "See you next time!",
+                      });
                       await wait(500);
                       logOut();
                       document.location.reload();
@@ -135,7 +137,9 @@ function Page({ params: { id } }: { params: { id: string } }) {
               onClick={async () => {
                 localStorage.removeItem("user");
                 localStorage.removeItem("cart");
-                toast("Logging out...");
+                toast("👋 Goodbye! You’ve successfully logged out.", {
+                  description: "See you next time!",
+                });
                 await wait(500);
                 logOut();
                 document.location.reload();

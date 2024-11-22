@@ -74,9 +74,9 @@ function Page() {
   return (
     <>
       <Navigation />
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="flex-1 w-full max-w-7xl mx-auto">
         {products.length > 0 && (
-          <div className="pt-8 md:pt-6">
+          <div className="pl-6 xl:pl-0 pt-6 md:pt-8">
             <Button
               onClick={() => router.back()}
               className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
@@ -88,7 +88,7 @@ function Page() {
             </Button>
           </div>
         )}
-        <div className="flex-1 py-14 md:py-16 lg:py-20">
+        <div className="py-14 md:py-16 lg:py-20">
           <MaxWidthWrapper className="max-w-screen-lg">
             <AnimatePresence>
               {products.length > 0 && (
