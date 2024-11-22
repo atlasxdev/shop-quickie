@@ -12,7 +12,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { Swiper as SwiperType } from "swiper/types";
 import { cn } from "@/lib/utils";
-import { Pointer } from "lucide-react";
 import Link from "next/link";
 import LearnMore from "@/components/cta/learn-more";
 
@@ -55,14 +54,13 @@ export function MensProductCarousel({ product }: { product: TProducts }) {
           </svg>
         </Link>
       </div>
-      <div className="flex md:hidden ml-auto w-max">
+      <div className="flex md:hidden ml-auto w-max mx-auto">
         <Button
           size={"sm"}
-          variant={"secondary"}
-          className="animate-pulse uppercase rounded-full text-[0.7rem] gap-2"
+          variant={"outline"}
+          className="relative text-[0.7rem] gap-2 font-medium pointer-events-none"
         >
-          Swipe right
-          <Pointer />
+          Swipe right to discover more great products! 👉
         </Button>
       </div>
       <Swiper
@@ -136,7 +134,7 @@ export function MensProductCarousel({ product }: { product: TProducts }) {
         </div>
         {product.map(({ id, title, category, description, image }) => (
           <SwiperSlide key={id}>
-            <Card className="flex-1 h-full rounded-none shadow-none hover:shadow-lg hover:scale-[1.01] transition-transform">
+            <Card className="flex-1 h-full shadow-none md:hover:shadow-lg md:hover:scale-[1.01] transition-transform">
               <CardContent className="flex flex-col w-full h-full py-4">
                 <CardHeader className="space-y-4 px-2">
                   <CardTitle className="text-center text-xl -tracking-tighter text-balance font-bold">

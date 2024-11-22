@@ -1,17 +1,16 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { apiRoute } from "@/axios/apiRoute";
-
 import { notFound } from "next/navigation";
-import { Loader } from "lucide-react";
-
 import { TProducts } from "@/types";
 import { MensProductCarousel } from "./mens-product-carousel";
 import { WomensProductCarousel } from "./womens-product-carousel";
 import { JewelriesCarousel } from "./jewelries-carousel";
 import { ElectronicsCarousel } from "./electronics";
+
+import { Loader } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 function Products() {
   const mensClothing = useQuery({
@@ -79,11 +78,12 @@ function Products() {
     electronics.data?.data == null
   ) {
     return (
-      <div className="h-dvh flex items-center justify-center">
-        <Card className="rounded-full">
-          <CardContent className="flex aspect-square items-center justify-center p-6">
-            <Loader className="size-10 animate-spin" />
-          </CardContent>
+      <div className="h-[50vh] flex items-center justify-center">
+        <Card className="flex items-center justify-center gap-4 h-max w-max p-4 md:p-6">
+          <Loader className="animate-spin" />
+          <p className="-tracking-tighter text-xs md:text-sm font-semibold">
+            Please wait while we load your deals...
+          </p>
         </Card>
       </div>
     );

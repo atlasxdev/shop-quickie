@@ -62,13 +62,7 @@ export function Products({ category }: { category: string }) {
   if (isLoading || actualProductArray == null || data == null) {
     return (
       <MaxWidthWrapper className="flex-1 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <Card key={index} className="rounded-none w-80 h-80">
-              <Skeleton className="h-full w-full" />
-            </Card>
-          ))}
-        </div>
+        <Skeleton className="w-full h-80" />
       </MaxWidthWrapper>
     );
   }
@@ -78,13 +72,13 @@ export function Products({ category }: { category: string }) {
   }
 
   return (
-    <MaxWidthWrapper className="flex-1">
+    <MaxWidthWrapper className="flex-1 space-y-4 md:space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {actualProductArray.map(
           ({ id, title, category, description, image }) => (
             <Card
               key={id}
-              className="flex-1 h-full rounded-none shadow-none hover:shadow-lg hover:scale-[1.01] transition-transform"
+              className="flex-1 h-full shadow-none hover:shadow-lg hover:scale-[1.01] transition-transform"
             >
               <CardContent className="flex flex-col w-full h-full py-4">
                 <CardHeader className="space-y-4 px-2">
@@ -114,15 +108,7 @@ export function Products({ category }: { category: string }) {
           )
         )}
       </div>
-      {isFetchingNextPage && (
-        <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <Card key={index} className="rounded-none">
-              <Skeleton className="aspect-[4/5]" />
-            </Card>
-          ))}
-        </div>
-      )}
+      {isFetchingNextPage && <Skeleton className="w-full h-80" />}
       {data.pages.flatMap((page) => page.data).length > maxItems ? (
         <div className="py-16 w-max mx-auto">
           <p className="text-base font-extrabold -tracking-tighter text-muted-foreground">

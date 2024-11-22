@@ -20,8 +20,6 @@ export function ElectronicsCarousel({ product }: { product: TProducts }) {
   const [isReachedEnd, setIsReachedEnd] = useState<boolean>(false);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
 
-  console.log("Is beginning: " + isReachedBeginning, "Is end: " + isReachedEnd);
-
   return (
     <>
       <div
@@ -128,7 +126,7 @@ export function ElectronicsCarousel({ product }: { product: TProducts }) {
         </div>
         {product.map(({ id, title, category, description, image }) => (
           <SwiperSlide key={id}>
-            <Card className="flex-1 h-full rounded-none shadow-none hover:shadow-lg hover:scale-[1.01] transition-transform">
+            <Card className="flex-1 h-full shadow-none hover:shadow-lg hover:scale-[1.01] transition-transform">
               <CardContent className="flex flex-col w-full h-full py-4">
                 <CardHeader className="space-y-4 px-2">
                   <CardTitle className="text-center text-xl -tracking-tighter text-balance font-bold">
