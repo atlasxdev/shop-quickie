@@ -79,9 +79,9 @@ function Products() {
   ) {
     return (
       <div className="h-[50vh] flex items-center justify-center">
-        <Card className="flex items-center justify-center gap-4 h-max w-max p-4 md:p-6">
+        <Card className="border-none shadow-none flex items-center justify-center gap-4 h-max w-max p-4 md:p-6">
           <Loader className="animate-spin" />
-          <p className="-tracking-tighter text-xs md:text-sm font-semibold">
+          <p className="-tracking-tighter text-[0.7rem] md:text-xs font-semibold text-balance">
             Please wait while we load your deals...
           </p>
         </Card>

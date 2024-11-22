@@ -58,7 +58,7 @@ export function MensProductCarousel({ product }: { product: TProducts }) {
         <Button
           size={"sm"}
           variant={"outline"}
-          className="relative text-[0.7rem] gap-2 font-medium pointer-events-none"
+          className="animate-pulse text-[0.7rem] gap-2 font-medium pointer-events-none"
         >
           Swipe right to discover more great products! 👉
         </Button>

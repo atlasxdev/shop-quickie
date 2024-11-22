@@ -2,7 +2,7 @@
 
 import { useLottie } from "lottie-react";
 import { motion } from "framer-motion";
-import groovyWalkAnimation from "../../../public/animation.json";
+import groovyWalkAnimation from "../../../public/animation-optimized.json";
 
 function HeroAnimation() {
   const { View } = useLottie({

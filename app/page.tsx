@@ -1,9 +1,6 @@
-"use client";
-
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { TextEffect } from "@/components/ui/text-effect";
 import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 import Products from "@/features/hero/components/products";
 import HeroAnimation from "@/features/hero/components/hero-lottie-animation";
 import { BestSellers } from "@/features/hero/components/best-sellers";
@@ -30,8 +27,8 @@ export default function Home() {
       <Navigation />
       <main className="flex-1">
         <MaxWidthWrapper className="!px-0">
-          <section className="pt-16 pb-24 sm:pt-24 sm:pb-32 md:pt-32 md:pb-44 flex flex-col lg:flex-row justify-center items-center px-4 md:px-6">
-            <div className="w-full flex flex-col gap-4 items-center md:items-start px-6">
+          <section className="pt-16 pb-24 sm:pt-24 sm:pb-32 md:pt-32 md:pb-44 flex flex-col lg:flex-row justify-center items-center px-6 md:px-8">
+            <div className="w-full flex flex-col gap-4 items-center md:items-start">
               <TextEffect
                 words="Shop in a Snap – Quick Finds, Big Smiles!"
                 className="hidden lg:block text-5xl md:text-7xl font-extrabold text-[#FBA328]"
@@ -41,22 +38,13 @@ export default function Home() {
                 Shop in a Snap – Quick Finds, Big Smiles!
               </h1>
 
-              <motion.p
-                initial={{
-                  opacity: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                }}
-                transition={{
-                  duration: 1,
-                }}
-                className="hidden lg:block text-base font-medium -tracking-tighter text-balance text-muted-foreground origin-left"
-              >
-                Discover your favorite products in one quick stop. Browse
+              <TextEffect
+                delay={0.5}
+                className="hidden lg:block text-base font-medium text-muted-foreground origin-left"
+                words="Discover your favorite products in one quick stop. Browse
                 through categories, find great deals, and enjoy a seamless
-                shopping experience, all with just a few clicks.
-              </motion.p>
+                shopping experience, all with just a few clicks."
+              />
 
               <p className="block lg:hidden text-sm font-medium -tracking-tighter text-balance text-muted-foreground origin-left">
                 Discover your favorite products in one quick stop. Browse

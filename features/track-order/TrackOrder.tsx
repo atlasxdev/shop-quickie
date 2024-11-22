@@ -30,7 +30,12 @@ export function TrackOrder({ trackingId }: { trackingId: string }) {
   if (!isClient) {
     return (
       <div className="flex-1 flex items-center justify-center h-[60vh]">
-        <Loader className="size-8 animate-spin" />
+        <Card className="flex items-center justify-center gap-4 h-max w-max p-4 md:p-6">
+          <Loader className="animate-spin" />
+          <p className="-tracking-tighter text-[0.7rem] md:text-xs font-semibold">
+            Hang tight, your order status will be revealed shortly!
+          </p>
+        </Card>
       </div>
     );
   }

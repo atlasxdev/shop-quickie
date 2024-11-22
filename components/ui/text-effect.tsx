@@ -27,7 +27,7 @@ export function TextEffect({
   }, [splittedWords]);
 
   return (
-    <div className="w-full flex gap-2 flex-wrap -tracking-tighter">
+    <div className="w-full flex gap-1.5 flex-wrap -tracking-tighter">
       {wordsToDisplay.map((word, idx) => (
         <motion.span
           className={className}

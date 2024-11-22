@@ -11,8 +11,8 @@ export function NavLoader() {
             <Skeleton className="h-4 w-12 rounded-md" />
             <Skeleton className="h-4 w-12 rounded-md" />
             <Skeleton className="h-4 w-12 rounded-md" />
-            <Skeleton className="h-4 w-12 rounded-md" />
-            <Skeleton className="h-4 w-12 rounded-md" />
+            <Skeleton className="hidden md:block h-4 w-12 rounded-md" />
+            <Skeleton className="hidden md:block h-4 w-12 rounded-md" />
           </div>
           <Skeleton className="size-8 rounded-md" />
         </div>
