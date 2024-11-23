@@ -1,3 +1,5 @@
+"use client";
+
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { TextEffect } from "@/components/ui/text-effect";
 import { ArrowRight } from "lucide-react";
@@ -9,6 +11,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { NavLoader } from "@/components/nav-loader";
+import useMetadata from "@/hooks/use-metadata";
 
 const Navigation = dynamic(() => import("@/components/Navigation"), {
   ssr: false,
@@ -22,6 +25,11 @@ const Navigation = dynamic(() => import("@/components/Navigation"), {
 });
 
 export default function Home() {
+  useMetadata(
+    "Shop Quickie",
+    "Your go-to platform for fast, hassle-free online shopping. Discover a wide range of products, find great deals, and enjoy a seamless experience with just a few clicks. Get started now!"
+  );
+
   return (
     <>
       <Navigation />

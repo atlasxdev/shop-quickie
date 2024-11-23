@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { ReviewOrder } from "./review-order";
 import { DeliveryAddress } from "./delivery-address";
 import Unauthorized from "@/components/Unauthorized";
+import useMetadata from "@/hooks/use-metadata";
 
 export function Checkout({
   productId,
@@ -14,6 +15,10 @@ export function Checkout({
   productId: string;
   quantity: string;
 }) {
+  useMetadata(
+    "Checkout - Complete Your Purchase at Shop Quickie",
+    "Secure and seamless checkout at [Store Name]. Review your items, enter shipping details, and choose your preferred payment method to complete your purchase. Enjoy a hassle-free shopping experience with our easy checkout process."
+  );
   const productIdArray = Array.isArray(productId) ? productId : [productId];
   const quantityArray = Array.isArray(quantity) ? quantity : [quantity];
   const [user, setUser] = useState<string | null>(null);

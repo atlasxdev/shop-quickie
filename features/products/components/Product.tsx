@@ -38,6 +38,7 @@ import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import AddToCart from "@/components/cta/add-to-cart";
 import { toast } from "sonner";
 import { useUserStore } from "@/zustand-store/store";
+import useMetadata from "@/hooks/use-metadata";
 
 export function Product({ id }: { id: string }) {
   const userStore = useUserStore((state) => state.user);
@@ -68,6 +69,11 @@ export function Product({ id }: { id: string }) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+
+  useMetadata(
+    data == null ? "Loading..." : `${data.data.title} - Shop Quickie`,
+    data == null ? "" : data.data.description
+  );
 
   if (isError || productAssets == null) {
     return notFound();

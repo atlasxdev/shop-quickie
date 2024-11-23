@@ -6,6 +6,7 @@ import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import useMetadata from "@/hooks/use-metadata";
 import { getActualProductArray } from "@/lib/utils";
 import { TProducts } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -15,6 +16,10 @@ import { useMemo } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
 function Page() {
+  useMetadata(
+    "Store - Shop Quickie",
+    "Discover a wide variety of products at unbeatable prices! Explore our store to find everything you need, from the latest trends to essential everyday items. Enjoy a seamless shopping experience with convenient browsing and easy checkout."
+  );
   const { data, fetchNextPage, isLoading, isFetchingNextPage, isError } =
     useInfiniteQuery({
       queryKey: ["products"],

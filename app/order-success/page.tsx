@@ -4,12 +4,17 @@ import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Unauthorized from "@/components/Unauthorized";
+import useMetadata from "@/hooks/use-metadata";
 import { ArrowLeft, Copy, Loader, PackageSearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
 function Page() {
+  useMetadata(
+    "Order Confirmed - Thank You for Shopping at Shop Quickie",
+    "Your order has been successfully placed at Shop Quickie. Thank you for your purchase! You will receive an email confirmation shortly with your order details and tracking information. We appreciate your business and look forward to serving you again."
+  );
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);

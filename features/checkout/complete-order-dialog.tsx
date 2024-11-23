@@ -43,7 +43,8 @@ export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
   }
 
   async function handleOrder() {
-    toast("Processing order...", {
+    toast.info("🚚 Processing Your Order!", {
+      description: "Sit tight and while your order is being processed.",
       duration: 1000,
     });
     setIsLoading(true);

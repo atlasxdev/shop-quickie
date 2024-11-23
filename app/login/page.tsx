@@ -26,8 +26,13 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import USERS from "../../data/users.json";
+import useMetadata from "@/hooks/use-metadata";
 
 function Page() {
+  useMetadata(
+    "Login to Your Account - Shop Quickie",
+    "Securely access your account at [Store Name]. Log in to view your orders, manage your profile, and enjoy a personalized shopping experience. Enter your username and password to get started."
+  );
   const router = useRouter();
   const logIn = useUserStore((state) => state.logIn);
   const { mutate, isPending } = useMutation({

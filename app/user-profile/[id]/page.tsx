@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import Unauthorized from "@/components/Unauthorized";
+import useMetadata from "@/hooks/use-metadata";
 import { wait } from "@/lib/utils";
 import { User, useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
@@ -38,6 +39,11 @@ function Page({ params: { id } }: { params: { id: string } }) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+
+  useMetadata(
+    "Your Profile - Shop Quickie",
+    "Manage your profile at Shop Quickie. Update your personal information, view your order history, and customize your preferences for a personalized shopping experience. Keep your account details up-to-date and enjoy a seamless shopping journey with us."
+  );
 
   useEffect(() => {
     setIsClient(true);

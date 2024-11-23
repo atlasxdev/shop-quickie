@@ -13,11 +13,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import Unauthorized from "@/components/Unauthorized";
 import { OrderAnimation } from "@/features/track-order/order-animation";
+import useMetadata from "@/hooks/use-metadata";
 import { ArrowLeft, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function TrackOrder({ trackingId }: { trackingId: string }) {
+  useMetadata(
+    "Track Your Order - Shop Quickie",
+    "Easily track your order at [Store Name]. Enter your order number and get real-time updates on the status of your shipment. Stay informed about the delivery progress and ensure a smooth and timely arrival of your purchase."
+  );
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);

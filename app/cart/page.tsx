@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddQuantity } from "@/features/cart/add-quantity";
 import { Checkout } from "@/features/cart/Checkout";
+import useMetadata from "@/hooks/use-metadata";
 import { priceFormatter } from "@/lib/utils";
 import { Product } from "@/types";
 import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
@@ -33,6 +34,10 @@ const Navigation = dynamic(() => import("@/components/Navigation"), {
 });
 
 function Page() {
+  useMetadata(
+    "Your Cart - Shop Quickie",
+    "Review and manage the items in your shopping cart. Ready to proceed to checkout and complete your purchase? Enjoy a seamless shopping experience with all your favorite products just a click away!"
+  );
   const router = useRouter();
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
