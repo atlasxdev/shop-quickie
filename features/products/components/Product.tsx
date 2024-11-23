@@ -342,12 +342,15 @@ export function Product({ id }: { id: string }) {
                   <>
                     <Button
                       onClick={() =>
-                        toast("🛒 Please sign in to add items to your cart.", {
-                          action: {
-                            label: "Sign in",
-                            onClick: () => router.push("/login"),
-                          },
-                        })
+                        toast(
+                          "🔐 Oops! You need to be logged in to add items to your cart.",
+                          {
+                            action: {
+                              label: "Sign in",
+                              onClick: () => router.push("/login"),
+                            },
+                          }
+                        )
                       }
                       size={"lg"}
                       className="rounded-full w-full gap-2"
@@ -358,12 +361,15 @@ export function Product({ id }: { id: string }) {
                     </Button>
                     <Button
                       onClick={() =>
-                        toast("Please sign in to buy this product", {
-                          action: {
-                            label: "Sign in",
-                            onClick: () => router.push("/login"),
-                          },
-                        })
+                        toast(
+                          "Please log in to continue your shopping spree! 🛒",
+                          {
+                            action: {
+                              label: "Sign in",
+                              onClick: () => router.push("/login"),
+                            },
+                          }
+                        )
                       }
                       size={"lg"}
                       className="rounded-full w-full"
