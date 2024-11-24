@@ -7,6 +7,15 @@ import { ReviewOrder } from "./review-order";
 import { DeliveryAddress } from "./delivery-address";
 import Unauthorized from "@/components/Unauthorized";
 import useMetadata from "@/hooks/use-metadata";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Store } from "lucide-react";
 
 export function Checkout({
   productId,
@@ -43,6 +52,59 @@ export function Checkout({
         <Skeleton className="h-96 rounded-lg w-full" />
         <Skeleton className="h-96 rounded-lg w-full" />
       </div>
+    );
+  }
+
+  if (productsWithQuantities.some((v) => v.productId > 20)) {
+    return (
+      <Card className="max-w-lg mx-auto w-full bg-white shadow-lg rounded-lg p-6 text-center">
+        <CardHeader>
+          <CardTitle className="-tracking-tighter text-xl md:text-2xl font-bold text-gray-800 mb-4">
+            🔍 Product Not Found!
+          </CardTitle>
+          <CardDescription className="-tracking-tighter text-balance font-medium text-xs md:text-sm mb-4">
+            Uh-oh! The product you&apos;re looking for is playing hide and seek.
+            Double-check the URL or dive into our store to discover more amazing
+            finds!
+          </CardDescription>
+        </CardHeader>
+        <Link
+          href="/store"
+          className={buttonVariants({
+            className: "gap-2 !rounded-full",
+          })}
+        >
+          <Store /> Browse store
+        </Link>
+      </Card>
+    );
+  }
+
+  if (
+    productsWithQuantities.some((v) => v.quantity > 10) ||
+    productsWithQuantities.some((v) => v.quantity < 1)
+  ) {
+    return (
+      <Card className="max-w-lg mx-auto w-full bg-white shadow-lg rounded-lg p-6 text-center">
+        <CardHeader>
+          <CardTitle className="-tracking-tighter text-xl md:text-2xl font-bold text-gray-800 mb-4">
+            ✋ Hold up!
+          </CardTitle>
+          <CardDescription className="-tracking-tighter text-balance font-medium text-xs md:text-sm mb-4">
+            {productsWithQuantities.some((v) => v.quantity < 1)
+              ? "You need to order at least 1 unit. Adjust the quantity and give it another shot!"
+              : "We love your enthusiasm, but you can only purchase up to 10 units of this product. Please adjust the quantity and give it another go."}
+          </CardDescription>
+        </CardHeader>
+        <Link
+          href="/store"
+          className={buttonVariants({
+            className: "gap-2 !rounded-full",
+          })}
+        >
+          <Store /> Browse store
+        </Link>
+      </Card>
     );
   }
 

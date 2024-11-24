@@ -1,6 +1,7 @@
 "use client";
 
 import { apiRoute } from "@/axios/apiRoute";
+import { GoBack } from "@/components/cta/go-back";
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { NavLoader } from "@/components/nav-loader";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
@@ -15,7 +16,7 @@ import { Product } from "@/types";
 import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeftIcon, ArrowRight, LogIn } from "lucide-react";
+import { ArrowRight, LogIn } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,7 +39,6 @@ function Page() {
     "Your Cart - Shop Quickie",
     "Review and manage the items in your shopping cart. Ready to proceed to checkout and complete your purchase? Enjoy a seamless shopping experience with all your favorite products just a click away!"
   );
-  const router = useRouter();
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -82,15 +82,7 @@ function Page() {
       <div className="flex-1 w-full max-w-7xl mx-auto">
         {products.length > 0 && (
           <div className="pl-6 xl:pl-0 pt-6 md:pt-8">
-            <Button
-              onClick={() => router.back()}
-              className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
-              variant={"link"}
-              size={"sm"}
-            >
-              <ArrowLeftIcon />
-              Go back
-            </Button>
+            <GoBack />
           </div>
         )}
         <div className="py-14 md:py-16 lg:py-20">

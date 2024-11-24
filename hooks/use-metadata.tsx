@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 const useMetadata = (title: string, description: string) => {
-  const router = useRouter();
-
   useEffect(() => {
+    function focus() {
+      document.title = title;
+    }
+    function blur() {
+      document.title = "We miss you" + " - " + title;
+    }
+
+    window.addEventListener("focus", focus);
+    window.addEventListener("blur", blur);
     document.title = title;
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
@@ -17,7 +23,12 @@ const useMetadata = (title: string, description: string) => {
       meta.content = description;
       document.head.appendChild(meta);
     }
-  }, [title, description, router]);
+
+    return () => {
+      window.removeEventListener("focus", focus);
+      window.removeEventListener("blur", blur);
+    };
+  }, [title, description]);
 };
 
 export default useMetadata;

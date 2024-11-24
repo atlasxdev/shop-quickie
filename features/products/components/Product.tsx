@@ -21,7 +21,6 @@ import { useEffect, useState } from "react";
 import { A11y } from "swiper/modules";
 import { ImageZoom } from "./ImageZoom";
 import {
-  ArrowLeftIcon,
   CircleMinusIcon,
   CirclePlusIcon,
   MousePointerClickIcon,
@@ -39,6 +38,7 @@ import AddToCart from "@/components/cta/add-to-cart";
 import { toast } from "sonner";
 import { useUserStore } from "@/zustand-store/store";
 import useMetadata from "@/hooks/use-metadata";
+import { GoBack } from "@/components/cta/go-back";
 
 export function Product({ id }: { id: string }) {
   const userStore = useUserStore((state) => state.user);
@@ -93,15 +93,7 @@ export function Product({ id }: { id: string }) {
   return (
     <>
       <div className="pl-0 lg:pl-2 pt-6 pr-6 md:pt-8 md:pr-8">
-        <Button
-          onClick={() => router.back()}
-          className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
-          variant={"link"}
-          size={"sm"}
-        >
-          <ArrowLeftIcon />
-          Go back
-        </Button>
+        <GoBack />
       </div>
       <div className="py-8 md:py-12 space-y-12">
         <div className="flex flex-col lg:flex-row gap-4 md:gap-8">

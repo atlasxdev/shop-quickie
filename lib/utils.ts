@@ -10,6 +10,9 @@ export function cn(...inputs: ClassValue[]) {
 
 export function generateCheckoutUrl(products: Cart["products"]) {
   const url: string[] = [];
+  if (!products.length) {
+    throw new Error("Invalid array content!");
+  }
   for (let index = 0; index < products.length; index++) {
     if (products.length === 1) {
       url.push(

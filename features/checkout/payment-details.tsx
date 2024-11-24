@@ -104,6 +104,7 @@ export function PaymentDetails({
                 Card holder name*
               </Label>
               <Input
+                className="text-xs md:text-sm"
                 {...rest}
                 name="cardHolderName"
                 ref={(e) => {
@@ -118,22 +119,28 @@ export function PaymentDetails({
               </AnimatePresence>
             </div>
             <div className="flex gap-2">
-              <div className="space-y-0.5">
+              <div className="w-full space-y-0.5">
                 <Label className="text-xs -tracking-tighter">
                   Card number*
                 </Label>
-                <Input {...register("cardNumber")} />
+                <Input
+                  className="text-xs md:text-sm"
+                  {...register("cardNumber")}
+                />
                 <AnimatePresence>
                   {errors.cardNumber && (
                     <ErrorMessage message={errors.cardNumber.message} />
                   )}
                 </AnimatePresence>
               </div>
-              <div className="space-y-0.5">
+              <div className="w-full space-y-0.5">
                 <Label className="text-xs -tracking-tighter">
                   Expiration date*
                 </Label>
-                <Input {...register("expirationDate")} />
+                <Input
+                  className="text-xs md:text-sm"
+                  {...register("expirationDate")}
+                />
                 <AnimatePresence>
                   {errors.expirationDate && (
                     <ErrorMessage message={errors.expirationDate.message} />
@@ -143,7 +150,7 @@ export function PaymentDetails({
             </div>
             <div className="space-y-0.5">
               <Label className="text-xs -tracking-tighter">CVV*</Label>
-              <Input {...register("cvv")} />
+              <Input className="text-xs md:text-sm" {...register("cvv")} />
               <AnimatePresence>
                 {errors.cvv && <ErrorMessage message={errors.cvv.message} />}
               </AnimatePresence>

@@ -13,7 +13,7 @@ export function LearnMore({
   return (
     <Button
       onClick={() => router.push(`/products?id=${id}`)}
-      className="w-max rounded-full mx-auto"
+      className="w-max rounded-full mx-auto text-[0.7rem]"
       size={"sm"}
       variant={variant}
     >

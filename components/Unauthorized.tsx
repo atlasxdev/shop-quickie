@@ -1,44 +1,49 @@
 import { ArrowLeft, Lock } from "lucide-react";
-import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { Button, buttonVariants } from "./ui/button";
+import Link from "next/link";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 function Unauthorized() {
-  const router = useRouter();
-
   return (
-    <div className="rounded-lg max-w-screen-lg mx-auto flex-1 flex items-center justify-center h-[60vh] bg-white px-6">
-      <div className="flex flex-col gap-4">
+    <Card className="rounded-lg max-w-lg mx-auto flex-1 flex flex-col items-center justify-center bg-white px-6">
+      <CardHeader className="flex flex-col gap-4">
         <div className="w-max mx-auto ">
           <Lock className="size-8" />
         </div>
-        <h1 className="text-center font-extrabold text-xxl md:text-3xl -tracking-tighter">
+        <CardTitle className="text-center font-extrabold text-xl md:text-2xl -tracking-tighter">
           Unauthorized Access
-        </h1>
+        </CardTitle>
 
-        <p className="max-w-prose text-center text-sm md:text-base -tracking-tighter text-balance text-muted-foreground">
+        <CardDescription className="max-w-prose text-center text-xs md:text-sm -tracking-tighter text-balance">
           You do not have permission to access this page. Please try again later
           if you believe this is an error.
-        </p>
-        <div className="w-max mx-auto space-x-4">
-          <Button
-            onClick={() => router.push("/store")}
-            size={"lg"}
-            variant={"secondary"}
-            className="w-max rounded-full gap-2"
-          >
-            <ArrowLeft />
-            Go back shopping
-          </Button>
-          <Button
-            onClick={() => window.location.reload()}
-            size={"lg"}
-            className="w-max  rounded-full gap-2"
-          >
-            Try again
-          </Button>
-        </div>
-      </div>
-    </div>
+        </CardDescription>
+      </CardHeader>
+      <CardFooter className="w-max mx-auto space-x-4">
+        <Link
+          href={"/store"}
+          className={buttonVariants({
+            className: "w-max !rounded-full gap-2",
+            variant: "secondary",
+          })}
+        >
+          <ArrowLeft />
+          Go back shopping
+        </Link>
+        <Button
+          onClick={() => window.location.reload()}
+          className="w-max  rounded-full gap-2"
+        >
+          Try again
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 

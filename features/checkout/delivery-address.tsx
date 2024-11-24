@@ -81,6 +81,7 @@ export function DeliveryAddress({
             <Label className="text-xs -tracking-tighter">Email address*</Label>
 
             <Input
+              className="text-xs md:text-sm"
               {...rest}
               name="email"
               ref={(e) => {
@@ -94,7 +95,7 @@ export function DeliveryAddress({
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Full name*</Label>
-            <Input {...register("fullName")} />
+            <Input className="text-xs md:text-sm" {...register("fullName")} />
             <AnimatePresence>
               {errors.fullName && (
                 <ErrorMessage message={errors.fullName.message} />
@@ -103,7 +104,7 @@ export function DeliveryAddress({
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Mobile*</Label>
-            <Input {...register("mobile")} />
+            <Input className="text-xs md:text-sm" {...register("mobile")} />
             <AnimatePresence>
               {errors.mobile && (
                 <ErrorMessage message={errors.mobile.message} />
@@ -127,7 +128,10 @@ export function DeliveryAddress({
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Suburb/Town*</Label>
-            <Input {...register("suburbOrTown")} />
+            <Input
+              className="text-xs md:text-sm"
+              {...register("suburbOrTown")}
+            />
             <AnimatePresence>
               {errors.suburbOrTown && (
                 <ErrorMessage message={errors.suburbOrTown.message} />
@@ -136,7 +140,10 @@ export function DeliveryAddress({
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">City/State*</Label>
-            <Input {...register("cityOrState")} />
+            <Input
+              className="text-xs md:text-sm"
+              {...register("cityOrState")}
+            />
             <AnimatePresence>
               {errors.cityOrState && (
                 <ErrorMessage message={errors.cityOrState.message} />
@@ -147,7 +154,10 @@ export function DeliveryAddress({
             <Label className="text-xs -tracking-tighter">
               Postcode/ZIP Code*
             </Label>
-            <Input {...register("postalOrZipCode")} />
+            <Input
+              className="text-xs md:text-sm"
+              {...register("postalOrZipCode")}
+            />
             <AnimatePresence>
               {errors.postalOrZipCode && (
                 <ErrorMessage message={errors.postalOrZipCode.message} />
@@ -156,7 +166,7 @@ export function DeliveryAddress({
           </div>
           <div className="space-y-0.5">
             <Label className="text-xs -tracking-tighter">Country*</Label>
-            <Input {...register("country")} />
+            <Input className="text-xs md:text-sm" {...register("country")} />
             <AnimatePresence>
               {errors.country && (
                 <ErrorMessage message={errors.country.message} />
