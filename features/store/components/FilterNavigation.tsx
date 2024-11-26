@@ -1,9 +1,8 @@
 "use client";
 
-import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { useMediaQuery } from "usehooks-ts";
 import { CATEGORIES } from "@/constants";
-import { useEffect, useState } from "react";
+import { Dispatch, memo, SetStateAction, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,8 +20,8 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 function FilterNavigation() {
-  const params = useParams();
   const router = useRouter();
+  const params = useParams();
   const [categoryFilter, setCategoryFilter] = useState<string>(
     decodeURIComponent((params.category as string) ?? "")
   );
@@ -35,14 +34,14 @@ function FilterNavigation() {
 
   if (!isClient) {
     return (
-      <MaxWidthWrapper className="w-full flex-1 py-12 md:py-16 lg:py-20">
+      <div className="w-full flex-1 py-12 md:py-16 lg:py-20 mx-auto max-w-screen-2xl px-6 md:px-8">
         <Skeleton className="rounded-lg w-full h-96" />
-      </MaxWidthWrapper>
+      </div>
     );
   }
 
   return (
-    <MaxWidthWrapper>
+    <div className="mx-auto max-w-screen-2xl px-6 md:px-8">
       <div className="space-y-8 md:space-y-12 py-14">
         <h1 className="text-center text-balance font-bold text-3xl md:text-4xl lg:text-5xl -tracking-tighter text-[#FBA328]">
           Store.{" "}
@@ -79,6 +78,23 @@ function FilterNavigation() {
           <MobileSwiper setCategoryFilter={setCategoryFilter} />
         )}
       </div>
+      <BreadcrumbComponent
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+      />
+    </div>
+  );
+}
+
+const BreadcrumbComponent = memo(function BreadcrumbComponent({
+  categoryFilter,
+  setCategoryFilter,
+}: {
+  categoryFilter: string;
+  setCategoryFilter: Dispatch<SetStateAction<string>>;
+}) {
+  return (
+    <>
       <Breadcrumb className="py-8">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -104,8 +120,8 @@ function FilterNavigation() {
           )}
         </BreadcrumbList>
       </Breadcrumb>
-    </MaxWidthWrapper>
+    </>
   );
-}
+});
 
 export default FilterNavigation;

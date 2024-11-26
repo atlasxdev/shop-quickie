@@ -1,5 +1,5 @@
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
-import { Product } from "@/features/products/components/Product";
+import { ProductPage } from "@/features/products/components/ProductPage";
 import dynamic from "next/dynamic";
 import { NavLoader } from "@/components/nav-loader";
 
@@ -26,7 +26,7 @@ function Page({
       <Navigation />
       <div className="flex-1 bg-[#F5F5F7]">
         <MaxWidthWrapper>
-          <Product id={id} />
+          <ProductPage id={id} />
         </MaxWidthWrapper>
       </div>
     </>

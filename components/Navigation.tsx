@@ -42,6 +42,7 @@ export default function Navigation() {
   }, [isClient, pathname]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
+    if (pathname !== "/") return;
     if (latest > 30) {
       setIsPageScrolled(true);
     } else {

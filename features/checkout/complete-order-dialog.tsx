@@ -45,12 +45,13 @@ export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
   async function handleOrder() {
     toast.info("🚚 Processing Your Order!", {
       description: "Sit tight and while your order is being processed.",
-      duration: 1000,
+      duration: 3000,
     });
     setIsLoading(true);
-    await wait(2000);
+    localStorage.setItem("hasOrder", "true");
+    await wait(3000);
     setIsLoading(false);
-    router.push("/order-success");
+    router.replace("/order-success");
   }
 
   return (
@@ -60,7 +61,7 @@ export function CompleteOrderDialog({ isValid }: { isValid: boolean }) {
           disabled={!isValid || isLoading}
           className="uppercase -tracking-tighter rounded-full w-full"
         >
-          Complete Order
+          {isLoading ? "Processing Order..." : "Complete Order"}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-2xl">

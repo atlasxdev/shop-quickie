@@ -11,10 +11,14 @@ import { TProducts } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
-export function Products({ category }: { category: string }) {
+export const Products = memo(function Products({
+  category,
+}: {
+  category: string;
+}) {
   const maxItems =
     decodeURIComponent(category) === "men's clothing"
       ? 4
@@ -120,4 +124,4 @@ export function Products({ category }: { category: string }) {
       )}
     </MaxWidthWrapper>
   );
-}
+});
