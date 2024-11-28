@@ -16,17 +16,17 @@ const Navigation = dynamic(() => import("@/components/Navigation"), {
 
 function Page({
   params: {},
-  searchParams: { id },
+  searchParams: { id, search },
 }: {
   params: { [key: string]: unknown };
-  searchParams: { id: string };
+  searchParams: { id: string; search?: string };
 }) {
   return (
     <>
       <Navigation />
       <div className="flex-1 bg-[#F5F5F7]">
         <MaxWidthWrapper>
-          <ProductPage id={id} />
+          <ProductPage id={id} search={search} />
         </MaxWidthWrapper>
       </div>
     </>

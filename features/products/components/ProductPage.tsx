@@ -39,8 +39,9 @@ import { GoBack } from "@/components/cta/go-back";
 import { ProductSlider } from "./ProductSlider";
 import { SeeMore } from "./SeeMore";
 import { AxiosResponse } from "axios";
+import { RelatedProducts } from "./RelatedProducts";
 
-export function ProductPage({ id }: { id: string }) {
+export function ProductPage({ id, search }: { id: string; search?: string }) {
   const productAssets = useMemo(() => {
     return PRODUCT_IMAGES.find((product) => product.id === Number(id));
   }, [id]);
@@ -77,10 +78,11 @@ export function ProductPage({ id }: { id: string }) {
 
   return (
     <>
-      <div className="pl-0 lg:pl-2 pt-6 pr-6 md:pt-8 md:pr-8">
+      <div className="pt-6 pr-6 md:pt-8 md:pr-8">
         <GoBack />
       </div>
       <Product id={id} data={data} productAssets={productAssets} />
+      {search ? <RelatedProducts id={id} search={search} /> : null}
     </>
   );
 }
@@ -125,8 +127,8 @@ const Product = memo(function Product({
 
   return (
     <div className="py-8 md:py-12 space-y-12">
-      <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
-        <div className="w-full lg:w-3/5 pl-0 lg:pl-6">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+        <div className="w-full lg:w-3/5">
           <Card className="md:sticky md:top-12 border-none shadow-none">
             <CardHeader className="space-y-0 flex flex-row justify-between items-center p-4 md:p-6">
               <Badge

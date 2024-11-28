@@ -6,4 +6,5 @@ const endpoint = process.env.NEXT_PUBLIC_ORAMA_ENDPOINT as string;
 export const oramaClient = new OramaClient({
   endpoint,
   api_key,
+  cache: true,
 });

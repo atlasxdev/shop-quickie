@@ -1,24 +1,31 @@
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { buttonVariants } from "../ui/button";
 
 export function LearnMore({
   id,
+  search,
   variant = "default",
+  className,
 }: {
   id: number;
+  search?: string;
+  className?: string;
   variant?: "link" | "default";
 }) {
-  const router = useRouter();
-
   return (
-    <Button
-      onClick={() => router.push(`/products?id=${id}`)}
-      className="w-max rounded-full mx-auto text-[0.7rem]"
-      size={"sm"}
-      variant={variant}
+    <Link
+      href={
+        search ? `/products?id=${id}&search=${search}` : `/products?id=${id}`
+      }
+      className={buttonVariants({
+        className: cn("w-max !rounded-full mx-auto text-[0.7rem]", className),
+        variant: variant,
+        size: "sm",
+      })}
     >
       Learn more
-    </Button>
+    </Link>
   );
 }
 
