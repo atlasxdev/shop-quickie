@@ -11,7 +11,7 @@ import {
 
 function Unauthorized() {
   return (
-    <Card className="rounded-lg max-w-lg mx-auto flex-1 flex flex-col items-center justify-center bg-white px-6">
+    <Card className="border-0 shadow-none sm:border sm:shadow rounded-lg max-w-lg mx-auto flex-1 flex flex-col items-center justify-center bg-white px-6">
       <CardHeader className="flex flex-col gap-4">
         <div className="w-max mx-auto ">
           <Lock className="size-8" />
@@ -31,6 +31,7 @@ function Unauthorized() {
           className={buttonVariants({
             className: "w-max !rounded-full gap-2",
             variant: "secondary",
+            size: "sm",
           })}
         >
           <ArrowLeft />
@@ -39,6 +40,7 @@ function Unauthorized() {
         <Button
           onClick={() => window.location.reload()}
           className="w-max  rounded-full gap-2"
+          size={"sm"}
         >
           Try again
         </Button>

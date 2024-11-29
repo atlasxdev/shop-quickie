@@ -79,53 +79,55 @@ function Page() {
   return (
     <>
       <Navigation />
-      <div className="flex-1 w-full max-w-7xl mx-auto">
-        {products.length > 0 && (
-          <div className="pl-6 xl:pl-0 pt-6 md:pt-8">
-            <GoBack />
-          </div>
-        )}
-        <div className="py-14 md:py-16 lg:py-20">
-          <MaxWidthWrapper className="max-w-screen-lg">
-            <AnimatePresence>
-              {products.length > 0 && (
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                  }}
-                  animate={{
-                    opacity: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
-                  className="space-y-10 md:space-y-14"
-                >
-                  <h1 className="text-center text-2xl md:text-3xl -tracking-tighter font-semibold">
-                    Your cart total is{" "}
-                    <AnimatedNumber value={cartTotal} isPrice={true} />
-                  </h1>
-                  {products.map((product, index) => (
-                    <CartItem
-                      setCartTotal={setCartTotal}
-                      key={index}
-                      id={product.productId}
-                      index={index}
-                      quantity={product.quantity}
-                    />
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-            {cart == null || products.length == 0 || cart.length == 0 ? (
-              <EmptyCart />
-            ) : null}
-            {cartTotal > 0 && (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="w-full max-w-7xl mx-auto">
+          {products.length > 0 && (
+            <div className="pl-6 xl:pl-0 pt-6 md:pt-8">
+              <GoBack />
+            </div>
+          )}
+          <div className="py-14 md:py-16 lg:py-20">
+            <MaxWidthWrapper className="max-w-screen-lg">
               <AnimatePresence>
-                <Checkout cartTotal={cartTotal} products={products} />
+                {products.length > 0 && (
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                    }}
+                    animate={{
+                      opacity: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                    }}
+                    className="space-y-10 md:space-y-14"
+                  >
+                    <h1 className="text-center text-2xl md:text-3xl -tracking-tighter font-semibold">
+                      Your cart total is{" "}
+                      <AnimatedNumber value={cartTotal} isPrice={true} />
+                    </h1>
+                    {products.map((product, index) => (
+                      <CartItem
+                        setCartTotal={setCartTotal}
+                        key={index}
+                        id={product.productId}
+                        index={index}
+                        quantity={product.quantity}
+                      />
+                    ))}
+                  </motion.div>
+                )}
               </AnimatePresence>
-            )}
-          </MaxWidthWrapper>
+              {cart == null || products.length == 0 || cart.length == 0 ? (
+                <EmptyCart />
+              ) : null}
+              {cartTotal > 0 && (
+                <AnimatePresence>
+                  <Checkout cartTotal={cartTotal} products={products} />
+                </AnimatePresence>
+              )}
+            </MaxWidthWrapper>
+          </div>
         </div>
       </div>
     </>
@@ -271,7 +273,6 @@ function EmptyCart() {
         ) : null}
         <Button
           onClick={() => router.push("/store")}
-          size={"lg"}
           className="rounded-full w-full"
           variant={"secondary"}
         >

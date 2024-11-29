@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Product } from "@/types";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -20,11 +19,43 @@ import { priceFormatter } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useSearch from "@/hooks/use-search";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function OramaSearch() {
-  const [isClicked, setIsClicked] = useState<boolean>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  return (
+    <>
+      <Button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="flex w-full max-w-xs justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
+        variant={"secondary"}
+        size={"sm"}
+      >
+        <div className="flex items-center gap-2">
+          <SearchIcon />
+          Search...
+        </div>
+
+        <kbd className="hidden md:inline-flex pointer-events-none  h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+          <span className="text-sm">⌘</span>K
+        </kbd>
+      </Button>
+
+      {isOpen && <OramaSearchContent isOpen={isOpen} setIsOpen={setIsOpen} />}
+    </>
+  );
+}
+
+type OramaSearchProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const router = useRouter();
   const { searchResults, isLoading } = useSearch(search);
 
   useEffect(() => {
@@ -57,26 +88,10 @@ export function OramaSearch() {
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [setIsOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-      <DialogTrigger asChild>
-        <Button
-          className="flex w-full max-w-xs justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
-          variant={"secondary"}
-          size={"sm"}
-        >
-          <div className="flex items-center gap-2">
-            <SearchIcon />
-            Search...
-          </div>
-
-          <kbd className="hidden md:inline-flex pointer-events-none  h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-            <span className="text-sm">⌘</span>K
-          </kbd>
-        </Button>
-      </DialogTrigger>
       <DialogContent className="!rounded-xl px-4">
         <ScrollArea className="mt-4 h-96">
           <div className="pl-2 pb-4 pr-4 space-y-6 md:space-y-8">
@@ -153,6 +168,11 @@ export function OramaSearch() {
                   <div className="w-max mx-auto">
                     <Link
                       href="/store"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsOpen(false);
+                        router.push("/store");
+                      }}
                       className={buttonVariants({
                         variant: "secondary",
                         className: "!rounded-full gap-2",

@@ -19,6 +19,7 @@ import useMetadata from "@/hooks/use-metadata";
 import { wait } from "@/lib/utils";
 import { User, useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { ArrowLeft, CircleUserRound, LogOut, MapPin } from "lucide-react";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -55,14 +56,31 @@ function Page({ params: { id } }: { params: { id: string } }) {
   }
 
   if (isLoading || data?.data == null || !isClient) {
+    const circleVariants = {
+      animate: {
+        scale: [1, 1.5, 1],
+        opacity: [1, 0.5, 1],
+        transition: {
+          duration: 1.2,
+          repeat: Infinity,
+          ease: "easeInOut",
+        },
+      },
+    };
+
     return (
-      <div className="flex-1 py-12 md:py-14 lg:py-16">
-        <MaxWidthWrapper>
-          <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-2 md:gap-4">
-            <Skeleton className="w-full h-full" />
-            <Skeleton className="w-full h-96" />
-          </div>
-        </MaxWidthWrapper>
+      <div className="w-full flex flex-col gap-4 items-center justify-center h-screen">
+        <motion.div
+          className="w-20 h-20 rounded-full bg-primary/10"
+          variants={circleVariants}
+          animate="animate"
+        ></motion.div>
+        <Skeleton className="mt-4 w-32 h-4" />
+        <Skeleton className="mt-2 w-48 h-3 " />
+        <div className="mt-6 flex space-x-4">
+          <Skeleton className="w-20 h-8 " />
+          <Skeleton className="w-20 h-8 " />
+        </div>
       </div>
     );
   }
@@ -75,10 +93,10 @@ function Page({ params: { id } }: { params: { id: string } }) {
   }
 
   return (
-    <div className="flex-1 py-12 md:py-14 lg:py-16">
+    <div className="py-12 md:py-14 lg:py-16">
       <MaxWidthWrapper className="max-w-screen-xl">
         <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-2 md:gap-4">
-          <div className="h-full flex flex-col justify-between py-4">
+          <div className="h-full flex flex-col justify-between">
             <div className="space-y-8">
               <div className="flex flex-col gap-4">
                 <div className="w-full flex md:hidden justify-between items-center">
@@ -96,8 +114,9 @@ function Page({ params: { id } }: { params: { id: string } }) {
                       localStorage.removeItem("cart");
                       toast("👋 Goodbye! You’ve successfully logged out.", {
                         description: "See you next time!",
+                        duration: 2000,
                       });
-                      await wait(500);
+                      await wait(2000);
                       logOut();
                       document.location.reload();
                     }}

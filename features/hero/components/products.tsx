@@ -8,9 +8,8 @@ import { MensProductCarousel } from "./mens-product-carousel";
 import { WomensProductCarousel } from "./womens-product-carousel";
 import { JewelriesCarousel } from "./jewelries-carousel";
 import { ElectronicsCarousel } from "./electronics";
-
 import { Loader } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 function Products() {
   const mensClothing = useQuery({
@@ -78,13 +77,16 @@ function Products() {
     electronics.data?.data == null
   ) {
     return (
-      <div className="h-[50vh] flex items-center justify-center">
-        <Card className="border-none shadow-none flex items-center justify-center gap-4 h-max w-max p-4 md:p-6">
-          <Loader className="animate-spin" />
-          <p className="-tracking-tighter text-[0.7rem] md:text-xs font-semibold text-balance">
-            Please wait while we load your deals...
-          </p>
-        </Card>
+      <div className="h-[50vh] flex items-center justify-center gap-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center"
+        >
+          <Loader className="animate-spin text-blue-600 w-10 h-10 mb-4" />
+          <p className="text-gray-600 text-sm">Loading products...</p>
+        </motion.div>
       </div>
     );
   }

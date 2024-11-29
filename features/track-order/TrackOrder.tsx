@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import Unauthorized from "@/components/Unauthorized";
 import { OrderAnimation } from "@/features/track-order/order-animation";
 import useMetadata from "@/hooks/use-metadata";
+import { motion } from "framer-motion";
 import { ArrowLeft, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,13 +35,18 @@ export function TrackOrder({ trackingId }: { trackingId: string }) {
 
   if (!isClient) {
     return (
-      <div className="flex-1 flex items-center justify-center h-[60vh]">
-        <Card className="flex items-center justify-center gap-4 h-max w-max p-4 md:p-6">
-          <Loader className="animate-spin" />
-          <p className="-tracking-tighter text-[0.7rem] md:text-xs font-semibold">
+      <div className="flex-1 flex items-center justify-center gap-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center"
+        >
+          <Loader className="animate-spin text-blue-600 w-10 h-10 mb-4" />
+          <p className="text-gray-600 text-sm">
             Hang tight, your order status will be revealed shortly!
           </p>
-        </Card>
+        </motion.div>
       </div>
     );
   }
@@ -52,7 +58,7 @@ export function TrackOrder({ trackingId }: { trackingId: string }) {
   return (
     <div className="flex-1 py-12 md:py-14 lg:py-14 bg-stone-50">
       <MaxWidthWrapper className="max-w-lg">
-        <Card className="bg-white">
+        <Card className="bg-white border-0 shadow-none sm:border sm:shadow">
           <div className="p-4">
             <Button
               onClick={() => router.back()}

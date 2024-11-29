@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "test:ui": "vitest --ui",
-    "scan": "next dev & npx react-scan@latest localhost:3000"
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -67,6 +66,7 @@
     "eslint-config-next": "14.2.16",
     "jsdom": "^25.0.1",
     "postcss": "^8",
+    "react-scan": "^0.0.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vitest": "^2.1.5"

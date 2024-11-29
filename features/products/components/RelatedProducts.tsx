@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { priceFormatter } from "@/lib/utils";
 import LearnMore from "@/components/cta/learn-more";
+import { Loader } from "lucide-react";
 
 export function RelatedProducts({
   search,
@@ -55,7 +56,19 @@ export function RelatedProducts({
   }
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="flex items-center justify-center h-[50vh] gap-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center"
+        >
+          <Loader className="animate-spin text-blue-600 w-10 h-10 mb-4" />
+          <p className="text-gray-600 text-sm">Loading related products...</p>
+        </motion.div>
+      </div>
+    );
   }
 
   return (
