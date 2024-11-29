@@ -145,7 +145,7 @@ function NoOrderPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="border shadow-md rounded-lg p-8 text-center max-w-lg mx-auto"
+        className="sm:border sm:shadow-md rounded-xl p-8 text-center max-w-lg mx-auto"
       >
         <h1 className="-tracking-tighter text-xl md:text-2xl font-bold mb-4">
           Oops! No Order Found
