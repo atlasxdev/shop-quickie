@@ -118,14 +118,15 @@ function Page() {
                   </motion.div>
                 )}
               </AnimatePresence>
-              {cart == null || products.length == 0 || cart.length == 0 ? (
-                <EmptyCart />
-              ) : null}
-              {cartTotal > 0 && (
+
+              {products.length > 0 && cartTotal > 0 && (
                 <AnimatePresence>
                   <Checkout cartTotal={cartTotal} products={products} />
                 </AnimatePresence>
               )}
+              {cart == null || products.length == 0 || cart.length == 0 ? (
+                <EmptyCart />
+              ) : null}
             </MaxWidthWrapper>
           </div>
         </div>
