@@ -11,8 +11,10 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 function MobileSwiper({
+  categoryFilter,
   setCategoryFilter,
 }: {
+  categoryFilter: string;
   setCategoryFilter: Dispatch<SetStateAction<string>>;
 }) {
   const router = useRouter();
@@ -85,7 +87,9 @@ function MobileSwiper({
             <Button
               variant={"link"}
               size={"sm"}
-              className="capitalize text-xs -tracking-tighter"
+              className={cn("capitalize text-xs -tracking-tighter", {
+                "text-[#FBA328]": category === categoryFilter,
+              })}
               onClick={() => {
                 setCategoryFilter(category);
                 router.push(`/store/${encodeURIComponent(category)}`);

@@ -9,16 +9,20 @@ function HeroAnimation() {
     animationData: groovyWalkAnimation,
     loop: true,
   });
+
   return (
     <motion.div
       initial={{
-        scale: 0,
+        x: 30,
+        opacity: 0,
       }}
       animate={{
-        scale: 1,
+        x: 0,
+        opacity: 1,
       }}
       transition={{
-        delay: 0.5,
+        type: "spring",
+        stiffness: 100,
       }}
     >
       {View}

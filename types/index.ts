@@ -1,3 +1,5 @@
+import { Result, ScalarSearchableValue } from "@orama/orama";
+
 export type TProducts = Product[];
 
 export interface Product {
@@ -14,3 +16,8 @@ export interface Rating {
   rate: number;
   count: number;
 }
+
+export type TResult = {
+  values: ScalarSearchableValue[];
+  result: Result<Product>[];
+};

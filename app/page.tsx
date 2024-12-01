@@ -1,7 +1,6 @@
 "use client";
 
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
-import { TextEffect } from "@/components/ui/text-effect";
 import { ArrowRight } from "lucide-react";
 import Products from "@/features/hero/components/products";
 import HeroAnimation from "@/features/hero/components/hero-lottie-animation";
@@ -11,7 +10,9 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { NavLoader } from "@/components/nav-loader";
+import { motion } from "framer-motion";
 import useMetadata from "@/hooks/use-metadata";
+import { useEffect, useState } from "react";
 
 const Navigation = dynamic(() => import("@/components/Navigation"), {
   ssr: false,
@@ -29,53 +30,69 @@ export default function Home() {
     "Shop Quickie",
     "Your go-to platform for fast, hassle-free online shopping. Discover a wide range of products, find great deals, and enjoy a seamless experience with just a few clicks. Get started now!"
   );
+  const [isClient, setIsClient] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <>
       <Navigation />
       <main className="flex-1">
         <MaxWidthWrapper className="!px-0">
-          <section className="pt-16 pb-24 sm:pt-24 sm:pb-32 md:pt-32 md:pb-44 flex flex-col lg:flex-row justify-center items-center px-6 md:px-8">
-            <div className="w-full flex flex-col gap-4 items-center md:items-start">
-              <TextEffect
-                words="Shop in a Snap – Quick Finds, Big Smiles!"
-                className="hidden lg:block text-5xl md:text-7xl font-extrabold text-[#FBA328]"
-              />
+          {isClient ? (
+            <section className="pt-16 pb-24 sm:pt-24 sm:pb-32 md:pt-32 md:pb-44 flex flex-col lg:flex-row justify-center items-center px-6 md:px-8">
+              <div className="w-full flex flex-col gap-4 items-center md:items-start">
+                <motion.h1
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  className="text-5xl md:text-7xl font-extrabold text-[#FBA328]"
+                >
+                  Shop in a Snap – Quick Finds, Big Smiles!
+                </motion.h1>
 
-              <h1 className="block lg:hidden text-5xl md:text-7xl font-extrabold text-[#FBA328]">
-                Shop in a Snap – Quick Finds, Big Smiles!
+                <motion.p
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  className="text-sm md:text-base font-medium -tracking-tighter text-balance text-muted-foreground origin-left"
+                >
+                  Discover your favorite products in one quick stop. Browse
+                  through categories, find great deals, and enjoy a seamless
+                  shopping experience, all with just a few clicks.
+                </motion.p>
+                <br />
+                <Link
+                  href={"/store"}
+                  className={buttonVariants({
+                    className:
+                      "text-sm uppercase !rounded-full -tracking-tighter gap-2",
+                    size: "lg",
+                  })}
+                >
+                  Shop now <ArrowRight />
+                </Link>
+              </div>
+
+              <div className="hidden lg:block mx-auto w-3/5">
+                <HeroAnimation />
+              </div>
+            </section>
+          ) : (
+            <div className="flex items-center justify-center min-h-screen">
+              <h1 className="font-black -tracking-tighter text-6xl sm:text-7xl md:text-8xl animate-pulse">
+                Loading...
               </h1>
-
-              <TextEffect
-                delay={0.5}
-                className="hidden lg:block text-base font-medium text-muted-foreground origin-left"
-                words="Discover your favorite products in one quick stop. Browse
-                through categories, find great deals, and enjoy a seamless
-                shopping experience, all with just a few clicks."
-              />
-
-              <p className="block lg:hidden text-sm font-medium -tracking-tighter text-balance text-muted-foreground origin-left">
-                Discover your favorite products in one quick stop. Browse
-                through categories, find great deals, and enjoy a seamless
-                shopping experience, all with just a few clicks.
-              </p>
-              <br />
-              <Link
-                href={"/store"}
-                className={buttonVariants({
-                  className:
-                    "text-sm uppercase !rounded-full -tracking-tighter gap-2",
-                  size: "lg",
-                })}
-              >
-                Shop now <ArrowRight />
-              </Link>
             </div>
-
-            <div className="hidden lg:block mx-auto w-3/5">
-              <HeroAnimation />
-            </div>
-          </section>
+          )}
         </MaxWidthWrapper>
 
         <MaxWidthWrapper>

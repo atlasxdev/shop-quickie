@@ -33,14 +33,14 @@ export function TextEffect({
           className={className}
           initial={{
             opacity: 0,
-            filter: "blur(12px)",
+            filter: "blur(4px)",
           }}
           animate={{
             opacity: 1,
             filter: "blur(0px)",
           }}
           transition={{
-            delay: idx / 20 + delay,
+            delay: idx / 25 + delay,
           }}
           key={idx}
         >

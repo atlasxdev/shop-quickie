@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { oramaClient } from "@/services";
-import { Product } from "@/types";
+import { Product, TResult } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Result } from "@orama/orama";
 
 function useSearch(search: string) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(0);
   const [searchResults, setSearchResults] = useState<
-    Result<Product>[] | "no-results" | undefined
+    | {
+        [key: string]: Product[];
+      }
+    | "no-results"
+    | undefined
   >();
   const queryClient = useQueryClient();
 
@@ -34,26 +39,47 @@ function useSearch(search: string) {
       const searchResults = await oramaClient.search({
         term: search,
         mode: "vector",
-        limit: 5,
+        groupBy: {
+          properties: ["category"],
+        },
+        sortBy: {
+          property: "title",
+          order: "ASC",
+        },
       });
 
-      if (!searchResults?.hits.length) {
-        setIsLoading(false);
-        setSearchResults("no-results");
+      if (searchResults?.groups == null) {
         throw new Error("Something went wrong");
       }
-      setSearchResults(searchResults.hits as Result<Product>[]);
+
+      const categorizeProducts = searchResults.groups.reduce(
+        (acc: { [key: string]: Product[] }, group: TResult) => {
+          const category = group.values[0];
+          acc[category.toString()] = group.result.map((item) => item.document);
+          return acc;
+        },
+        {}
+      );
+      setCount(
+        Object.values(categorizeProducts).reduce(
+          (total, products) => total + products.length,
+          0
+        )
+      );
+      setSearchResults(categorizeProducts);
       setIsLoading(false);
-      return searchResults.hits as Result<Product>[];
+      return categorizeProducts;
     } catch (error) {
       oramaClient.reset();
       console.error(error);
+      setCount(0);
+      setIsLoading(false);
       setSearchResults("no-results");
       return "no-results";
     }
   }
 
-  return { searchResults, isLoading };
+  return { searchResults, isLoading, count };
 }
 
 export default useSearch;

@@ -8,21 +8,32 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Product } from "@/types";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ArrowRight, ArrowUpDown, Loader, SearchIcon } from "lucide-react";
+import { ArrowRight, Loader, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import LearnMore from "@/components/cta/learn-more";
-import { CardDescription } from "@/components/ui/card";
 import { AnimatePresence, motion } from "framer-motion";
 import { priceFormatter } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useSearch from "@/hooks/use-search";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { DropdownFilter } from "./components/DropdownFilter";
 
 export function OramaSearch() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, [setIsOpen]);
 
   return (
     <>
@@ -53,49 +64,21 @@ type OramaSearchProps = {
 };
 
 function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
   const router = useRouter();
-  const { searchResults, isLoading } = useSearch(search);
+  const [search, setSearch] = useState<string>("");
+  const { searchResults, isLoading, count } = useSearch(search);
+  const [sortedResults, setSortedResults] = useState(searchResults);
 
   useEffect(() => {
-    if (searchResults == null || searchResults == "no-results") return;
-    if (isClicked) {
-      searchResults.sort(
-        (d1, d2) =>
-          (d2.document as Product).price - (d1.document as Product).price
-      );
-    } else {
-      searchResults.sort(
-        (d1, d2) =>
-          (d1.document as Product).price - (d2.document as Product).price
-      );
-    }
-  }, [isClicked, searchResults]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setSearch("");
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setIsOpen(true);
-      }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, [setIsOpen]);
+    setSortedResults(searchResults);
+  }, [searchResults]);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-      <DialogContent className="!rounded-xl px-4">
-        <ScrollArea className="mt-4 h-96">
-          <div className="pl-2 pb-4 pr-4 space-y-6 md:space-y-8">
-            <DialogHeader className="pt-6 space-y-4">
+      <DialogContent className="!rounded-xl px-4 max-w-2xl">
+        <ScrollArea className="mt-4 h-[400px]">
+          <div className="relative pl-2 pb-4 pr-4 space-y-6 md:space-y-8">
+            <DialogHeader className="sticky top-0 z-20 pt-6 space-y-4 backdrop-blur-md bg-white/70 p-4 rounded-md">
               <DialogTitle className="text-center -tracking-tighter uppercase font-extrabold text-[#FBA328]">
                 Ask me anything
               </DialogTitle>
@@ -103,7 +86,7 @@ function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
               <Input
                 autoFocus
                 placeholder="Search for products..."
-                className="text-xs md:text-sm"
+                className="text-xs md:text-sm bg-white"
                 value={search}
                 onChange={(e) => {
                   if (e.target.value == null) return;
@@ -156,7 +139,7 @@ function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
                 >
                   <div className="text-center space-y-4">
                     <h2 className="-tracking-tighter text-sm md:text-base font-medium">
-                      🤔 Hmmm... No Matches Found
+                      🤔 Hmmm... No results found
                     </h2>
                     <p className="text-muted-foreground text-xs md:text-sm -tracking-tighter text-balance">
                       It seems like we couldn&apos;t find anything matching your
@@ -186,75 +169,87 @@ function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
               )}
             </AnimatePresence>
 
-            {searchResults != "no-results" &&
-              searchResults != null &&
-              searchResults.length > 0 && (
-                <>
-                  <div className="mt-0 md:mt-4 w-full flex items-center justify-between">
-                    <CardDescription className="mt-2 text-xs font-medium -tracking-tighter">
-                      {searchResults.length} Results
-                    </CardDescription>
-                    <Button
-                      disabled={searchResults.length <= 1}
-                      onClick={() =>
-                        setIsClicked((prev) => {
-                          if (prev == null) {
-                            return true;
-                          } else {
-                            return !prev;
-                          }
-                        })
-                      }
-                      variant={"ghost"}
-                      size={"sm"}
-                      className="gap-2"
-                    >
-                      Price
-                      <ArrowUpDown />
-                    </Button>
-                  </div>
-                  <div className="w-full space-y-2">
-                    {searchResults.map((hit) => (
-                      <motion.div
-                        layout
-                        transition={{
-                          type: "spring",
-                          damping: 25,
-                          stiffness: 120,
-                          delay: 0.4,
-                        }}
-                        className="w-full flex gap-4 rounded-md p-4 border hover:shadow-md transition-shadow"
-                        key={hit.id}
-                      >
-                        <Image
-                          src={hit.document.image}
-                          alt={hit.document.description}
-                          width={50}
-                          height={50}
-                          className="object-contain"
+            {sortedResults != "no-results" && sortedResults != null && (
+              <div className="w-full space-y-4">
+                <div className="w-max ml-auto">
+                  <Badge
+                    variant={"secondary"}
+                    className="font-medium -tracking-tighter"
+                  >
+                    Number of results:
+                    <span className="ml-1">{count}</span>
+                  </Badge>
+                </div>
+                <div className="w-full space-y-6 md:space-y-10">
+                  {Object.entries(sortedResults).map(([category, products]) => (
+                    <div className="space-y-2" key={category}>
+                      <div className="w-full flex justify-between items-center">
+                        <h1 className="uppercase -tracking-tighter text-sm md:text-base font-bold text-[#FBA328]">
+                          {category}
+                        </h1>
+                        <DropdownFilter
+                          category={category}
+                          products={products}
+                          setSortedResults={setSortedResults}
+                          sortedResults={sortedResults}
                         />
-                        <div className="flex flex-col gap-4 w-full">
-                          <p className="text-sm font-medium -tracking-tighter text-pretty">
-                            {hit.document.title}
-                          </p>
-                          <div className="w-full flex items-center justify-between">
-                            <p className="text-sm">
-                              {priceFormatter(hit.document.price)}
+                      </div>
+                      {products.map((product) => (
+                        <motion.div
+                          layout
+                          transition={{
+                            type: "spring",
+                            damping: 25,
+                            stiffness: 120,
+                          }}
+                          className="bg-white w-full flex flex-col gap-4 rounded-lg p-4 md:p-6 border hover:shadow-md transition-shadow"
+                          key={product.id}
+                        >
+                          <Image
+                            src={product.image}
+                            alt={product.description}
+                            width={80}
+                            height={80}
+                            className="hidden md:block object-contain mx-auto"
+                          />
+                          <Image
+                            src={product.image}
+                            alt={product.description}
+                            width={60}
+                            height={60}
+                            className="block md:hidden object-contain mx-auto"
+                          />
+                          <div className="flex flex-col gap-4 w-full">
+                            <p className="text-sm lg:text-base font-medium -tracking-tighter text-pretty">
+                              {product.title}
                             </p>
-                            <div onClick={() => setIsOpen(false)}>
-                              <LearnMore
-                                variant="link"
-                                id={hit.document.id}
-                                search={search}
-                              />
+
+                            <p className="text-xs font-medium -tracking-tighter text-pretty text-muted-foreground line-clamp-3">
+                              {product.description}
+                            </p>
+                            <div className="w-full flex items-center justify-between">
+                              <p className="text-sm md:text-base font-bold">
+                                {priceFormatter(product.price)}
+                              </p>
+                              <div
+                                className="w-2/4"
+                                onClick={() => setIsOpen(false)}
+                              >
+                                <LearnMore
+                                  search={search}
+                                  className="w-full mx-0 ml-auto"
+                                  id={product.id}
+                                />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </>
-              )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </DialogContent>

@@ -8,6 +8,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function filterEmptyArrays<T>(obj: T) {
+  for (const key in obj) {
+    if (Array.isArray(obj[key]) && obj[key].length === 0) {
+      delete obj[key];
+    }
+  }
+  return obj;
+}
+
 export function generateCheckoutUrl(products: Cart["products"]) {
   const url: string[] = [];
   if (!products.length) {

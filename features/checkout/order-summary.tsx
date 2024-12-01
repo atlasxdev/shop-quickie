@@ -109,7 +109,6 @@ function Summary({
   useEffect(() => {
     if (data?.data == null) return;
     setItemTotal((prev) => {
-      console.log(prev);
       return prev + data.data.price * parseInt(quantity);
     });
 

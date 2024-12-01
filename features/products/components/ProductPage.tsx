@@ -40,6 +40,7 @@ import { ProductSlider } from "./ProductSlider";
 import { SeeMore } from "./SeeMore";
 import { AxiosResponse } from "axios";
 import { RelatedProducts } from "./RelatedProducts";
+import { ShopByCategory } from "./ShopByCategory";
 
 export function ProductPage({ id, search }: { id: string; search?: string }) {
   const productAssets = useMemo(() => {
@@ -82,7 +83,10 @@ export function ProductPage({ id, search }: { id: string; search?: string }) {
         <GoBack />
       </div>
       <Product id={id} data={data} productAssets={productAssets} />
-      {search ? <RelatedProducts id={id} search={search} /> : null}
+      <div className="pb-8 md:pb-10">
+        {search ? <RelatedProducts id={id} search={search} /> : null}
+        <ShopByCategory />
+      </div>
     </>
   );
 }

@@ -18,6 +18,7 @@ import Image from "next/image";
 import MobileSwiper from "@/features/store/components/MobileSwiper";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 function FilterNavigation() {
   const router = useRouter();
@@ -63,7 +64,9 @@ function FilterNavigation() {
                 <Button
                   variant={"link"}
                   size={"sm"}
-                  className="capitalize text-xs -tracking-tighter"
+                  className={cn("capitalize text-xs -tracking-tighter", {
+                    "text-[#FBA328]": category === categoryFilter,
+                  })}
                   onClick={() => {
                     setCategoryFilter(category);
                     router.push(`/store/${encodeURIComponent(category)}`);
@@ -75,7 +78,10 @@ function FilterNavigation() {
             ))}
           </div>
         ) : (
-          <MobileSwiper setCategoryFilter={setCategoryFilter} />
+          <MobileSwiper
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter}
+          />
         )}
       </div>
       <BreadcrumbComponent

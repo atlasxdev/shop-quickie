@@ -34,7 +34,6 @@ export function AddQuantity({
       }
       return item.products.flatMap((v) => [v]);
     });
-    console.log(updatedCart);
     localStorage.removeItem("cart");
     updateCart(
       _cart.flatMap((items) => {
