@@ -234,6 +234,7 @@ const Product = memo(function Product({
               {user || userStore ? (
                 <>
                   <AddToCart
+                    size="lg"
                     price={data.data.price}
                     productId={data.data.id.toString()}
                     quantity={quantity}
