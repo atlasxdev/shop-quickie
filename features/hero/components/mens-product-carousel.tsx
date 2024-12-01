@@ -5,15 +5,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { A11y } from "swiper/modules";
 import { TProducts } from "@/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import Image from "next/image";
 import { useState } from "react";
 import { Swiper as SwiperType } from "swiper/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import LearnMore from "@/components/cta/learn-more";
+import { CardProduct } from "@/components/CardProduct";
 
 export function MensProductCarousel({ product }: { product: TProducts }) {
   const [isReachedBeginning, setIsReachedBeginning] = useState<boolean>(true);
@@ -66,7 +63,6 @@ export function MensProductCarousel({ product }: { product: TProducts }) {
       <Swiper
         grabCursor
         slidesPerView={3}
-        spaceBetween={30}
         breakpoints={{
           320: {
             slidesPerView: 1,
@@ -78,9 +74,9 @@ export function MensProductCarousel({ product }: { product: TProducts }) {
             spaceBetween: 20,
           },
 
-          1024: {
+          1280: {
             slidesPerView: 3,
-            spaceBetween: 30,
+            spaceBetween: 20,
           },
         }}
         modules={[A11y]}
@@ -132,34 +128,17 @@ export function MensProductCarousel({ product }: { product: TProducts }) {
             <path d="M23.5587,16.916 C24.1447,17.4999987 24.1467,18.446 23.5647,19.034 L16.6077,26.056 C16.3147,26.352 15.9287,26.4999987 15.5427,26.4999987 C15.1607,26.4999987 14.7787,26.355 14.4867,26.065 C13.8977,25.482 13.8947,24.533 14.4777,23.944 L20.3818,17.984 L14.4408,12.062 C13.8548,11.478 13.8528,10.5279 14.4378,9.941 C15.0218,9.354 15.9738,9.353 16.5588,9.938 L23.5588,16.916 L23.5587,16.916 Z"></path>
           </svg>
         </div>
-        {product.map(({ id, title, category, description, image }) => (
+        {product.map(({ id, title, price, description, image }) => (
           <SwiperSlide key={id}>
-            <Card className="flex-1 h-full shadow-none md:hover:shadow-lg md:hover:scale-[1.01] transition-transform">
-              <CardContent className="flex flex-col w-full h-full py-4">
-                <CardHeader className="space-y-4 px-2">
-                  <CardTitle className="text-center text-xl -tracking-tighter text-balance font-bold">
-                    {title}
-                  </CardTitle>
-                  <Badge
-                    className=" capitalize rounded-full w-max mx-auto text-[0.7rem] font-normal"
-                    variant={"secondary"}
-                  >
-                    {category}
-                  </Badge>
-
-                  <LearnMore id={id} />
-                </CardHeader>
-                <div className="flex-1 flex items-center justify-center mb-4">
-                  <Image
-                    className="object-cover mx-auto"
-                    width={150}
-                    height={150}
-                    src={image}
-                    alt={description}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            <CardProduct
+              id={id}
+              price={price}
+              title={title}
+              description={description}
+              image={image}
+              imageHeight="h-40"
+              titleHeight="h-10"
+            />
           </SwiperSlide>
         ))}
       </Swiper>

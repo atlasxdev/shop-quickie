@@ -24,9 +24,9 @@ function Page() {
       queryFn: async ({ pageParam }) => {
         return await apiRoute.get<TProducts>(`/products?limit=${pageParam}`);
       },
-      initialPageParam: 4,
+      initialPageParam: 3,
       getNextPageParam: (_, __, lastPageParam) => {
-        return lastPageParam + 4;
+        return lastPageParam + 3;
       },
       maxPages: 5,
       refetchOnMount: false,

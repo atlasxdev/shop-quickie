@@ -1,40 +1,44 @@
 "use client";
-
+import USERS from "../../data/users.json";
 import { apiRoute } from "@/axios/apiRoute";
-import { ErrorMessage } from "@/components/ErrorMessage";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { cn, wait } from "@/lib/utils";
+import { wait } from "@/lib/utils";
 import { TLoginSchema, ZodLoginSchema } from "@/zod-schema";
 import { useUserStore } from "@/zustand-store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { AnimatePresence } from "framer-motion";
-import { ArrowLeft, Loader, LogIn } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { permanentRedirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import USERS from "../../data/users.json";
-import useMetadata from "@/hooks/use-metadata";
+import { motion } from "framer-motion";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function Page() {
-  useMetadata(
-    "Login to Your Account - Shop Quickie",
-    "Securely access your account at [Store Name]. Log in to view your orders, manage your profile, and enjoy a personalized shopping experience. Enter your username and password to get started."
-  );
   const router = useRouter();
   const logIn = useUserStore((state) => state.logIn);
+  const [isClient, setIsClient] = useState<boolean>(false);
+
   const { mutate, isPending } = useMutation({
     mutationFn: async ({ username, password }: TLoginSchema) => {
       return await apiRoute.post(`/auth/login`, {
@@ -44,35 +48,30 @@ function Page() {
     },
     onMutate: () =>
       toast("🔑 Welcome!", {
-        description: "Just a moment while we verify your credentials",
+        description: "Verifying your credentials...",
       }),
     onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
-      const user = USERS.find((user) => user.username == username);
+      const user = USERS.find((user) => user.username === username);
       logIn(data.data.token);
       localStorage.setItem(
         "user",
         JSON.stringify({ token: data.data.token, userId: user?.id })
       );
       await wait(1000);
-      toast("Welcome back! 🎉", {
+      toast("🎉 Welcome back!", {
         description: "You’ve successfully logged in.",
       });
       router.back();
     },
     onError: () => {
-      toast.error("Oops! We couldn't log you in.", {
+      toast.error("Login failed!", {
         description: "Please check your credentials and try again.",
       });
-      reset();
+      form.reset();
     },
   });
 
-  const {
-    register,
-    formState: { errors, isValid },
-    reset,
-    handleSubmit,
-  } = useForm<TLoginSchema>({
+  const form = useForm<TLoginSchema>({
     resolver: zodResolver(ZodLoginSchema),
     defaultValues: {
       username: "",
@@ -81,67 +80,137 @@ function Page() {
     mode: "onChange",
   });
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   function submitForm(data: TLoginSchema) {
     mutate({ ...data });
   }
 
+  if (!isClient) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-gray-100">
+        <motion.div
+          className="flex space-x-2 animate-bounce"
+          transition={{
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <div className="w-4 h-4 bg-orange-500 rounded-full" />
+          <div className="w-4 h-4 bg-orange-600 rounded-full" />
+          <div className="w-4 h-4 bg-orange-700 rounded-full" />
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (localStorage.getItem("user") != null) {
+    permanentRedirect("/");
+  }
+
   return (
-    <div className="px-6 md:px-0 relative flex-1 flex items-center justify-center bg-[#F5F5F7] py-12 md:py-14 lg:py-16">
-      <Link
-        href={"/store"}
-        className={buttonVariants({
-          variant: "link",
-          className: cn(
-            "-tracking-tighter absolute top-5 left-5 gap-2 !text-[#FBA328]",
-            {
-              "pointer-events-none": isPending,
-            }
-          ),
-        })}
-      >
-        <ArrowLeft />
-        Continue shopping
-      </Link>
-      <Card className="mt-8 md:mt-0 max-w-sm w-full h-96">
-        <CardHeader className="flex items-center justify-center">
-          <Image src={"/logo.png"} priority width={60} height={60} alt="" />
-          <CardTitle className="text-xl font-bold -tracking-tighter">
-            Welcome
-          </CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit(submitForm)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-1">
-              <Label className="text-xs -tracking-tighter">Username</Label>
-              <Input {...register("username")} autoFocus className="text-xs" />
-              <AnimatePresence>
-                {errors.username && (
-                  <ErrorMessage message={errors.username.message} />
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs -tracking-tighter">Password</Label>
-              <Input {...register("password")} className="" type="password" />
-              <AnimatePresence>
-                {errors.password && (
-                  <ErrorMessage message={errors.password.message} />
-                )}
-              </AnimatePresence>
-            </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6 lg:p-12">
+      <Card className="max-w-screen-lg w-full grid grid-cols-1 lg:grid-cols-2 shadow-lg overflow-hidden rounded-lg">
+        <div className="hidden lg:flex flex-col justify-center bg-gradient-to-b from-[#FBA328] to-orange-500 text-white p-10">
+          <h2 className="text-2xl font-bold text-center mt-4">
+            Welcome to Shop Quickie!
+          </h2>
+          <p className="text-center mt-2">
+            Log in to explore amazing deals and manage your account
+            effortlessly.
+          </p>
+        </div>
+
+        {/* Login Form */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white flex flex-col py-6 px-2 lg:p-8"
+        >
+          {/* Go Back Button */}
+          <Button
+            variant="link"
+            className="mb-4 text-[#FBA328] gap-2 w-max"
+            onClick={() => router.back()}
+            size={"sm"}
+          >
+            <ArrowLeft /> Go Back
+          </Button>
+
+          <CardHeader className="flex flex-col items-center mb-8">
+            <Image src="/logo.png" alt="Logo" width={60} height={60} />
+            <CardTitle className="text-xl md:text-2xl font-extrabold mt-4">
+              Sign In
+            </CardTitle>
+            <CardDescription>Access your account below.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(submitForm)}
+                className="space-y-4 md:space-y-6"
+              >
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="-tracking-tighter text-xs">
+                        Username
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="Enter your username"
+                          className="-tracking-tighter !text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="-tracking-tighter text-[0.65rem] md:text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="-tracking-tighter text-xs">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <PasswordInput
+                          {...field}
+                          placeholder="Enter your password"
+                          className="-tracking-tighter !text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="-tracking-tighter text-[0.65rem]" />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-[#FBA328] text-white hover:bg-orange-600"
+                  disabled={isPending}
+                >
+                  {isPending ? "Loading..." : "Log In"}
+                </Button>
+              </form>
+            </Form>
           </CardContent>
-          <CardFooter>
-            <Button
-              disabled={!isValid}
-              className={cn("w-full rounded-full gap-2", {
-                "animate-pulse pointer-events-none": isPending,
-              })}
-            >
-              Login{" "}
-              {isPending ? <Loader className="animate-spin" /> : <LogIn />}
-            </Button>
-          </CardFooter>
-        </form>
+          <div className="mt-6 text-center">
+            <p className="-tracking-tighter text-xs">
+              New to Shop Quickie?{" "}
+              <Link href="/#" className="text-[#FBA328] hover:underline">
+                Create an account
+              </Link>
+            </p>
+          </div>
+        </motion.div>
       </Card>
     </div>
   );

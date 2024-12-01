@@ -170,7 +170,7 @@ function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
             </AnimatePresence>
 
             {sortedResults != "no-results" && sortedResults != null && (
-              <div className="w-full space-y-4">
+              <div className="w-full space-y-2">
                 <div className="w-max ml-auto">
                   <Badge
                     variant={"secondary"}
@@ -180,9 +180,9 @@ function OramaSearchContent({ isOpen, setIsOpen }: OramaSearchProps) {
                     <span className="ml-1">{count}</span>
                   </Badge>
                 </div>
-                <div className="w-full space-y-6 md:space-y-10">
+                <div className="w-full space-y-10 md:space-y-12">
                   {Object.entries(sortedResults).map(([category, products]) => (
-                    <div className="space-y-2" key={category}>
+                    <div className="py-4 space-y-2" key={category}>
                       <div className="w-full flex justify-between items-center">
                         <h1 className="uppercase -tracking-tighter text-sm md:text-base font-bold text-[#FBA328]">
                           {category}

@@ -156,16 +156,16 @@ export function RelatedProducts({
         </CardHeader>
         <CardContent className="p-0 md:px-6 md:pb-6 md:pt-0">
           {sortedResults != "no-results" && sortedResults != null && (
-            <div className="w-full space-y-8 md:space-y-12">
+            <div className="w-full space-y-10 md:space-y-12">
               {Object.entries(sortedResults).map(([category, products]) => (
-                <div className="space-y-6" key={category}>
+                <div className="py-4 space-y-6" key={category}>
                   <div className="w-full flex justify-between items-center">
                     <Link
                       className="text-[#FBA328] flex items-center justify-center gap-2"
                       href={`/store/${category}`}
                       target="_blank"
                     >
-                      <h1 className="uppercase -tracking-tighter text-sm md:text-base font-bold">
+                      <h1 className="uppercase -tracking-tighter text-base md:text-lg lg:text-xl font-bold">
                         {category}
                       </h1>
                       <ExternalLink className="size-4" />

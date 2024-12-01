@@ -11,10 +11,12 @@ function AddToCart({
   productId,
   quantity,
   price,
+  size = "lg",
 }: {
   productId: string;
   quantity: number;
   price: number;
+  size: "lg" | "sm";
 }) {
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter();
@@ -148,7 +150,7 @@ function AddToCart({
   return (
     <Button
       onClick={() => mutateCart()}
-      size={"lg"}
+      size={size}
       className="rounded-full w-full gap-2"
       variant={"secondary"}
     >

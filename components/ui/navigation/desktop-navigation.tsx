@@ -140,7 +140,20 @@ export function DesktopNavigation({
           </div>
           <div className="w-full flex justify-end items-center gap-4">
             <OramaSearch />
-            {user ? <UserDropdown /> : null}
+            {user ? (
+              <UserDropdown />
+            ) : (
+              <Link
+                href={"/login"}
+                className={buttonVariants({
+                  className: "!py-5",
+                  variant: "ghost",
+                  size: "sm",
+                })}
+              >
+                Sign in
+              </Link>
+            )}
             <div className="relative hidden md:block">
               {cart != null && cart[0].products.length > 0 ? (
                 <span className="bg-black right-0 -top-1 absolute size-5 flex items-center justify-center p-1 rounded-full border">

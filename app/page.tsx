@@ -124,10 +124,18 @@ export default function Home() {
               </div>
             </section>
           ) : (
-            <div className="flex items-center justify-center min-h-screen">
-              <h1 className="font-black -tracking-tighter text-6xl sm:text-7xl md:text-8xl animate-pulse">
-                Loading...
-              </h1>
+            <div className="flex items-center justify-center h-[80vh]">
+              <motion.div
+                className="flex space-x-2 animate-bounce"
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <div className="w-4 h-4 bg-orange-500 rounded-full" />
+                <div className="w-4 h-4 bg-orange-600 rounded-full" />
+                <div className="w-4 h-4 bg-orange-700 rounded-full" />
+              </motion.div>
             </div>
           )}
         </MaxWidthWrapper>
