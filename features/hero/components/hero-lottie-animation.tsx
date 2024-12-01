@@ -13,16 +13,17 @@ function HeroAnimation() {
   return (
     <motion.div
       initial={{
-        x: 30,
-        opacity: 0,
+        y: sessionStorage.getItem("hasAnimated") ? 0 : 30,
+        opacity: sessionStorage.getItem("hasAnimated") ? 1 : 0,
       }}
       animate={{
-        x: 0,
+        y: 0,
         opacity: 1,
       }}
       transition={{
         type: "spring",
         stiffness: 100,
+        delay: 3,
       }}
     >
       {View}

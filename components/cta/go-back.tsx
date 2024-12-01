@@ -9,7 +9,7 @@ export function GoBack() {
 
   return (
     <Button
-      onClick={() => router.push("/")}
+      onClick={() => router.back()}
       className="uppercase font-bold -tracking-tighter text-[#FBA328] gap-2 pl-0 lg:pl-4"
       variant={"link"}
       size={"sm"}

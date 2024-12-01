@@ -106,6 +106,7 @@ function Page() {
                       Your cart total is{" "}
                       <AnimatedNumber value={cartTotal} isPrice={true} />
                     </h1>
+
                     {products.map((product, index) => (
                       <CartItem
                         setCartTotal={setCartTotal}
@@ -170,10 +171,7 @@ function CartItem({
   }
 
   return (
-    <motion.div
-      layout
-      className="flex flex-col md:flex-row items-center gap-4 md:gap-6"
-    >
+    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
       <Image
         className="object-contain hidden md:block"
         src={data.data.image}
@@ -240,7 +238,7 @@ function CartItem({
           </Button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -251,7 +249,18 @@ function EmptyCart() {
   const router = useRouter();
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{
+        opacity: sessionStorage.getItem("hasAnimated") ? 1 : 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      transition={{
+        delay: 0.5,
+      }}
+      className="space-y-6"
+    >
       <div className="space-y-4">
         <h1 className="text-2xl md:text-4xl font-bold -tracking-tighter">
           Your cart is empty
@@ -281,7 +290,7 @@ function EmptyCart() {
           <ArrowRight />
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

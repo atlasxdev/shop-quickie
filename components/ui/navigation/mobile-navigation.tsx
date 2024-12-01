@@ -47,7 +47,6 @@ export function MobileNavigation({
       <div className="w-full flex items-center justify-between">
         <Sheet onOpenChange={(open) => setIsOpen(open)} open={isOpen}>
           <SheetTrigger>
-            {" "}
             <svg
               strokeWidth="2"
               viewBox="0 0 24 24"

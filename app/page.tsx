@@ -34,6 +34,13 @@ export default function Home() {
 
   useEffect(() => {
     setIsClient(true);
+
+    const timeout = setTimeout(
+      () => sessionStorage.setItem("hasAnimated", "true"),
+      4000
+    );
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -46,10 +53,17 @@ export default function Home() {
               <div className="w-full flex flex-col gap-4 items-center md:items-start">
                 <motion.h1
                   initial={{
-                    opacity: 0,
+                    opacity: sessionStorage.getItem("hasAnimated") ? 1 : 0,
+                    y: sessionStorage.getItem("hasAnimated") ? 0 : 10,
                   }}
                   animate={{
                     opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    delay: 1.5,
                   }}
                   className="text-5xl md:text-7xl font-extrabold text-[#FBA328]"
                 >
@@ -58,10 +72,17 @@ export default function Home() {
 
                 <motion.p
                   initial={{
-                    opacity: 0,
+                    opacity: sessionStorage.getItem("hasAnimated") ? 1 : 0,
+                    y: sessionStorage.getItem("hasAnimated") ? 0 : 10,
                   }}
                   animate={{
                     opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    delay: 2,
                   }}
                   className="text-sm md:text-base font-medium -tracking-tighter text-balance text-muted-foreground origin-left"
                 >
@@ -70,16 +91,32 @@ export default function Home() {
                   shopping experience, all with just a few clicks.
                 </motion.p>
                 <br />
-                <Link
-                  href={"/store"}
-                  className={buttonVariants({
-                    className:
-                      "text-sm uppercase !rounded-full -tracking-tighter gap-2",
-                    size: "lg",
-                  })}
+                <motion.div
+                  initial={{
+                    opacity: sessionStorage.getItem("hasAnimated") ? 1 : 0,
+                    y: sessionStorage.getItem("hasAnimated") ? 0 : 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    delay: 2.5,
+                  }}
                 >
-                  Shop now <ArrowRight />
-                </Link>
+                  <Link
+                    href={"/store"}
+                    className={buttonVariants({
+                      className:
+                        "text-sm uppercase !rounded-full -tracking-tighter gap-2",
+                      size: "lg",
+                    })}
+                  >
+                    Shop now <ArrowRight />
+                  </Link>
+                </motion.div>
               </div>
 
               <div className="hidden lg:block mx-auto w-3/5">

@@ -22,7 +22,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning={true}
-        className={`${recursive.className} flex flex-col min-h-screen antialiased`}
+        className={`${recursive.className} flex flex-col min-h-screen antialiased `}
       >
         <Scroll />
         <NextTopLoader color="#FBA328" />

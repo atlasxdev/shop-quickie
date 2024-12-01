@@ -2,12 +2,12 @@
 
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
 import { NAV_LINKS } from "@/constants";
-import { wait } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { cn, wait } from "@/lib/utils";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { buttonVariants } from "../button";
 import { ShoppingCartIcon } from "lucide-react";
 import { OramaSearch } from "@/services/OramaSearch";
@@ -18,9 +18,11 @@ import { AnimatedNumber } from "../AnimatedNumber";
 const staticLinks = NAV_LINKS.slice(1);
 
 export function DesktopNavigation({
+  pathname,
   isActiveLink,
   setIsActiveLink,
 }: {
+  pathname: string;
   isActiveLink: string | null;
   setIsActiveLink: Dispatch<SetStateAction<string | null>>;
 }) {
@@ -31,15 +33,37 @@ export function DesktopNavigation({
     useCartStore((state) => state.cart) ??
     JSON.parse(localStorage.getItem("cart") ?? "null");
   const router = useRouter();
+  const { scrollY } = useScroll();
+  const [isPageScrolled, setIsPageScrolled] = useState<boolean>(false);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 30) {
+      setIsPageScrolled(true);
+    } else {
+      setIsPageScrolled(false);
+    }
+  });
 
   return (
-    <nav className={"sticky z-20 inset-x-0 p-4 md:p-6"}>
+    <motion.nav
+      initial={{
+        opacity: sessionStorage.getItem("hasAnimated") ? 1 : 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      transition={{
+        delay: 0.3,
+      }}
+      className={cn(
+        "p-4 md:p-6",
+        !pathname.match(/[products][store]/) &&
+          "sticky top-0 z-20 backdrop-blur-md bg-white/70 inset-x-0",
+        isPageScrolled && !pathname.match(/[products][store]/) && "border-b"
+      )}
+    >
       <MaxWidthWrapper>
-        <motion.div
-          className={
-            "w-full flex items-center justify-between backdrop-blur-md bg-white/70"
-          }
-        >
+        <motion.div className={"w-full flex items-center justify-between"}>
           <div className={"flex items-center gap-10"}>
             <Link
               onClick={() => {
@@ -140,6 +164,6 @@ export function DesktopNavigation({
           </div>
         </motion.div>
       </MaxWidthWrapper>
-    </nav>
+    </motion.nav>
   );
 }

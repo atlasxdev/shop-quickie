@@ -22,6 +22,8 @@ function Page() {
     const user = JSON.parse(window.localStorage.getItem("user") ?? "null");
     setUser(user);
     setIsClient(true);
+
+    return () => localStorage.removeItem("hasOrder");
   }, []);
 
   if (!isClient) {
