@@ -58,9 +58,6 @@ function Page() {
       }),
     onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
       const user = USERS.find((user) => user.username === username);
-      if (!user) {
-        throw new Error("No user found!");
-      }
       logIn(data.data.token);
       localStorage.setItem(
         "user",
