@@ -68,7 +68,7 @@ function Page() {
         | Cart[]
         | null;
 
-      if (cart != null) {
+      if (user != null && cart != null) {
         localStorage.removeItem("cart");
         const updatedCart = cart.map((v) => ({ ...v, userId: user.id }));
         updateCart(updatedCart);
