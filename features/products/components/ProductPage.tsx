@@ -22,7 +22,6 @@ import {
   CircleMinusIcon,
   CirclePlusIcon,
   MousePointerClickIcon,
-  ShoppingCartIcon,
 } from "lucide-react";
 
 import { Rating } from "@smastrom/react-rating";
@@ -231,67 +230,41 @@ const Product = memo(function Product({
             </div>
 
             <CardFooter className="flex-col gap-3 md:gap-4 px-0 pb-0 md:px-6 md:pb-6">
+              <AddToCart
+                size="lg"
+                price={data.data.price}
+                productId={data.data.id.toString()}
+                quantity={quantity}
+              />
               {user || userStore ? (
-                <>
-                  <AddToCart
-                    size="lg"
-                    price={data.data.price}
-                    productId={data.data.id.toString()}
-                    quantity={quantity}
-                  />
-                  <Button
-                    onClick={() =>
-                      router.push(
-                        `/checkout?productId=${id}&quantity=${quantity}`
-                      )
-                    }
-                    size={"lg"}
-                    className="rounded-full w-full"
-                    variant={"default"}
-                  >
-                    Buy now
-                  </Button>
-                </>
+                <Button
+                  onClick={() =>
+                    router.push(
+                      `/checkout?productId=${id}&quantity=${quantity}`
+                    )
+                  }
+                  size={"lg"}
+                  className="rounded-full w-full"
+                  variant={"default"}
+                >
+                  Buy now
+                </Button>
               ) : (
-                <>
-                  <Button
-                    onClick={() =>
-                      toast(
-                        "🔐 Oops! You need to be logged in to add items to your cart.",
-                        {
-                          action: {
-                            label: "Sign in",
-                            onClick: () => router.push("/login"),
-                          },
-                        }
-                      )
-                    }
-                    size={"lg"}
-                    className="rounded-full w-full gap-2"
-                    variant={"secondary"}
-                  >
-                    Add to cart
-                    <ShoppingCartIcon />
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      toast(
-                        "Please log in to continue your shopping spree! 🛒",
-                        {
-                          action: {
-                            label: "Sign in",
-                            onClick: () => router.push("/login"),
-                          },
-                        }
-                      )
-                    }
-                    size={"lg"}
-                    className="rounded-full w-full"
-                    variant={"default"}
-                  >
-                    Buy now
-                  </Button>
-                </>
+                <Button
+                  onClick={() =>
+                    toast("Please log in to continue your shopping spree! 🛒", {
+                      action: {
+                        label: "Sign in",
+                        onClick: () => router.push("/login"),
+                      },
+                    })
+                  }
+                  size={"lg"}
+                  className="rounded-full w-full"
+                  variant={"default"}
+                >
+                  Buy now
+                </Button>
               )}
             </CardFooter>
           </CardContent>

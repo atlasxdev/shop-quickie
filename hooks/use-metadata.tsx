@@ -8,7 +8,7 @@ const useMetadata = (title: string, description: string) => {
       document.title = title;
     }
     function blur() {
-      document.title = "Your cart is lonely..." + " - " + title;
+      document.title = "Your cart is lonely :(" + " - " + title;
     }
 
     window.addEventListener("focus", focus);

@@ -39,7 +39,7 @@ export function OramaSearch() {
     <>
       <Button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex w-full max-w-xs justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
+        className="flex w-full max-w-sm justify-between mx-4 lg:mx-0 text-muted-foreground hover:text-black"
         variant={"secondary"}
         size={"sm"}
       >

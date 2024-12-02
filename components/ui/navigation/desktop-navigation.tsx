@@ -1,13 +1,11 @@
 "use client";
 
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
-import { NAV_LINKS } from "@/constants";
-import { cn, wait } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { buttonVariants } from "../button";
 import { ShoppingCartIcon } from "lucide-react";
 import { OramaSearch } from "@/services/OramaSearch";
@@ -15,24 +13,13 @@ import { useCartStore, useUserStore } from "@/zustand-store/store";
 import { UserDropdown } from "@/components/UserDropdown";
 import { AnimatedNumber } from "../AnimatedNumber";
 
-const staticLinks = NAV_LINKS.slice(1);
-
-export function DesktopNavigation({
-  pathname,
-  isActiveLink,
-  setIsActiveLink,
-}: {
-  pathname: string;
-  isActiveLink: string | null;
-  setIsActiveLink: Dispatch<SetStateAction<string | null>>;
-}) {
+export function DesktopNavigation({ pathname }: { pathname: string }) {
   const user =
     useUserStore((state) => state.user) ??
     JSON.parse(localStorage.getItem("user") ?? "null");
   const cart =
     useCartStore((state) => state.cart) ??
     JSON.parse(localStorage.getItem("cart") ?? "null");
-  const router = useRouter();
   const { scrollY } = useScroll();
   const [isPageScrolled, setIsPageScrolled] = useState<boolean>(false);
 
@@ -64,82 +51,31 @@ export function DesktopNavigation({
     >
       <MaxWidthWrapper>
         <motion.div className={"w-full flex items-center justify-between"}>
-          <div className={"flex items-center gap-10"}>
-            <Link
-              onClick={() => {
-                setIsActiveLink(null);
-              }}
-              className={"relative size-14"}
-              href={"/"}
-            >
-              <Image
-                src={"/logo.png"}
-                priority
-                fill
-                className="object-cover"
-                alt=""
-              />
-            </Link>
-
-            <div className="hidden md:flex items-center justify-center">
-              {NAV_LINKS.map(({ label, href, elementId }) =>
-                elementId != null ? (
-                  <Link
-                    key={label}
-                    href={href}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      if (
-                        staticLinks.some(({ label }) => label === isActiveLink)
-                      ) {
-                        setIsActiveLink(label);
-                        document
-                          .getElementById(elementId)!
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        router.push("/");
-                        setIsActiveLink(label);
-                        await wait(1500);
-                        document
-                          .getElementById(elementId)!
-                          .scrollIntoView({ behavior: "smooth" });
-                      }
-                    }}
-                    className={buttonVariants({
-                      className:
-                        isActiveLink === label
-                          ? "!text-[#FBA328] !font-semibold"
-                          : "!text-black",
-                      variant: "ghost",
-                      size: "sm",
-                    })}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <Link
-                    key={label}
-                    href={href}
-                    onClick={() => {
-                      setIsActiveLink(label);
-                    }}
-                    className={buttonVariants({
-                      className:
-                        isActiveLink === label
-                          ? "!text-[#FBA328] !font-semibold"
-                          : "!text-black",
-                      variant: "ghost",
-                      size: "sm",
-                    })}
-                  >
-                    {label}
-                  </Link>
-                )
-              )}
-            </div>
-          </div>
+          <Link className={"relative size-14"} href={"/"}>
+            <Image
+              src={"/logo.png"}
+              priority
+              fill
+              className="object-cover"
+              alt=""
+            />
+          </Link>
           <div className="w-full flex justify-end items-center gap-4">
             <OramaSearch />
+            <Link
+              href={"/store"}
+              className={buttonVariants({
+                className:
+                  pathname === "/store"
+                    ? "!text-[#FBA328] !font-semibold"
+                    : "!text-black",
+                variant: "ghost",
+                size: "sm",
+              })}
+            >
+              Store
+            </Link>
+
             {user ? (
               <UserDropdown />
             ) : (
@@ -171,7 +107,7 @@ export function DesktopNavigation({
                   size: "sm",
                 })}
               >
-                <ShoppingCartIcon className="!size-6" />
+                <ShoppingCartIcon className={"!size-6"} />
               </Link>
             </div>
           </div>

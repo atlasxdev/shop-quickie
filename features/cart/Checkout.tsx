@@ -1,16 +1,19 @@
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { generateCheckoutUrl } from "@/lib/utils";
 import { Cart } from "@/zustand-store/store";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export function Checkout({
+  user,
   cartTotal,
   products,
 }: {
+  user: string | null;
   cartTotal: number;
   products: Cart["products"];
 }) {
@@ -41,15 +44,32 @@ export function Checkout({
         />
       </div>
       <div className="w-52 ml-auto ">
-        <Link
-          href={`/checkout?${checkoutUrl}`}
-          className={buttonVariants({
-            size: "lg",
-            className: "w-full !rounded-full gap-2",
-          })}
-        >
-          Checkout <ArrowRight />
-        </Link>
+        {user ? (
+          <Link
+            href={`/checkout?${checkoutUrl}`}
+            className={buttonVariants({
+              size: "lg",
+              className: "w-full !rounded-full gap-2",
+            })}
+          >
+            Checkout <ArrowRight />
+          </Link>
+        ) : (
+          <Button
+            onClick={() =>
+              toast("Please log in to continue your shopping spree! 🛒", {
+                action: {
+                  label: "Sign in",
+                  onClick: () => (window.location.href = "/login"),
+                },
+              })
+            }
+            size={"lg"}
+            className="rounded-full gap-2 w-full"
+          >
+            Checkout <ArrowRight />
+          </Button>
+        )}
       </div>
     </motion.div>
   );

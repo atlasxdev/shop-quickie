@@ -28,7 +28,7 @@ function Page() {
       getNextPageParam: (_, __, lastPageParam) => {
         return lastPageParam + 3;
       },
-      maxPages: 5,
+      maxPages: 7,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     });
@@ -67,7 +67,7 @@ function Page() {
     <div className="max-w-screen-2xl px-6 md:px-8 mx-auto flex-1 space-y-4 md:space-y-6">
       <Products actualProductArray={actualProductArray} />
       {isFetchingNextPage && <Skeleton className="w-full h-80" />}
-      {data.pages.length === 5 ? (
+      {data.pages.length === 7 ? (
         <div className="py-16 w-max mx-auto">
           <p className="text-base font-extrabold -tracking-tighter text-muted-foreground">
             That&apos;s all! Nothing more to load.

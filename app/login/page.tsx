@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { wait } from "@/lib/utils";
 import { TLoginSchema, ZodLoginSchema } from "@/zod-schema";
-import { useUserStore } from "@/zustand-store/store";
+import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -33,8 +33,14 @@ import {
 import { PasswordInput } from "@/components/ui/password-input";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
+import useMetadata from "@/hooks/use-metadata";
 
 function Page() {
+  useMetadata(
+    "Login to Your Account - Shop Quickie",
+    "Securely access your account at [Store Name]. Log in to view your orders, manage your profile, and enjoy a personalized shopping experience. Enter your username and password to get started."
+  );
+  const updateCart = useCartStore((state) => state.updateCart);
   const router = useRouter();
   const logIn = useUserStore((state) => state.logIn);
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -52,11 +58,25 @@ function Page() {
       }),
     onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
       const user = USERS.find((user) => user.username === username);
+      if (!user) {
+        throw new Error("No user found!");
+      }
       logIn(data.data.token);
       localStorage.setItem(
         "user",
         JSON.stringify({ token: data.data.token, userId: user?.id })
       );
+
+      const cart = JSON.parse(localStorage.getItem("cart") ?? "null") as
+        | Cart[]
+        | null;
+
+      if (cart != null) {
+        localStorage.removeItem("cart");
+        const updatedCart = cart.map((v) => ({ ...v, userId: user.id }));
+        updateCart(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+      }
       await wait(1000);
       toast("🎉 Welcome back!", {
         description: "You’ve successfully logged in.",
@@ -74,8 +94,8 @@ function Page() {
   const form = useForm<TLoginSchema>({
     resolver: zodResolver(ZodLoginSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      username: "mor_2314",
+      password: "83r5^_",
     },
     mode: "onChange",
   });
@@ -124,12 +144,7 @@ function Page() {
         </div>
 
         {/* Login Form */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white flex flex-col py-6 px-2 lg:p-8"
-        >
+        <div className="bg-white flex flex-col py-6 px-2 lg:p-8">
           {/* Go Back Button */}
           <Button
             variant="link"
@@ -210,7 +225,7 @@ function Page() {
               </Link>
             </p>
           </div>
-        </motion.div>
+        </div>
       </Card>
     </div>
   );

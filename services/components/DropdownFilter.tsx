@@ -77,8 +77,7 @@ export function DropdownFilter({
     >
       <SelectTrigger
         className={buttonVariants({
-          className:
-            "w-[150px] md:w-[200px] justify-between text-[0.7rem] md:text-xs",
+          className: "w-max justify-between text-[0.7rem] md:text-xs",
           variant: "outline",
           size: "sm",
         })}

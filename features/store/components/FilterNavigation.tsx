@@ -31,7 +31,12 @@ function FilterNavigation() {
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    setCategoryFilter(
+      decodeURIComponent(params.category as string) === "undefined"
+        ? ""
+        : decodeURIComponent(params.category as string)
+    );
+  }, [params]);
 
   if (!isClient) {
     return (

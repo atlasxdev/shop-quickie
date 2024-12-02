@@ -1,30 +1,3 @@
-export const NAV_LINKS = [
-  {
-    href: "/store",
-    label: "Store",
-  },
-  {
-    href: "#men's clothing",
-    label: "Men's",
-    elementId: "men's clothing",
-  },
-  {
-    href: "#women's clothing",
-    label: "Women's",
-    elementId: "women's clothing",
-  },
-  {
-    href: "#jewelries",
-    label: "Jewelries",
-    elementId: "jewelries",
-  },
-  {
-    href: "#electronics",
-    label: "Electronics",
-    elementId: "electronics",
-  },
-];
-
 export const CATEGORIES = [
   "men's clothing",
   "women's clothing",

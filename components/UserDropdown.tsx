@@ -1,4 +1,4 @@
-import { Loader, LogOut, PackageSearch, User } from "lucide-react";
+import { LogOut, PackageSearch, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import { wait } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 export function UserDropdown() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export function UserDropdown() {
   }, []);
 
   if (!isClient) {
-    return <Loader className="size-4 animate-spin" />;
+    return <Skeleton className="size-5 rounded-md animate-pulse" />;
   }
 
   return (

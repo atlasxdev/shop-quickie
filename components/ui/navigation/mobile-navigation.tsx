@@ -9,34 +9,26 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
 import { buttonVariants } from "../button";
 import { Link as LucideLink, ShoppingCartIcon } from "lucide-react";
-import { NAV_LINKS } from "@/constants";
-import { wait } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { OramaSearch } from "@/services/OramaSearch";
 import { UserDropdown } from "@/components/UserDropdown";
 import { useCartStore, useUserStore } from "@/zustand-store/store";
 import { AnimatedNumber } from "../AnimatedNumber";
 
-const staticLinks = NAV_LINKS.slice(1);
-
-export function MobileNavigation({
-  isActiveLink,
-  setIsActiveLink,
-}: {
-  isActiveLink: string | null;
-  setIsActiveLink: Dispatch<SetStateAction<string | null>>;
-}) {
+export function MobileNavigation({ pathname }: { pathname: string }) {
   const user =
     useUserStore((state) => state.user) ??
     JSON.parse(localStorage.getItem("user") ?? "null");
   const cart =
     useCartStore((state) => state.cart) ??
     JSON.parse(localStorage.getItem("cart") ?? "null");
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <nav
@@ -82,7 +74,6 @@ export function MobileNavigation({
               <Link
                 onClick={() => {
                   setIsOpen(false);
-                  setIsActiveLink(null);
                 }}
                 className={"relative size-20 mx-auto"}
                 href={"/"}
@@ -104,56 +95,72 @@ export function MobileNavigation({
               <OramaSearch />
             </div>
             <div className="mt-12 flex flex-col">
-              {NAV_LINKS.map(({ label, href, elementId }) =>
-                elementId != null ? (
-                  <Link
-                    key={label}
-                    href={href}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      if (
-                        staticLinks.some(({ label }) => label === isActiveLink)
-                      ) {
-                        setIsActiveLink(label);
-                        document
-                          .getElementById(elementId)!
-                          .scrollIntoView({ behavior: "smooth" });
-                        setIsOpen(false);
-                      } else {
-                        router.push("/");
-                        setIsActiveLink(label);
-                        setIsOpen(false);
-                        await wait(1500);
-                        document
-                          .getElementById(elementId)!
-                          .scrollIntoView({ behavior: "smooth" });
-                      }
-                    }}
-                    className={buttonVariants({
-                      className: "uppercase -tracking-tighter !justify-start",
-                      variant: "link",
-                      size: "lg",
-                    })}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <Link
-                    key={label}
-                    href={href}
-                    onClick={() => {
-                      setIsActiveLink(label);
-                    }}
-                    className={buttonVariants({
-                      className: "uppercase -tracking-tighter !justify-start",
-                      variant: "link",
-                      size: "lg",
-                    })}
-                  >
-                    {label}
-                  </Link>
-                )
-              )}
+              <Link
+                href={"/store"}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className={buttonVariants({
+                  className: "uppercase -tracking-tighter !justify-start",
+                  variant: "link",
+                  size: "lg",
+                })}
+              >
+                Store
+              </Link>
+
+              <Link
+                href={"/store/men's%20clothing"}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className={buttonVariants({
+                  className: "uppercase -tracking-tighter !justify-start",
+                  variant: "link",
+                  size: "lg",
+                })}
+              >
+                Men&apos;s
+              </Link>
+              <Link
+                href={"/store/women's%20clothing"}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className={buttonVariants({
+                  className: "uppercase -tracking-tighter !justify-start",
+                  variant: "link",
+                  size: "lg",
+                })}
+              >
+                Women&apos;s
+              </Link>
+              <Link
+                href={"/store/jewelries"}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className={buttonVariants({
+                  className: "uppercase -tracking-tighter !justify-start",
+                  variant: "link",
+                  size: "lg",
+                })}
+              >
+                Jewelries
+              </Link>
+              <Link
+                href={"/store/electronics"}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className={buttonVariants({
+                  className: "uppercase -tracking-tighter !justify-start",
+                  variant: "link",
+                  size: "lg",
+                })}
+              >
+                Electronics
+              </Link>
             </div>
           </SheetContent>
         </Sheet>

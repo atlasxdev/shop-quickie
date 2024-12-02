@@ -26,7 +26,7 @@ export function CardProduct({
 }) {
   return (
     <Card className="flex-1 h-full shadow-none hover:shadow-lg hover:scale-[1.01] transition-transform">
-      <CardContent className="flex flex-col w-full h-full py-4">
+      <CardContent className="flex flex-col justify-between w-full h-full py-4">
         <CardHeader className="space-y-4 px-2">
           <div
             className={cn("flex items-center justify-center mb-4", imageHeight)}

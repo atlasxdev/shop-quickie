@@ -15,6 +15,7 @@ export const Products = memo(function Products({
             case "men's clothing":
               return (
                 <CardProduct
+                  key={id}
                   id={id}
                   price={price}
                   title={title}
@@ -27,6 +28,7 @@ export const Products = memo(function Products({
             case "women's clothing":
               return (
                 <CardProduct
+                  key={id}
                   id={id}
                   price={price}
                   title={title}
@@ -39,6 +41,7 @@ export const Products = memo(function Products({
             case "electronics":
               return (
                 <CardProduct
+                  key={id}
                   description={description}
                   id={id}
                   image={image}
@@ -51,6 +54,7 @@ export const Products = memo(function Products({
             case "jewelery":
               return (
                 <CardProduct
+                  key={id}
                   description={description}
                   id={id}
                   price={price}

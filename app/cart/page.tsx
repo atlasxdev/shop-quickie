@@ -41,12 +41,10 @@ function Page() {
   );
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
+  const user = useUserStore((state) => state.user);
+  const logIn = useUserStore((state) => state.logIn);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [cartTotal, setCartTotal] = useState(0);
-
-  const products = useMemo(() => {
-    return cart != null ? cart.flatMap((items) => items.products) : [];
-  }, [cart]);
 
   useEffect(() => {
     setIsClient(true);
@@ -55,7 +53,22 @@ function Page() {
   useEffect(() => {
     const _cart = JSON.parse(localStorage.getItem("cart") ?? "null");
     updateCart(_cart);
-  }, [updateCart]);
+    const _user = JSON.parse(localStorage.getItem("user") ?? "null");
+    logIn(_user);
+  }, [logIn, updateCart]);
+
+  const products = useMemo(() => {
+    if (user) {
+      return cart != null
+        ? cart.find(
+            (items) =>
+              items.userId == (user as unknown as { userId: number }).userId
+          )!.products
+        : [];
+    } else {
+      return cart != null ? cart.flatMap((items) => items.products) : [];
+    }
+  }, [cart, user]);
 
   useEffect(() => {
     setCartTotal(() =>
@@ -122,7 +135,11 @@ function Page() {
 
               {products.length > 0 && cartTotal > 0 && (
                 <AnimatePresence>
-                  <Checkout cartTotal={cartTotal} products={products} />
+                  <Checkout
+                    user={user}
+                    cartTotal={cartTotal}
+                    products={products}
+                  />
                 </AnimatePresence>
               )}
               {cart == null || products.length == 0 || cart.length == 0 ? (
