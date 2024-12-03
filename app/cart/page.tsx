@@ -58,8 +58,13 @@ function Page() {
   }, [logIn, updateCart]);
 
   const products = useMemo(() => {
+    if (cart == null) return [];
     if (user) {
-      return cart != null
+      const userCart = cart.find(
+        (items) =>
+          items.userId == (user as unknown as { userId: number }).userId
+      );
+      return userCart != null
         ? cart.find(
             (items) =>
               items.userId == (user as unknown as { userId: number }).userId

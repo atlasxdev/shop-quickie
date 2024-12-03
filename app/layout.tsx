@@ -25,7 +25,7 @@ export default function RootLayout({
         className={`${recursive.className} flex flex-col min-h-screen antialiased `}
       >
         <Scroll />
-        <NextTopLoader color="#FBA328" />
+        <NextTopLoader height={4} color="#FBA328" />
         <Provider>{children}</Provider>
         <Toaster
           closeButton
