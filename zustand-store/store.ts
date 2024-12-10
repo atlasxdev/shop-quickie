@@ -1,83 +1,88 @@
 import { create } from "zustand";
-
-export interface User {
-  address: Address;
-  id: number;
-  email: string;
-  username: string;
-  password: string;
-  name: Name;
-  phone: string;
-}
-
-export interface Address {
-  geolocation: Geolocation;
-  city: string;
-  street: string;
-  number: number;
-  zipcode: string;
-}
-
-export interface Geolocation {
-  lat: string;
-  long: string;
-}
-
-export interface Name {
-  firstname: string;
-  lastname: string;
-}
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface Cart {
-  id: number | string;
+  id: string;
   userId: number;
   date: string;
   products: { productId: string; quantity: number; price: number }[] | [];
 }
 
+export type UserType = {
+  token: string;
+  userId: number;
+};
+
 type UserStore = {
-  user: string | null;
-  logIn: (user: string) => void;
+  user: UserType | null;
+  logIn: (user: UserType) => void;
   logOut: () => void;
 };
 
 export type CartStore = {
-  cart: null | Cart[];
-  updateCart: (cart: Cart[]) => void;
-  getInDateRange: () => void;
-  addToCart: (item: Cart) => void;
-  removeItem: (productId: number) => void;
+  cart: Cart | null;
+  setCart: (cart: Cart) => void;
+  addToCart: (item: Cart["products"][0]) => void;
+  setItemQuantity: (productId: string, quantity: number) => void;
+  removeItem: (productId: string) => void;
 };
 
-export const useCartStore = create<CartStore>()((set) => ({
-  cart: null,
-  updateCart: (cart) => set({ cart }),
-  getInDateRange: () =>
-    set((state) =>
-      state.cart != null
-        ? {
-            cart: state.cart.sort(
-              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      cart: null,
+      addToCart: (item) =>
+        set((state) => ({
+          ...state,
+          cart: { ...get().cart!, products: [item, ...get().cart!.products] },
+        })),
+      setCart: (cart) => set((state) => ({ ...state, cart })),
+      setItemQuantity: (productId, quantity) =>
+        set((state) => ({
+          ...state,
+          cart: {
+            ...get().cart!,
+            products: get().cart!.products.map((v) => {
+              if (v.productId == productId) {
+                return { ...v, quantity };
+              } else {
+                return v;
+              }
+            }),
+          },
+        })),
+      removeItem: (productId) =>
+        set((state) => ({
+          ...state,
+          cart: {
+            ...get().cart!,
+            products: get().cart!.products.filter(
+              (v) => v.productId != productId
             ),
-          }
-        : state
-    ),
-  addToCart: (item) =>
-    set((state) => ({ ...state, cart: [{ ...item, ...state.cart }] })),
-  removeItem: (id) =>
-    set((state) =>
-      state.cart != null
-        ? { cart: state.cart.filter((v) => v.id != id) }
-        : state
-    ),
-}));
+          },
+        })),
+    }),
+    {
+      name: "cart",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ cart: state.cart }),
+    }
+  )
+);
 
-export const useUserStore = create<UserStore>()((set) => ({
-  user: null,
-  logIn: (user) => set({ user }),
-
-  logOut: () => {
-    localStorage.removeItem("user");
-    set({ user: null });
-  },
-}));
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      logIn: (user) =>
+        set((state) => ({ ...state, user: (get()["user"] = user) })),
+      logOut: () =>
+        set((state) => ({ ...state, user: (get()["user"] = null) })),
+    }),
+    {
+      name: "user",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ user: state.user }),
+    }
+  )
+);

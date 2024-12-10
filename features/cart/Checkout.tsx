@@ -2,7 +2,7 @@ import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { generateCheckoutUrl } from "@/lib/utils";
-import { Cart } from "@/zustand-store/store";
+import { Cart, UserType } from "@/zustand-store/store";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export function Checkout({
   cartTotal,
   products,
 }: {
-  user: string | null;
+  user: UserType | null;
   cartTotal: number;
   products: Cart["products"];
 }) {
@@ -56,14 +56,18 @@ export function Checkout({
           </Link>
         ) : (
           <Button
-            onClick={() =>
-              toast("Please log in to continue your shopping spree! 🛒", {
-                action: {
-                  label: "Sign in",
-                  onClick: () => (window.location.href = "/login"),
-                },
-              })
-            }
+            onClick={() => {
+              const toastId = toast(
+                "Please log in to continue your shopping spree! 🛒",
+                {
+                  action: {
+                    label: "Sign in",
+                    onClick: () => (window.location.href = "/login"),
+                  },
+                }
+              );
+              toast.dismiss(toastId);
+            }}
             size={"lg"}
             className="rounded-full gap-2 w-full"
           >

@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Store } from "lucide-react";
+import { useUserStore } from "@/zustand-store/store";
 
 export function Checkout({
   productId,
@@ -30,7 +31,7 @@ export function Checkout({
   );
   const productIdArray = Array.isArray(productId) ? productId : [productId];
   const quantityArray = Array.isArray(quantity) ? quantity : [quantity];
-  const [user, setUser] = useState<string | null>(null);
+  const user = useUserStore((state) => state.user);
   const productsWithQuantities = productIdArray.map((id, index) => ({
     productId: id,
     quantity: quantityArray[index],
@@ -42,7 +43,6 @@ export function Checkout({
 
   useEffect(() => {
     setIsClient(true);
-    setUser(localStorage.getItem("user") ?? null);
   }, []);
 
   if (!isClient) {

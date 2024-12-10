@@ -13,16 +13,16 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useLottie } from "lottie-react";
 import politeChicky from "../../public/polite-chicky.json";
+import { useUserStore } from "@/zustand-store/store";
+import { toast } from "sonner";
 
 function Page() {
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [user, setUser] = useState<string | null>(null);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
-    const user = JSON.parse(window.localStorage.getItem("user") ?? "null");
-    setUser(user);
     setIsClient(true);
-
+    toast.dismiss();
     return () => localStorage.removeItem("hasOrder");
   }, []);
 

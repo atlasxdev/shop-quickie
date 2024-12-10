@@ -19,17 +19,19 @@ import { Skeleton } from "./ui/skeleton";
 export function UserDropdown() {
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [user, setUser] = useState<{ userId: number } | null>(null);
+  const user = useUserStore((state) => state.user);
   const logOut = useUserStore((state) => state.logOut);
 
   useEffect(() => {
-    const user = JSON.parse(window.localStorage.getItem("user") ?? "null");
-    setUser(user);
     setIsClient(true);
   }, []);
 
   if (!isClient) {
     return <Skeleton className="size-5 rounded-md animate-pulse" />;
+  }
+
+  if (!user) {
+    return <></>;
   }
 
   return (
@@ -46,7 +48,11 @@ export function UserDropdown() {
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() =>
-              router.push(`/user-profile/${user?.userId.toString()}`)
+              router.push(
+                `/user-profile/${(
+                  user as unknown as { token: string; userId: number }
+                )?.userId.toString()}`
+              )
             }
           >
             <User />

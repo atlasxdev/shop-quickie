@@ -13,7 +13,7 @@ import { Checkout } from "@/features/cart/Checkout";
 import useMetadata from "@/hooks/use-metadata";
 import { priceFormatter } from "@/lib/utils";
 import { Product } from "@/types";
-import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
+import { useCartStore, useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, LogIn } from "lucide-react";
@@ -39,41 +39,22 @@ function Page() {
     "Your Cart - Shop Quickie",
     "Review and manage the items in your shopping cart. Ready to proceed to checkout and complete your purchase? Enjoy a seamless shopping experience with all your favorite products just a click away!"
   );
-  const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
   const user = useUserStore((state) => state.user);
-  const logIn = useUserStore((state) => state.logIn);
   const [isClient, setIsClient] = useState<boolean>(false);
+
   const [cartTotal, setCartTotal] = useState(0);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    const _cart = JSON.parse(localStorage.getItem("cart") ?? "null");
-    updateCart(_cart);
-    const _user = JSON.parse(localStorage.getItem("user") ?? "null");
-    logIn(_user);
-  }, [logIn, updateCart]);
-
   const products = useMemo(() => {
     if (cart == null) return [];
-    if (user) {
-      const userCart = cart.find(
-        (items) =>
-          items.userId == (user as unknown as { userId: number }).userId
-      );
-      return userCart != null
-        ? cart.find(
-            (items) =>
-              items.userId == (user as unknown as { userId: number }).userId
-          )!.products
-        : [];
-    } else {
-      return cart != null ? cart.flatMap((items) => items.products) : [];
-    }
-  }, [cart, user]);
+    return cart.products;
+  }, [cart]);
+
+  console.log(products);
 
   useEffect(() => {
     setCartTotal(() =>
@@ -130,7 +111,6 @@ function Page() {
                         setCartTotal={setCartTotal}
                         key={index}
                         id={product.productId}
-                        index={index}
                         quantity={product.quantity}
                       />
                     ))}
@@ -147,9 +127,7 @@ function Page() {
                   />
                 </AnimatePresence>
               )}
-              {cart == null || products.length == 0 || cart.length == 0 ? (
-                <EmptyCart />
-              ) : null}
+              {cart == null || products.length == 0 ? <EmptyCart /> : null}
             </MaxWidthWrapper>
           </div>
         </div>
@@ -161,15 +139,14 @@ function Page() {
 function CartItem({
   id,
   quantity,
-  index,
   setCartTotal,
 }: {
-  id?: string;
+  id: string;
   quantity: number;
-  index: number;
+
   setCartTotal: Dispatch<SetStateAction<number>>;
 }) {
-  const updateCart = useCartStore((state) => state.updateCart);
+  const removeItem = useCartStore((state) => state.removeItem);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
@@ -242,16 +219,7 @@ function CartItem({
                   return prev - data.data.price;
                 }
               });
-              const cart: Cart[] = JSON.parse(
-                localStorage.getItem("cart") ?? "[]"
-              );
-              const updatedCart = cart.flatMap((items) => {
-                items.products.splice(index, 1);
-                return items;
-              });
-              localStorage.removeItem("cart");
-              updateCart(updatedCart);
-              localStorage.setItem("cart", JSON.stringify(updatedCart));
+              removeItem(id);
             }}
             className="rounded-full text-red-600 p-0 text-xs md:text-sm"
             variant={"link"}
@@ -265,9 +233,7 @@ function CartItem({
 }
 
 function EmptyCart() {
-  const user =
-    useUserStore((state) => state.user) ??
-    JSON.parse(localStorage.getItem("user") ?? "null");
+  const user = useUserStore((state) => state.user);
   const router = useRouter();
 
   return (

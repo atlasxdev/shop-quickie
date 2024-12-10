@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { wait } from "@/lib/utils";
 import { TLoginSchema, ZodLoginSchema } from "@/zod-schema";
-import { Cart, useCartStore, useUserStore } from "@/zustand-store/store";
+import { useCartStore, useUserStore } from "@/zustand-store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -40,7 +40,9 @@ function Page() {
     "Login to Your Account - Shop Quickie",
     "Securely access your account at [Store Name]. Log in to view your orders, manage your profile, and enjoy a personalized shopping experience. Enter your username and password to get started."
   );
-  const updateCart = useCartStore((state) => state.updateCart);
+  const user = useUserStore((state) => state.user);
+  const cart = useCartStore((state) => state.cart);
+  const setCart = useCartStore((state) => state.setCart);
   const router = useRouter();
   const logIn = useUserStore((state) => state.logIn);
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -57,22 +59,16 @@ function Page() {
         description: "Verifying your credentials...",
       }),
     onSuccess: async (data: AxiosResponse<{ token: string }>, { username }) => {
+      toast.dismiss();
       const user = USERS.find((user) => user.username === username);
-      logIn(data.data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ token: data.data.token, userId: user?.id })
-      );
-
-      const cart = JSON.parse(localStorage.getItem("cart") ?? "null") as
-        | Cart[]
-        | null;
-
+      if (!user) {
+        throw new Error("No user found.");
+      }
+      logIn({ userId: user.id, token: data.data.token });
       if (user != null && cart != null) {
         localStorage.removeItem("cart");
-        const updatedCart = cart.map((v) => ({ ...v, userId: user.id }));
-        updateCart(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        const updatedCart = [cart].map((v) => ({ ...v, userId: user.id }));
+        setCart(updatedCart[0]);
       }
       await wait(1000);
       toast("🎉 Welcome back!", {
@@ -123,7 +119,7 @@ function Page() {
     );
   }
 
-  if (localStorage.getItem("user") != null) {
+  if (user != null) {
     permanentRedirect("/");
   }
 

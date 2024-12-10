@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import Unauthorized from "@/components/Unauthorized";
 import useMetadata from "@/hooks/use-metadata";
+import { useUserStore } from "@/zustand-store/store";
 import { motion } from "framer-motion";
 import { ArrowLeft, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -25,11 +26,10 @@ export function TrackOrder({ trackingId }: { trackingId: string }) {
   );
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [user, setUser] = useState<string | null>(null);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     setIsClient(true);
-    setUser(localStorage.getItem("user") ?? null);
   }, []);
 
   if (!isClient) {

@@ -18,12 +18,8 @@ import { useCartStore, useUserStore } from "@/zustand-store/store";
 import { AnimatedNumber } from "../AnimatedNumber";
 
 export function MobileNavigation({ pathname }: { pathname: string }) {
-  const user =
-    useUserStore((state) => state.user) ??
-    JSON.parse(localStorage.getItem("user") ?? "null");
-  const cart =
-    useCartStore((state) => state.cart) ??
-    JSON.parse(localStorage.getItem("cart") ?? "null");
+  const user = useUserStore((state) => state.user);
+  const cart = useCartStore((state) => state.cart);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -179,11 +175,11 @@ export function MobileNavigation({ pathname }: { pathname: string }) {
             </Link>
           )}
           <div className="relative">
-            {cart != null && cart[0].products.length > 0 ? (
+            {cart != null && cart.products.length > 0 ? (
               <span className="bg-black right-0 -top-1.5 absolute size-5 flex items-center justify-center p-1 rounded-full border">
                 <AnimatedNumber
                   className="text-[0.65rem] text-white"
-                  value={cart[0].products.length}
+                  value={cart.products.length}
                 />
               </span>
             ) : null}

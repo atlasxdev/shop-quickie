@@ -16,7 +16,7 @@ import { Product as TProduct } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { notFound, useRouter } from "next/navigation";
 
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 import {
   CircleMinusIcon,
@@ -105,11 +105,9 @@ const Product = memo(function Product({
 }) {
   const cachedAddQtyFn = useCallback(addQuantity, []);
   const cachedDecreaseQtyFn = useCallback(decreaseQuantity, []);
-  const userStore = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
-
-  const [user, setUser] = useState();
 
   function addQuantity() {
     setQuantity((prev) => prev + 1);
@@ -121,10 +119,6 @@ const Product = memo(function Product({
       return prev - 1;
     });
   }
-
-  useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("user") ?? "null"));
-  }, []);
 
   const BEST_SELLERS = [1, 5, 18];
 
@@ -236,7 +230,7 @@ const Product = memo(function Product({
                 productId={data.data.id.toString()}
                 quantity={quantity}
               />
-              {user || userStore ? (
+              {user ? (
                 <Button
                   onClick={() =>
                     router.push(
@@ -251,14 +245,18 @@ const Product = memo(function Product({
                 </Button>
               ) : (
                 <Button
-                  onClick={() =>
-                    toast("Please log in to continue your shopping spree! 🛒", {
-                      action: {
-                        label: "Sign in",
-                        onClick: () => router.push("/login"),
-                      },
-                    })
-                  }
+                  onClick={() => {
+                    const toastId = toast(
+                      "Please log in to continue your shopping spree! 🛒",
+                      {
+                        action: {
+                          label: "Sign in",
+                          onClick: () => (window.location.href = "/login"),
+                        },
+                      }
+                    );
+                    toast.dismiss(toastId);
+                  }}
                   size={"lg"}
                   className="rounded-full w-full"
                   variant={"default"}

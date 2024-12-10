@@ -29,7 +29,7 @@ function Page({ params: { id } }: { params: { id: string } }) {
   const router = useRouter();
   const logOut = useUserStore((state) => state.logOut);
   const [activeTab, setActiveTab] = useState<"details" | "address">("details");
-  const [user, setUser] = useState<string | null>(null);
+  const user = useUserStore((state) => state.user);
   const [isClient, setIsClient] = useState<boolean>(false);
   const { data, isError, isLoading } = useQuery({
     queryKey: ["user", id],
@@ -48,7 +48,6 @@ function Page({ params: { id } }: { params: { id: string } }) {
 
   useEffect(() => {
     setIsClient(true);
-    setUser(localStorage.getItem("user") ?? null);
   }, []);
 
   if (isError || parseInt(id) > 10) {

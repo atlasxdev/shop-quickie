@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
-import { Cart, useCartStore } from "@/zustand-store/store";
+import { useCartStore } from "@/zustand-store/store";
 
 export function AddQuantity({
   quantity,
@@ -18,46 +18,9 @@ export function AddQuantity({
   productId: string;
   quantity: number;
 }) {
-  const updateCart = useCartStore((state) => state.updateCart);
+  const setItemQuantity = useCartStore((state) => state.setItemQuantity);
   function changeQuantity(value: number) {
-    const _cart: Cart[] | [] = JSON.parse(localStorage.getItem("cart") ?? "[]");
-    const updatedCart = _cart.flatMap((item: Cart) => {
-      if (item.products.find((v) => v.productId == productId)) {
-        item.products.forEach((v) => {
-          if (v.productId == productId) {
-            v.quantity = value;
-          } else {
-            return v;
-          }
-        });
-        return item.products.flatMap((v) => v);
-      }
-      return item.products.flatMap((v) => [v]);
-    });
-    localStorage.removeItem("cart");
-    updateCart(
-      _cart.flatMap((items) => {
-        return [
-          {
-            ...items,
-            products: updatedCart,
-          },
-        ];
-      })
-    );
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(
-        _cart.flatMap((items) => {
-          return [
-            {
-              ...items,
-              products: updatedCart,
-            },
-          ];
-        })
-      )
-    );
+    setItemQuantity(productId, value);
   }
 
   return (
