@@ -81,7 +81,7 @@ export function UserDropdown() {
             toast("👋 Goodbye! You’ve successfully logged out.", {
               description: "See you next time!",
             });
-            await wait(500);
+            await wait(1000);
             logOut();
             document.location.reload();
           }}

@@ -246,16 +246,13 @@ const Product = memo(function Product({
               ) : (
                 <Button
                   onClick={() => {
-                    const toastId = toast(
-                      "Please log in to continue your shopping spree! 🛒",
-                      {
-                        action: {
-                          label: "Sign in",
-                          onClick: () => (window.location.href = "/login"),
-                        },
-                      }
-                    );
-                    toast.dismiss(toastId);
+                    toast("Please log in to continue your shopping spree! 🛒", {
+                      action: {
+                        label: "Sign in",
+                        onClick: () => (window.location.href = "/login"),
+                      },
+                    });
+                    toast.dismiss();
                   }}
                   size={"lg"}
                   className="rounded-full w-full"

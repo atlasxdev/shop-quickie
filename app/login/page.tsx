@@ -77,6 +77,7 @@ function Page() {
       router.back();
     },
     onError: () => {
+      toast.dismiss();
       toast.error("Login failed!", {
         description: "Please check your credentials and try again.",
       });
