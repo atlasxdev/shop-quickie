@@ -17,7 +17,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Unauthorized from "@/components/Unauthorized";
 import useMetadata from "@/hooks/use-metadata";
 import { wait } from "@/lib/utils";
-import { User, useUserStore } from "@/zustand-store/store";
+import { User } from "@/types";
+import { useUserStore } from "@/zustand-store/store";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowLeft, CircleUserRound, LogOut, MapPin } from "lucide-react";
@@ -84,10 +85,7 @@ function Page({ params: { id } }: { params: { id: string } }) {
     );
   }
 
-  if (
-    user == null ||
-    (JSON.parse(user) as { userId: number }).userId.toString() != id
-  ) {
+  if (user == null || user.userId.toString() != id) {
     return <Unauthorized />;
   }
 
