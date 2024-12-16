@@ -1,4 +1,5 @@
 import "./globals.css";
+import "@smastrom/react-rating/style.css";
 import { Recursive } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";

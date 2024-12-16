@@ -161,13 +161,13 @@ const Product = memo(function Product({
                 {data.data.title}
               </CardTitle>
               <div className="flex items-center justify-between space-x-2">
-                <div className="flex space-x-2">
+                <div className="flex items-center space-x-2">
                   <Rating
                     value={data.data.rating.rate}
                     isDisabled
                     halfFillMode="svg"
                     readOnly
-                    className="size-6"
+                    className="max-w-28 max-h-28 md:max-w-36 md:max-h-36"
                   />
                   <span className="text-xs font-bold underline">
                     {data.data.rating.rate}
