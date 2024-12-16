@@ -34,21 +34,20 @@ export function BestSellers() {
 
       {/* Products Section */}
       <motion.div
-        className="flex flex-col lg:flex-row gap-4"
+        className="min-h-screen flex flex-col lg:flex-row gap-4"
         variants={staggerContainer}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
         {/* Main Feature Product */}
         <motion.div
-          className="relative group flex-1 overflow-hidden bg-gray-200 rounded-lg shadow-lg aspect-square"
+          className="relative group flex-1 overflow-hidden rounded-lg shadow-lg w-full aspect-[4/3]"
           variants={fadeInUp}
         >
           <Image
             src={"/best-seller-1.png"}
             alt="best seller image"
-            className="group-hover:scale-105 object-cover w-full h-full transition-transform duration-500 ease-in-out brightness-75"
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="group-hover:scale-105 object-cover w-full h-full transition-transform duration-500 ease-in-out"
             fill
             priority
           />
@@ -56,6 +55,10 @@ export function BestSellers() {
           <div className="absolute z-10 bottom-6 md:bottom-10 lg:bottom-12 left-6 space-y-4 text-white">
             <div className="pr-0 md:pr-4">
               <motion.p
+                style={{
+                  textShadow:
+                    "0px 0px 2px rgba(0, 0, 0, 0.3), 0px 0px 5px rgba(0, 0, 0, 0.1)",
+                }}
                 className="text-pretty font-extrabold text-2xl md:text-4xl lg:text-5xl leading-tight"
                 variants={fadeInUp}
               >
@@ -77,19 +80,23 @@ export function BestSellers() {
 
         <div className="flex flex-col gap-4 flex-1">
           <motion.div
-            className="relative group flex-1 overflow-hidden bg-gray-300 rounded-lg shadow-lg aspect-square"
+            className="relative group flex-1 overflow-hidden rounded-lg shadow-lg w-full aspect-[4/3]"
             variants={fadeInUp}
           >
             <Image
               src={"/best-seller-2.jpg"}
               alt="best seller image"
-              className="group-hover:scale-105 transition-transform duration-500 ease-in-out object-cover w-full h-full brightness-75"
-              sizes="(max-width: 1024px) 50vw, 25vw"
+              className="group-hover:scale-105 object-contain w-full h-full transition-transform duration-500 ease-in-out"
+              quality={100}
               fill
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
             <div className="absolute z-10 bottom-4 md:bottom-8 left-4 space-y-2 text-white">
               <motion.p
+                style={{
+                  textShadow:
+                    "0px 0px 2px rgba(0, 0, 0, 0.3), 0px 0px 5px rgba(0, 0, 0, 0.1)",
+                }}
                 className="text-pretty font-extrabold text-lg md:text-xl lg:text-2xl leading-snug"
                 variants={fadeInUp}
               >
@@ -108,19 +115,23 @@ export function BestSellers() {
             </div>
           </motion.div>
           <motion.div
-            className="relative group flex-1 overflow-hidden bg-gray-300 rounded-lg shadow-lg aspect-square"
+            className="relative group flex-1 overflow-hidden rounded-lg shadow-lg w-full aspect-[4/3]"
             variants={fadeInUp}
           >
             <Image
               src={"/best-seller-3.jpg"}
               alt="best seller image"
-              className="group-hover:scale-105 transition-transform duration-500 ease-in-out object-cover w-full h-full brightness-75"
-              sizes="(max-width: 1024px) 50vw, 25vw"
+              className="group-hover:scale-105 object-contain w-full h-full transition-transform duration-500 ease-in-out"
+              quality={100}
               fill
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
             <div className="absolute z-10 bottom-4 md:bottom-8 left-4 space-y-2 text-white">
               <motion.p
+                style={{
+                  textShadow:
+                    "0px 0px 2px rgba(0, 0, 0, 0.3), 0px 0px 5px rgba(0, 0, 0, 0.1)",
+                }}
                 className="text-pretty font-extrabold text-lg md:text-xl lg:text-2xl leading-snug"
                 variants={fadeInUp}
               >
